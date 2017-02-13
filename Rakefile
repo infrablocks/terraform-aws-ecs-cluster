@@ -1,5 +1,5 @@
-task :default => :hello_world
+require 'rspec/core/rake_task'
 
-task :hello_world do
-  puts 'Hello World!'
-end
+task :default => :spec
+
+RSpec::Core::RakeTask.new('spec')
