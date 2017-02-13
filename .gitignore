@@ -1,0 +1,5 @@
+## IDE:
+.idea
+*.ipr
+*.iws
+*.iml
