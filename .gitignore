@@ -21,3 +21,6 @@ run/pids/
 run/logs/
 *.log
 .tmp
+
+# RSpec
+.rspec_status

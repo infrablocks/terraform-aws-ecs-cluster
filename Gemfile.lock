@@ -2,6 +2,7 @@ GEM
   remote: https://rubygems.org/
   specs:
     concurrent-ruby (1.0.4)
+    diff-lcs (1.3)
     hamster (3.0.0)
       concurrent-ruby (~> 1.0)
     lino (1.0.0)
@@ -9,6 +10,19 @@ GEM
       open4 (~> 1.3)
     open4 (1.3.4)
     rake (11.3.0)
+    rspec (3.5.0)
+      rspec-core (~> 3.5.0)
+      rspec-expectations (~> 3.5.0)
+      rspec-mocks (~> 3.5.0)
+    rspec-core (3.5.4)
+      rspec-support (~> 3.5.0)
+    rspec-expectations (3.5.0)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.5.0)
+    rspec-mocks (3.5.0)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.5.0)
+    rspec-support (3.5.0)
 
 PLATFORMS
   ruby
@@ -16,6 +30,7 @@ PLATFORMS
 DEPENDENCIES
   lino (~> 1.0)
   rake (~> 11.2)
+  rspec (~> 3.0)
 
 BUNDLED WITH
-   1.14.3
+   1.14.4
