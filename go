@@ -45,8 +45,7 @@ function run_rake() {
         cp scripts/git/prepare-commit-msg .git/hooks/
 
         echo "Sourcing cloud credentials."
-        if [[ 'grep 'true' config/secrets/.unlocked' ]]; then
-          echo "Unlocked...continuing"
+        if grep -q true config/secrets/.unlocked; then
           source config/secrets/aws/personal-account.sh
         fi
 
