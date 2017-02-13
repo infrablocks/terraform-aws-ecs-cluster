@@ -44,6 +44,9 @@ function run_rake() {
         set +e && rm .git/hooks/prepare-commit-msg >/dev/null 2>&1 && set -e
         cp scripts/git/prepare-commit-msg .git/hooks/
 
+        echo "Sourcing cloud credentials."
+        source config/secrets/aws/personal-account.sh
+
         if [[ "$offline" = "no" ]]; then
             echo "Installing bundler."
             if [[ "$verbose" = "yes" ]]; then
