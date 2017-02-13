@@ -45,7 +45,10 @@ function run_rake() {
         cp scripts/git/prepare-commit-msg .git/hooks/
 
         echo "Sourcing cloud credentials."
-        source config/secrets/aws/personal-account.sh
+        if [[ 'grep 'true' config/secrets/.unlocked' ]]; then
+          echo "Unlocked...continuing"
+          source config/secrets/aws/personal-account.sh
+        fi
 
         if [[ "$offline" = "no" ]]; then
             echo "Installing bundler."
