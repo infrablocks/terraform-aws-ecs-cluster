@@ -157,80 +157,22 @@ module Terraform
   end
 
   module Tasks
-    class <<self
-      include ::Rake::DSL if defined?(::Rake::DSL)
+    def self.install(version = '0.6.16')
+      RakeDependencies::Tasks::All.new do |t|
+        t.namespace = :terraform
+        t.dependency = 'terraform'
+        t.version = version
+        t.path = Paths.from_project_root_directory('vendor', 'terraform')
+        t.type = :zip
 
-      def install(version=DEFAULT_VERSION)
-        namespace :terraform do
-          RakeDependencies::Tasks::Clean.new do |t|
-            t.path = DEFAULT_PATH
-            t.dependency = DEPENDENCY_NAME
-          end
-          RakeDependencies::Tasks::Download.new do |t|
-            t.type = :zip
-            t.path = DEFAULT_PATH
-            t.dependency = DEPENDENCY_NAME
-            t.version = version
-            t.os_ids = {mac: 'darwin', linux: 'linux'}
-            t.uri_template = "https://releases.hashicorp.com/terraform/<%= @version %>/terraform_<%= @version %>_<%= @os_id %>_amd64<%= @ext %>"
-            t.file_name_template = "terraform_<%= @version %>_<%= @os_id %>_amd64<%= @ext %>"
-          end
-          RakeDependencies::Tasks::Extract.new do |t|
-            t.type = :zip
-            t.path = DEFAULT_PATH
-            t.dependency = DEPENDENCY_NAME
-            t.version = version
-            t.os_ids = {mac: 'darwin', linux: 'linux'}
-            t.file_name_template = "terraform_<%= @version %>_<%= @os_id %>_amd64<%= @ext %>"
-          end
-          RakeDependencies::Tasks::Fetch.new do |t|
-            t.dependency = DEPENDENCY_NAME
-          end
-          Ensure.new do |t|
-            t.version = version
-          end
-        end
-      end
-    end
+        t.os_ids = {mac: 'darwin', linux: 'linux'}
 
-    class Ensure < ::Rake::TaskLib
-      include ::Rake::DSL if defined?(::Rake::DSL)
+        t.uri_template = "https://releases.hashicorp.com/terraform/<%= @version %>/terraform_<%= @version %>_<%= @os_id %>_amd64<%= @ext %>"
+        t.file_name_template = "terraform_<%= @version %>_<%= @os_id %>_amd64<%= @ext %>"
 
-      attr_accessor :name
-      attr_accessor :version
-      attr_accessor :path
-      attr_accessor :clean_task
-      attr_accessor :download_task
-      attr_accessor :extract_task
-
-      def initialize(*args, &task_block)
-        @name = name || :ensure
-        @version = DEFAULT_VERSION
-        @path = DEFAULT_PATH
-        @clean_task = scoped_task_name(:clean)
-        @download_task = scoped_task_name(:download)
-        @extract_task = scoped_task_name(:extract)
-
-        define(args, &task_block)
-      end
-
-      private
-
-      def scoped_task_name(task_name)
-        Rake.application.current_scope.path_with_task_name(task_name)
-      end
-
-      def define(args, &task_block)
-        desc "Ensure terraform is present"
-        task name, *args do |_, task_args|
-          task_block.call(*[self, task_args].slice(0, task_block.arity)) if task_block
-
-          terraform_binary = path == DEFAULT_PATH ?
-              DEFAULT_BINARY :
-              File.join(path, "bin", "terraform")
+        t.needs_fetch = lambda do |parameters|
+          terraform_binary = File.join(parameters[:path], parameters[:binary_directory], 'terraform')
           version_string = StringIO.new
-
-          needs_fetch = true
 
           if File.exist?(terraform_binary)
             Lino::CommandLineBuilder.for_command(terraform_binary)
@@ -239,15 +181,11 @@ module Terraform
                 .execute(stdout: version_string)
 
             if version_string.string.lines.first =~ /#{version}/
-              needs_fetch = false
+              return false
             end
           end
 
-          if needs_fetch
-            Rake::Task[clean_task].execute
-            Rake::Task[download_task].execute
-            Rake::Task[extract_task].execute
-          end
+          return true
         end
       end
     end
