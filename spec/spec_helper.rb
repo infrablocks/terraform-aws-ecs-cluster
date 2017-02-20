@@ -41,7 +41,7 @@ RSpec.configure do |config|
 
   config.add_setting :desired_capacity, default: 2
 
-  config.add_setting :instance_type, default: 't2.nano'
+  config.add_setting :instance_type, default: 't2.medium'
   config.add_setting :image_id, default: 'ami-3fb6bc5b'
 
   config.add_setting :private_network_cidr, default: '10.0.0.0/8'
