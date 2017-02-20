@@ -33,6 +33,7 @@ RSpec.configure do |config|
 
   config.add_setting :domain_name, default: 'greasedscone.uk'
   config.add_setting :public_zone_id, default: 'Z2WA5EVJBZSQ3V'
+  config.add_setting :private_zone_id, default: 'Z2BVA9QD5NHSW6'
 
   config.add_setting :cluster_name, default: 'test-cluster'
   config.add_setting :cluster_node_ssh_public_key_path, default: 'config/secrets/keys/cluster/ssh.public'
@@ -70,6 +71,7 @@ RSpec.configure do |config|
 
         domain_name: variables.domain_name,
         public_zone_id: variables.public_zone_id,
+        private_zone_id: variables.private_zone_id,
 
         cluster_name: variables.cluster_name,
         cluster_node_ssh_public_key_path: variables.cluster_node_ssh_public_key_path,
@@ -110,6 +112,7 @@ RSpec.configure do |config|
 
           domain_name: variables.domain_name,
           public_zone_id: variables.public_zone_id,
+          private_zone_id: variables.private_zone_id,
 
           cluster_name: variables.cluster_name,
           cluster_node_ssh_public_key_path: variables.cluster_node_ssh_public_key_path,

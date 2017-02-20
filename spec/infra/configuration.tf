@@ -11,6 +11,7 @@ variable "bastion_ssh_allow_cidrs" {}
 
 variable "domain_name" {}
 variable "public_zone_id" {}
+variable "private_zone_id" {}
 
 variable "cluster_name" {}
 variable "instance_type" {}
@@ -40,6 +41,7 @@ module "base_network" {
 
   domain_name = "${var.domain_name}"
   public_zone_id = "${var.public_zone_id}"
+  private_zone_id = "${var.private_zone_id}"
 }
 
 module "ecs_cluster" {
