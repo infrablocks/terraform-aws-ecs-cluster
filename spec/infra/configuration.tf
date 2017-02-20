@@ -20,6 +20,8 @@ variable "cluster_node_ssh_public_key_path" {}
 variable "minimum_size" {}
 variable "maximum_size" {}
 
+variable "desired_capacity" {}
+
 variable "private_network_cidr" {}
 
 module "base_network" {
@@ -59,6 +61,8 @@ module "ecs_cluster" {
   instance_type = "${var.instance_type}"
 
   vpc_id = "${module.base_network.vpc_id}"
+
+  desired_capacity = "${var.desired_capacity}"
 }
 
 output "launch_configuration_name" {

@@ -39,6 +39,8 @@ RSpec.configure do |config|
   config.add_setting :minimum_size, default: 1
   config.add_setting :maximum_size, default: 3
 
+  config.add_setting :desired_capacity, default: 2
+
   config.add_setting :instance_type, default: 't2.nano'
   config.add_setting :image_id, default: 'ami-3fb6bc5b'
 
@@ -76,6 +78,8 @@ RSpec.configure do |config|
         maximum_size: variables.maximum_size,
 
         instance_type: variables.instance_type,
+
+        desired_capacity: variables.desired_capacity,
 
         private_network_cidr: variables.private_network_cidr
     })

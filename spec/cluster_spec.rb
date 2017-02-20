@@ -15,6 +15,8 @@ describe 'ECS Cluster' do
 
   let(:private_network_cidr) { RSpec.configuration.private_network_cidr }
 
+  let(:desired_capacity) { RSpec.configuration.desired_capacity }
+
   let(:vpc_id) { Terraform.output(name: 'vpc_id') }
   let(:launch_configuration_name) { Terraform.output(name: 'launch_configuration_name') }
   let(:private_subnet_ids) { Terraform.output(name: 'private_subnet_ids').split(',') }
@@ -88,10 +90,17 @@ describe 'ECS Cluster' do
     its(:min_size) { should eq(minimum_size) }
     its(:max_size) { should eq(maximum_size) }
     its(:launch_configuration_name) { should eq(launch_configuration_name)}
+    its(:desired_capacity) { should eq(desired_capacity) }
 
     it 'uses all private subnets' do
       expect(subject.vpc_zone_identifier.split(','))
           .to(contain_exactly(*private_subnet_ids))
     end
+
+    it { should have_tag('Name').value("cluster-worker-#{component}-#{deployment_identifier}-#{cluster_name}")}
+    it { should have_tag('Component').value(component) }
+    it { should have_tag('DeploymentIdentifier').value(deployment_identifier) }
+    it { should have_tag('ClusterName').value(cluster_name) }
+
   end
 end
