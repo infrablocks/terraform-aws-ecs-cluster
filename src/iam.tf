@@ -3,6 +3,18 @@ resource "aws_iam_role" "cluster_instance_role" {
   assume_role_policy = "${file("${path.module}/policies/cluster-instance-role.json")}"
 }
 
+resource "aws_iam_policy" "cluster_instance_policy" {
+  name = "cluster-instance-policy-${var.component}-${var.deployment_identifier}-${var.cluster_name}"
+  description = "cluster-instance-policy-${var.component}-${var.deployment_identifier}-${var.cluster_name}"
+  policy = "${file("${path.module}/policies/cluster-instance-policy.json")}"
+}
+
+resource "aws_iam_policy_attachment" "cluster_instance_policy_attachment" {
+  name = "cluster-instance-policy-attachment-${var.component}-${var.deployment_identifier}-${var.cluster_name}"
+  roles = ["${aws_iam_role.cluster_instance_role.id}"]
+  policy_arn = "${aws_iam_policy.cluster_instance_policy.arn}"
+}
+
 resource "aws_iam_instance_profile" "cluster" {
   name = "cluster-instance-profile-${var.component}-${var.deployment_identifier}-${var.cluster_name}"
   path = "/"

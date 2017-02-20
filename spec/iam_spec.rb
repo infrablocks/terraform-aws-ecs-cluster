@@ -28,5 +28,27 @@ describe 'IAM policies, profiles and roles' do
       expect(policy_document_statement['Action']).to(eq('sts:AssumeRole'))
       expect(policy_document_statement['Principal']['Service']).to(eq('ec2.amazonaws.com'))
     end
+
+    it {
+      should have_iam_policy("cluster-instance-policy-#{component}-#{deployment_identifier}-#{cluster_name}")
+    }
+
+    it { should be_allowed_action('ecs:CreateCluster') }
+    it { should be_allowed_action('ecs:DeregisterContainerInstance') }
+    it { should be_allowed_action('ecs:DiscoverPollEndpoint') }
+    it { should be_allowed_action('ecs:Poll') }
+    it { should be_allowed_action('ecs:RegisterContainerInstance') }
+    it { should be_allowed_action('ecs:StartTelemetrySession') }
+    it { should be_allowed_action('ecs:Submit*') }
+    it { should be_allowed_action('logs:CreateLogStream') }
+    it { should be_allowed_action('logs:PutLogEvents') }
+  end
+
+  context 'cluster instance policy' do
+    subject {
+      iam_policy("cluster-instance-policy-#{component}-#{deployment_identifier}-#{cluster_name}")
+    }
+
+    it { should exist }
   end
 end
