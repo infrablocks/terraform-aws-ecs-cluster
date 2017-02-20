@@ -26,5 +26,6 @@ run/logs/
 .rspec_status
 
 # Terraform
+.terraform
 *.tfstate
 *.tfstate.backup
