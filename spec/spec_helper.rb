@@ -76,10 +76,9 @@ RSpec.configure do |config|
 
         minimum_size: variables.minimum_size,
         maximum_size: variables.maximum_size,
+        desired_capacity: variables.desired_capacity,
 
         instance_type: variables.instance_type,
-
-        desired_capacity: variables.desired_capacity,
 
         private_network_cidr: variables.private_network_cidr
     })
@@ -117,6 +116,7 @@ RSpec.configure do |config|
 
           minimum_size: variables.minimum_size,
           maximum_size: variables.maximum_size,
+          desired_capacity: variables.desired_capacity,
 
           instance_type: variables.instance_type,
 
