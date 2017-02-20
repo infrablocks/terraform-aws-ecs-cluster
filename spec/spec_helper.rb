@@ -34,6 +34,11 @@ RSpec.configure do |config|
   config.add_setting :domain_name, default: 'greasedscone.uk'
   config.add_setting :public_zone_id, default: 'Z2WA5EVJBZSQ3V'
 
+  config.add_setting :cluster_name, default: 'test-cluster'
+
+  config.add_setting :instance_type, default: 't2.nano'
+  config.add_setting :image_id, default: 'ami-3fb6bc5b'
+
   config.before(:suite) do
     variables = RSpec.configuration
     configuration_directory = Paths.from_project_root_directory('spec/infra')
@@ -57,7 +62,11 @@ RSpec.configure do |config|
         bastion_ssh_allow_cidrs: variables.bastion_ssh_allow_cidrs,
 
         domain_name: variables.domain_name,
-        public_zone_id: variables.public_zone_id
+        public_zone_id: variables.public_zone_id,
+
+        cluster_name: variables.cluster_name,
+
+        instance_type: variables.instance_type,
     })
   end
 
@@ -86,7 +95,11 @@ RSpec.configure do |config|
           bastion_ssh_allow_cidrs: variables.bastion_ssh_allow_cidrs,
 
           domain_name: variables.domain_name,
-          public_zone_id: variables.public_zone_id
+          public_zone_id: variables.public_zone_id,
+
+          cluster_name: variables.cluster_name,
+
+          instance_type: variables.instance_type,
       })
 
       puts
