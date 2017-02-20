@@ -39,7 +39,7 @@ describe 'ECS Cluster' do
     its(:user_data) do
       should eq(Base64.strict_encode64(<<~DOC))
         #!/bin/bash
-        echo "ECS_CLUSTER=#{cluster_name}" > /etc/ecs/ecs.config
+        echo "ECS_CLUSTER=#{component}-#{deployment_identifier}-#{cluster_name}" > /etc/ecs/ecs.config
       DOC
     end
 

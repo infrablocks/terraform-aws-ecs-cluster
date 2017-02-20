@@ -13,7 +13,7 @@ data "template_file" "cluster_user_data" {
   template = "${coalesce(var.user_data_template, file("${path.module}/scripts/user-data.tpl"))}"
 
   vars {
-    cluster_name = "${var.cluster_name}"
+    cluster_name = "${aws_ecs_cluster.cluster.name}"
   }
 }
 
