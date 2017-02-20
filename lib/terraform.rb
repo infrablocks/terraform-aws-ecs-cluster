@@ -25,6 +25,10 @@ module Terraform
       Commands::Apply.new.execute(opts)
     end
 
+    def get(opts)
+      Commands::Get.new.execute(opts)
+    end
+
     def destroy(opts)
       Commands::Destroy.new.execute(opts)
     end
@@ -62,12 +66,34 @@ module Terraform
 
         Lino::CommandLineBuilder.for_command(binary)
             .with_subcommand('apply') do |sub|
-          vars.each do |key, value|
-            sub = sub.with_option('-var', "'#{key}=#{value}'")
-          end
-          sub = sub.with_option('-state', state) if state
-          sub
-        end
+              vars.each do |key, value|
+                sub = sub.with_option('-var', "'#{key}=#{value}'")
+              end
+              sub = sub.with_option('-state', state) if state
+              sub
+            end
+            .with_argument(directory)
+            .build
+            .execute
+      end
+    end
+
+    class Get
+      attr_reader :binary
+
+      def initialize(binary = DEFAULT_BINARY)
+        @binary = binary
+      end
+
+      def execute(opts)
+        directory = opts[:directory]
+        state = opts[:state]
+
+        Lino::CommandLineBuilder.for_command(binary)
+            .with_subcommand('get') do |sub|
+              sub = sub.with_option('-state', state) if state
+              sub
+            end
             .with_argument(directory)
             .build
             .execute
@@ -88,12 +114,12 @@ module Terraform
 
         Lino::CommandLineBuilder.for_command(binary)
             .with_subcommand('destroy') do |sub|
-          vars.each do |key, value|
-            sub = sub.with_option('-var', "'#{key}=#{value}'")
-          end
-          sub = sub.with_option('-state', state) if state
-          sub
-        end
+              vars.each do |key, value|
+                sub = sub.with_option('-var', "'#{key}=#{value}'")
+              end
+              sub = sub.with_option('-state', state) if state
+              sub
+            end
             .with_argument(directory)
             .build
             .execute(stdin: 'yes')
@@ -113,11 +139,11 @@ module Terraform
         stdout = StringIO.new
 
         builder = Lino::CommandLineBuilder.for_command(binary)
-                      .with_option_separator('=')
-                      .with_subcommand('output') do |sub|
-          sub = sub.with_option('-state', state) if state
-          sub
-        end
+            .with_option_separator('=')
+            .with_subcommand('output') do |sub|
+              sub = sub.with_option('-state', state) if state
+              sub
+            end
         builder = builder.with_argument(name) if name
         builder
             .build
@@ -144,12 +170,12 @@ module Terraform
         Lino::CommandLineBuilder.for_command(binary)
             .with_subcommand('remote')
             .with_subcommand('config') do |sub|
-          sub = sub.with_option('-backend', backend)
-          config.each do |key, value|
-            sub = sub.with_option('-backend-config', "'#{key}=#{value}'")
-          end
-          sub
-        end
+              sub = sub.with_option('-backend', backend)
+              config.each do |key, value|
+                sub = sub.with_option('-backend-config', "'#{key}=#{value}'")
+              end
+              sub
+            end
             .build
             .execute
       end
