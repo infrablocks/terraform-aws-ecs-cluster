@@ -1,7 +1,16 @@
 resource "aws_launch_configuration" "cluster" {
-  name = "cluster-${var.component}-${var.deployment_identifier}-${var.cluster_name}"
+  name_prefix = "cluster-${var.component}-${var.deployment_identifier}-${var.cluster_name}-"
   image_id = "${lookup(var.amis, var.region)}"
   instance_type = "${var.instance_type}"
+  key_name = "${aws_key_pair.cluster.key_name}"
+
+  security_groups = [
+    "${aws_security_group.cluster.id}"
+  ]
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 //resource "aws_autoscaling_group" "cluster" {

@@ -8,6 +8,14 @@ variable "cluster_name" {
   default = "default"
 }
 
+variable "vpc_id" {}
+
+variable "private_network_cidr" {
+  default = "10.0.0.0/8"
+}
+
+variable "cluster_node_ssh_public_key_path" {}
+
 //variable "minimum_size" {
 //  default = 1
 //}

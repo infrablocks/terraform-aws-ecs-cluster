@@ -15,6 +15,10 @@ variable "public_zone_id" {}
 variable "cluster_name" {}
 variable "instance_type" {}
 
+variable "cluster_node_ssh_public_key_path" {}
+
+variable "private_network_cidr" {}
+
 module "base_network" {
   source = "git@github.com:tobyclemson/terraform-aws-base-networking.git//src"
 
@@ -38,10 +42,27 @@ module "ecs_cluster" {
 
   region = "${var.region}"
   private_subnet_ids = "${module.base_network.private_subnet_ids}"
+  private_network_cidr = "${var.private_network_cidr}"
 
   component = "${var.component}"
   deployment_identifier = "${var.deployment_identifier}"
 
   cluster_name = "${var.cluster_name}"
+  cluster_node_ssh_public_key_path = "${var.cluster_node_ssh_public_key_path}"
+
   instance_type = "${var.instance_type}"
+
+  vpc_id = "${module.base_network.vpc_id}"
+}
+
+output "launch_configuration_name" {
+  value = "${module.ecs_cluster.launch_configuration_name}"
+}
+
+output "vpc_id" {
+  value = "${module.base_network.vpc_id}"
+}
+
+output "vpc_cidr" {
+  value = "${module.base_network.vpc_cidr}"
 }

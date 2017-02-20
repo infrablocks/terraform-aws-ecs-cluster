@@ -35,9 +35,12 @@ RSpec.configure do |config|
   config.add_setting :public_zone_id, default: 'Z2WA5EVJBZSQ3V'
 
   config.add_setting :cluster_name, default: 'test-cluster'
+  config.add_setting :cluster_node_ssh_public_key_path, default: 'config/secrets/keys/cluster/ssh.public'
 
   config.add_setting :instance_type, default: 't2.nano'
   config.add_setting :image_id, default: 'ami-3fb6bc5b'
+
+  config.add_setting :private_network_cidr, default: '10.0.0.0/8'
 
   config.before(:suite) do
     variables = RSpec.configuration
@@ -65,8 +68,11 @@ RSpec.configure do |config|
         public_zone_id: variables.public_zone_id,
 
         cluster_name: variables.cluster_name,
+        cluster_node_ssh_public_key_path: variables.cluster_node_ssh_public_key_path,
 
         instance_type: variables.instance_type,
+
+        private_network_cidr: variables.private_network_cidr
     })
   end
 
@@ -98,8 +104,11 @@ RSpec.configure do |config|
           public_zone_id: variables.public_zone_id,
 
           cluster_name: variables.cluster_name,
+          cluster_node_ssh_public_key_path: variables.cluster_node_ssh_public_key_path,
 
           instance_type: variables.instance_type,
+
+          private_network_cidr: variables.private_network_cidr
       })
 
       puts
