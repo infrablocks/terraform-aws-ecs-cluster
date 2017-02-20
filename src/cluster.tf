@@ -40,16 +40,19 @@ resource "aws_launch_configuration" "cluster" {
   }
 }
 
-//resource "aws_autoscaling_group" "cluster" {
-//  name = "asg-${var.component}-${var.deployment_identifier}-${var.cluster_name}"
-//
-//  vpc_zone_identifier = [
-//    "${split(",", var.private_subnet_ids)}"
-//  ]
-//
-//
-//  min_size = "${var.minimum_size}"
-//  max_size = "${var.maximum_size}"
+resource "aws_autoscaling_group" "cluster" {
+  name = "asg-${var.component}-${var.deployment_identifier}-${var.cluster_name}"
+
+  vpc_zone_identifier = [
+    "${split(",", var.private_subnet_ids)}"
+  ]
+
+  launch_configuration = "${aws_launch_configuration.cluster.name}"
+
+  min_size = "${var.minimum_size}"
+  max_size = "${var.maximum_size}"
+}
+
 //  desired_capacity = "${var.desired_capacity}"
 //
 //  tag {

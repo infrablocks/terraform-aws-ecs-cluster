@@ -16,15 +16,15 @@ variable "private_network_cidr" {
 
 variable "cluster_node_ssh_public_key_path" {}
 
-//variable "minimum_size" {
-//  default = 1
-//}
-//variable "maximum_size" {
-//  default = 10
-//}
-//variable "desired_capacity" {
-//  default = 3
-//}
+variable "minimum_size" {
+  default = 1
+}
+variable "maximum_size" {
+  default = 10
+}
+variable "desired_capacity" {
+  default = 3
+}
 
 //variable "private_network_cidr" {
 //  default = "10.0.0.0/8"

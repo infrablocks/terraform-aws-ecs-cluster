@@ -6,12 +6,18 @@ describe 'ECS Cluster' do
   let(:component) { RSpec.configuration.component }
   let(:deployment_identifier) { RSpec.configuration.deployment_identifier }
   let(:cluster_name) { RSpec.configuration.cluster_name }
+
+  let(:minimum_size) { RSpec.configuration.minimum_size }
+  let(:maximum_size) { RSpec.configuration.maximum_size }
+
   let(:instance_type) { RSpec.configuration.instance_type }
   let(:image_id) { RSpec.configuration.image_id }
+
   let(:private_network_cidr) { RSpec.configuration.private_network_cidr }
 
   let(:vpc_id) { Terraform.output(name: 'vpc_id') }
   let(:launch_configuration_name) { Terraform.output(name: 'launch_configuration_name') }
+  let(:private_subnet_ids) { Terraform.output(name: 'private_subnet_ids').split(',') }
 
   context 'launch configuration' do
     subject {
@@ -72,6 +78,20 @@ describe 'ECS Cluster' do
       expect(egress_rule.to_port).to(be_nil)
       expect(egress_rule.ip_protocol).to(eq('-1'))
       expect(egress_rule.ip_ranges.map(&:cidr_ip)).to(eq(['0.0.0.0/0']))
+    end
+  end
+
+  context 'autoscaling group' do
+    subject { autoscaling_group("asg-#{component}-#{deployment_identifier}-#{cluster_name}") }
+
+    it { should exist }
+    its(:min_size) { should eq(minimum_size) }
+    its(:max_size) { should eq(maximum_size) }
+    its(:launch_configuration_name) { should eq(launch_configuration_name)}
+
+    it 'uses all private subnets' do
+      expect(subject.vpc_zone_identifier.split(','))
+          .to(contain_exactly(*private_subnet_ids))
     end
   end
 end

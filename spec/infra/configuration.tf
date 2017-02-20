@@ -17,6 +17,9 @@ variable "instance_type" {}
 
 variable "cluster_node_ssh_public_key_path" {}
 
+variable "minimum_size" {}
+variable "maximum_size" {}
+
 variable "private_network_cidr" {}
 
 module "base_network" {
@@ -50,6 +53,9 @@ module "ecs_cluster" {
   cluster_name = "${var.cluster_name}"
   cluster_node_ssh_public_key_path = "${var.cluster_node_ssh_public_key_path}"
 
+  minimum_size = "${var.minimum_size}"
+  maximum_size = "${var.maximum_size}"
+
   instance_type = "${var.instance_type}"
 
   vpc_id = "${module.base_network.vpc_id}"
@@ -65,4 +71,8 @@ output "vpc_id" {
 
 output "vpc_cidr" {
   value = "${module.base_network.vpc_cidr}"
+}
+
+output "private_subnet_ids" {
+  value = "${module.base_network.private_subnet_ids}"
 }

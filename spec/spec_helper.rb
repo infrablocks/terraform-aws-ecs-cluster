@@ -36,6 +36,8 @@ RSpec.configure do |config|
 
   config.add_setting :cluster_name, default: 'test-cluster'
   config.add_setting :cluster_node_ssh_public_key_path, default: 'config/secrets/keys/cluster/ssh.public'
+  config.add_setting :minimum_size, default: 1
+  config.add_setting :maximum_size, default: 3
 
   config.add_setting :instance_type, default: 't2.nano'
   config.add_setting :image_id, default: 'ami-3fb6bc5b'
@@ -69,6 +71,9 @@ RSpec.configure do |config|
 
         cluster_name: variables.cluster_name,
         cluster_node_ssh_public_key_path: variables.cluster_node_ssh_public_key_path,
+
+        minimum_size: variables.minimum_size,
+        maximum_size: variables.maximum_size,
 
         instance_type: variables.instance_type,
 
@@ -105,6 +110,9 @@ RSpec.configure do |config|
 
           cluster_name: variables.cluster_name,
           cluster_node_ssh_public_key_path: variables.cluster_node_ssh_public_key_path,
+
+          minimum_size: variables.minimum_size,
+          maximum_size: variables.maximum_size,
 
           instance_type: variables.instance_type,
 
