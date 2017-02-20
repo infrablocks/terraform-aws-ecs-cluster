@@ -103,4 +103,10 @@ describe 'ECS Cluster' do
     it { should have_tag('ClusterName').value(cluster_name) }
 
   end
+
+  context 'cluster' do
+    subject { ecs_cluster("#{component}-#{deployment_identifier}-#{cluster_name}") }
+
+    it { should exist }
+  end
 end
