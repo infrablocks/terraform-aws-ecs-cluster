@@ -23,7 +23,7 @@ RSpec.configure do |config|
   config.add_setting :region, default: 'eu-west-2'
   config.add_setting :availability_zones, default: 'eu-west-2a,eu-west-2b'
 
-  config.add_setting :component, default: 'integration-tests'
+  config.add_setting :component, default: 'test'
   config.add_setting :deployment_identifier,
       default: deployment_identifier || SecureRandom.hex[0, 8]
 

@@ -24,6 +24,17 @@ describe 'ECS Cluster' do
 
     its(:key_name) { should eq("cluster-#{component}-#{deployment_identifier}-#{cluster_name}") }
 
+    its(:iam_instance_profile) do
+      should eq("cluster-instance-profile-#{component}-#{deployment_identifier}-#{cluster_name}")
+    end
+
+    its(:user_data) do
+      should eq(Base64.strict_encode64(<<~DOC))
+        #!/bin/bash
+        echo "ECS_CLUSTER=#{cluster_name}" > /etc/ecs/ecs.config
+      DOC
+    end
+
     it { should have_security_group("#{component}-#{deployment_identifier}-#{cluster_name}") }
 
     it 'has a name containing the component, deployment_identifier and cluster_name' do
@@ -64,4 +75,3 @@ describe 'ECS Cluster' do
     end
   end
 end
-

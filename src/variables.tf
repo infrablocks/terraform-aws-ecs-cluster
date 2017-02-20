@@ -30,9 +30,9 @@ variable "cluster_node_ssh_public_key_path" {}
 //  default = "10.0.0.0/8"
 //}
 //
-//variable "user_data_template" {
-//  default = ""
-//}
+variable "user_data_template" {
+  default = ""
+}
 
 variable "instance_type" {
   default = "t2.medium"
