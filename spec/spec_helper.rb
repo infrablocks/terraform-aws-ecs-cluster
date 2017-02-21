@@ -22,6 +22,7 @@ RSpec.configure do |config|
   config.add_setting :vpc_cidr, default: "10.1.0.0/16"
   config.add_setting :region, default: 'eu-west-2'
   config.add_setting :availability_zones, default: 'eu-west-2a,eu-west-2b'
+  config.add_setting :private_network_cidr, default: '10.0.0.0/8'
 
   config.add_setting :component, default: 'test'
   config.add_setting :deployment_identifier,
@@ -37,15 +38,12 @@ RSpec.configure do |config|
 
   config.add_setting :cluster_name, default: 'test-cluster'
   config.add_setting :cluster_node_ssh_public_key_path, default: 'config/secrets/keys/cluster/ssh.public'
-  config.add_setting :minimum_size, default: 1
-  config.add_setting :maximum_size, default: 3
+  config.add_setting :cluster_node_instance_type, default: 't2.medium'
+  config.add_setting :cluster_node_ami, default: 'ami-3fb6bc5b'
 
-  config.add_setting :desired_capacity, default: 2
-
-  config.add_setting :instance_type, default: 't2.medium'
-  config.add_setting :image_id, default: 'ami-3fb6bc5b'
-
-  config.add_setting :private_network_cidr, default: '10.0.0.0/8'
+  config.add_setting :cluster_minimum_size, default: 1
+  config.add_setting :cluster_maximum_size, default: 3
+  config.add_setting :cluster_desired_capacity, default: 2
 
   config.before(:suite) do
     variables = RSpec.configuration
@@ -61,6 +59,7 @@ RSpec.configure do |config|
         vpc_cidr: variables.vpc_cidr,
         region: variables.region,
         availability_zones: variables.availability_zones,
+        private_network_cidr: variables.private_network_cidr,
 
         component: variables.component,
         deployment_identifier: variables.deployment_identifier,
@@ -75,14 +74,11 @@ RSpec.configure do |config|
 
         cluster_name: variables.cluster_name,
         cluster_node_ssh_public_key_path: variables.cluster_node_ssh_public_key_path,
+        cluster_node_instance_type: variables.cluster_node_instance_type,
 
-        minimum_size: variables.minimum_size,
-        maximum_size: variables.maximum_size,
-        desired_capacity: variables.desired_capacity,
-
-        instance_type: variables.instance_type,
-
-        private_network_cidr: variables.private_network_cidr
+        cluster_minimum_size: variables.cluster_minimum_size,
+        cluster_maximum_size: variables.cluster_maximum_size,
+        cluster_desired_capacity: variables.cluster_desired_capacity,
     })
   end
 
@@ -90,7 +86,6 @@ RSpec.configure do |config|
     unless deployment_identifier
       variables = RSpec.configuration
       configuration_directory = Paths.from_project_root_directory('spec/infra')
-
 
       puts
       puts "Destroying with deployment identifier: #{variables.deployment_identifier}"
@@ -102,6 +97,7 @@ RSpec.configure do |config|
           vpc_cidr: variables.vpc_cidr,
           region: variables.region,
           availability_zones: variables.availability_zones,
+          private_network_cidr: variables.private_network_cidr,
 
           component: variables.component,
           deployment_identifier: variables.deployment_identifier,
@@ -116,14 +112,11 @@ RSpec.configure do |config|
 
           cluster_name: variables.cluster_name,
           cluster_node_ssh_public_key_path: variables.cluster_node_ssh_public_key_path,
+          cluster_node_instance_type: variables.cluster_node_instance_type,
 
-          minimum_size: variables.minimum_size,
-          maximum_size: variables.maximum_size,
-          desired_capacity: variables.desired_capacity,
-
-          instance_type: variables.instance_type,
-
-          private_network_cidr: variables.private_network_cidr
+          cluster_minimum_size: variables.cluster_minimum_size,
+          cluster_maximum_size: variables.cluster_maximum_size,
+          cluster_desired_capacity: variables.cluster_desired_capacity,
       })
 
       puts

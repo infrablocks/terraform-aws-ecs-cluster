@@ -1,44 +1,24 @@
-variable "component" {}
-variable "deployment_identifier" {}
-
 variable "region" {}
-variable "private_subnet_ids" {}
-
-variable "cluster_name" {
-  default = "default"
-}
-
 variable "vpc_id" {}
-
+variable "private_subnet_ids" {}
 variable "private_network_cidr" {
   default = "10.0.0.0/8"
 }
 
+variable "component" {}
+variable "deployment_identifier" {}
+
+variable "cluster_name" {
+  default = "default"
+}
 variable "cluster_node_ssh_public_key_path" {}
-
-variable "minimum_size" {
-  default = 1
-}
-variable "maximum_size" {
-  default = 10
-}
-variable "desired_capacity" {
-  default = 3
-}
-
-//variable "private_network_cidr" {
-//  default = "10.0.0.0/8"
-//}
-//
-variable "user_data_template" {
-  default = ""
-}
-
-variable "instance_type" {
+variable "cluster_node_instance_type" {
   default = "t2.medium"
 }
-
-variable "amis" {
+variable "cluster_node_user_data_template" {
+  default = ""
+}
+variable "cluster_node_amis" {
   type = "map"
 
   default = {
@@ -54,4 +34,14 @@ variable "amis" {
     ap-southeast-2 = "ami-8af8ffe9"
     ca-central-1 = "ami-ead5688"
   }
+}
+
+variable "cluster_minimum_size" {
+  default = 1
+}
+variable "cluster_maximum_size" {
+  default = 10
+}
+variable "cluster_desired_capacity" {
+  default = 3
 }

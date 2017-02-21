@@ -5,12 +5,12 @@ resource "null_resource" "iam_wait" {
   ]
 
   provisioner "local-exec" {
-    command = "sleep 60"
+    command = "sleep 120"
   }
 }
 
 data "template_file" "cluster_user_data" {
-  template = "${coalesce(var.user_data_template, file("${path.module}/scripts/user-data.tpl"))}"
+  template = "${coalesce(var.cluster_node_user_data_template, file("${path.module}/scripts/user-data.tpl"))}"
 
   vars {
     cluster_name = "${aws_ecs_cluster.cluster.name}"
@@ -19,8 +19,8 @@ data "template_file" "cluster_user_data" {
 
 resource "aws_launch_configuration" "cluster" {
   name_prefix = "cluster-${var.component}-${var.deployment_identifier}-${var.cluster_name}-"
-  image_id = "${lookup(var.amis, var.region)}"
-  instance_type = "${var.instance_type}"
+  image_id = "${lookup(var.cluster_node_amis, var.region)}"
+  instance_type = "${var.cluster_node_instance_type}"
   key_name = "${aws_key_pair.cluster.key_name}"
 
   iam_instance_profile = "${aws_iam_instance_profile.cluster.name}"
@@ -49,9 +49,9 @@ resource "aws_autoscaling_group" "cluster" {
 
   launch_configuration = "${aws_launch_configuration.cluster.name}"
 
-  min_size = "${var.minimum_size}"
-  max_size = "${var.maximum_size}"
-  desired_capacity = "${var.desired_capacity}"
+  min_size = "${var.cluster_minimum_size}"
+  max_size = "${var.cluster_maximum_size}"
+  desired_capacity = "${var.cluster_desired_capacity}"
 
   tag {
     key = "Name"

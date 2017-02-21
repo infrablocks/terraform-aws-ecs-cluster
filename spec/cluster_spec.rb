@@ -3,19 +3,18 @@ require 'spec_helper'
 describe 'ECS Cluster' do
   include_context :terraform
 
-  let(:component) { RSpec.configuration.component }
-  let(:deployment_identifier) { RSpec.configuration.deployment_identifier }
-  let(:cluster_name) { RSpec.configuration.cluster_name }
-
-  let(:minimum_size) { RSpec.configuration.minimum_size }
-  let(:maximum_size) { RSpec.configuration.maximum_size }
-
-  let(:instance_type) { RSpec.configuration.instance_type }
-  let(:image_id) { RSpec.configuration.image_id }
-
   let(:private_network_cidr) { RSpec.configuration.private_network_cidr }
 
-  let(:desired_capacity) { RSpec.configuration.desired_capacity }
+  let(:component) { RSpec.configuration.component }
+  let(:deployment_identifier) { RSpec.configuration.deployment_identifier }
+
+  let(:cluster_name) { RSpec.configuration.cluster_name }
+  let(:cluster_node_instance_type) { RSpec.configuration.cluster_node_instance_type }
+  let(:cluster_node_ami) { RSpec.configuration.cluster_node_ami }
+
+  let(:cluster_minimum_size) { RSpec.configuration.cluster_minimum_size }
+  let(:cluster_maximum_size) { RSpec.configuration.cluster_maximum_size }
+  let(:cluster_desired_capacity) { RSpec.configuration.cluster_desired_capacity }
 
   let(:vpc_id) { Terraform.output(name: 'vpc_id') }
   let(:launch_configuration_name) { Terraform.output(name: 'launch_configuration_name') }
@@ -27,8 +26,8 @@ describe 'ECS Cluster' do
     }
 
     it { should exist }
-    its(:instance_type) { should eq(instance_type) }
-    its(:image_id) { should eq(image_id) }
+    its(:instance_type) { should eq(cluster_node_instance_type) }
+    its(:image_id) { should eq(cluster_node_ami) }
 
     its(:key_name) { should eq("cluster-#{component}-#{deployment_identifier}-#{cluster_name}") }
 
@@ -87,10 +86,10 @@ describe 'ECS Cluster' do
     subject { autoscaling_group("asg-#{component}-#{deployment_identifier}-#{cluster_name}") }
 
     it { should exist }
-    its(:min_size) { should eq(minimum_size) }
-    its(:max_size) { should eq(maximum_size) }
+    its(:min_size) { should eq(cluster_minimum_size) }
+    its(:max_size) { should eq(cluster_maximum_size) }
     its(:launch_configuration_name) { should eq(launch_configuration_name)}
-    its(:desired_capacity) { should eq(desired_capacity) }
+    its(:desired_capacity) { should eq(cluster_desired_capacity) }
 
     it 'uses all private subnets' do
       expect(subject.vpc_zone_identifier.split(','))

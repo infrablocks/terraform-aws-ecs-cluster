@@ -1,6 +1,7 @@
-variable "vpc_cidr" {}
 variable "region" {}
+variable "vpc_cidr" {}
 variable "availability_zones" {}
+variable "private_network_cidr" {}
 
 variable "component" {}
 variable "deployment_identifier" {}
@@ -14,16 +15,12 @@ variable "public_zone_id" {}
 variable "private_zone_id" {}
 
 variable "cluster_name" {}
-variable "instance_type" {}
-
 variable "cluster_node_ssh_public_key_path" {}
+variable "cluster_node_instance_type" {}
 
-variable "minimum_size" {}
-variable "maximum_size" {}
-
-variable "desired_capacity" {}
-
-variable "private_network_cidr" {}
+variable "cluster_minimum_size" {}
+variable "cluster_maximum_size" {}
+variable "cluster_desired_capacity" {}
 
 module "base_network" {
   source = "git@github.com:tobyclemson/terraform-aws-base-networking.git//src"
@@ -48,6 +45,7 @@ module "ecs_cluster" {
   source = "../../src"
 
   region = "${var.region}"
+  vpc_id = "${module.base_network.vpc_id}"
   private_subnet_ids = "${module.base_network.private_subnet_ids}"
   private_network_cidr = "${var.private_network_cidr}"
 
@@ -56,19 +54,11 @@ module "ecs_cluster" {
 
   cluster_name = "${var.cluster_name}"
   cluster_node_ssh_public_key_path = "${var.cluster_node_ssh_public_key_path}"
+  cluster_node_instance_type = "${var.cluster_node_instance_type}"
 
-  minimum_size = "${var.minimum_size}"
-  maximum_size = "${var.maximum_size}"
-
-  instance_type = "${var.instance_type}"
-
-  vpc_id = "${module.base_network.vpc_id}"
-
-  desired_capacity = "${var.desired_capacity}"
-}
-
-output "launch_configuration_name" {
-  value = "${module.ecs_cluster.launch_configuration_name}"
+  cluster_minimum_size = "${var.cluster_minimum_size}"
+  cluster_maximum_size = "${var.cluster_maximum_size}"
+  cluster_desired_capacity = "${var.cluster_desired_capacity}"
 }
 
 output "vpc_id" {
@@ -81,4 +71,8 @@ output "vpc_cidr" {
 
 output "private_subnet_ids" {
   value = "${module.base_network.private_subnet_ids}"
+}
+
+output "launch_configuration_name" {
+  value = "${module.ecs_cluster.launch_configuration_name}"
 }
