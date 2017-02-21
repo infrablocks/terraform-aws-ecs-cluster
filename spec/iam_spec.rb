@@ -150,5 +150,34 @@ describe 'IAM policies, profiles and roles' do
       expect(policy_document_statement['Action']).to(include('ec2:Describe*'))
       expect(policy_document_statement['Action']).to(include('ec2:AuthorizeSecurityGroupIngress'))
     end
+
+    context 'outputs' do
+      let(:cluster_instance_role) {
+        iam_role("cluster-instance-role-#{component}-#{deployment_identifier}-#{cluster_name}")
+      }
+      let(:cluster_service_role){
+        iam_role("cluster-service-role-#{component}-#{deployment_identifier}-#{cluster_name}")
+      }
+
+      it 'outputs instance role arn' do
+        instance_role_arn = Terraform.output(name: 'instance_role_arn')
+        expect(instance_role_arn).to(eq(cluster_instance_role.arn))
+      end
+
+      it 'outputs instance role id' do
+        instance_role_id = Terraform.output(name: 'instance_role_id')
+        expect(instance_role_id).to(eq(cluster_instance_role.role_id))
+      end
+
+      it 'outputs service role arn' do
+        service_role_arn = Terraform.output(name: 'service_role_arn')
+        expect(service_role_arn).to(eq(cluster_service_role.arn))
+      end
+
+      it 'outputs service role id' do
+        service_role_id = Terraform.output(name: 'service_role_id')
+        expect(service_role_id).to(eq(cluster_service_role.role_id))
+      end
+    end
   end
 end

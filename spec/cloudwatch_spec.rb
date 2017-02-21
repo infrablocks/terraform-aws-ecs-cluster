@@ -7,14 +7,21 @@ describe 'CloudWatch' do
   let(:deployment_identifier) { RSpec.configuration.deployment_identifier }
   let(:cluster_name) { RSpec.configuration.cluster_name }
 
-  context 'logging' do
-    subject {
-      response = cloudwatch_logs_client.describe_log_groups({
-          log_group_name_prefix: "/#{component}/#{deployment_identifier}/ecs-cluster/#{cluster_name}"
-      })
-      response.log_groups.first
-    }
+  let(:log_group){
+    cloudwatch_logs_client.describe_log_groups({
+        log_group_name_prefix: "/#{component}/#{deployment_identifier}/ecs-cluster/#{cluster_name}"
+    }).log_groups.first
+  }
 
-    it { should_not be_nil }
+  context 'logging' do
+    it 'creates log group' do
+      expect(log_group).to_not be_nil
+    end
+  end
+
+  context 'outputs' do
+    it 'outputs the log group name' do
+      expect(Terraform.output(name: 'log_group')).to(eq(log_group.log_group_name))
+    end
   end
 end

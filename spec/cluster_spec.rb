@@ -108,4 +108,24 @@ describe 'ECS Cluster' do
 
     it { should exist }
   end
+
+  context 'outputs' do
+    let(:cluster) { ecs_cluster("#{component}-#{deployment_identifier}-#{cluster_name}") }
+    let(:asg) { autoscaling_group("asg-#{component}-#{deployment_identifier}-#{cluster_name}") }
+
+    it 'outputs the cluster id' do
+      cluster_id = Terraform.output(name: 'cluster_id')
+      expect(cluster_id).to(eq(cluster.cluster_arn))
+    end
+
+    it 'outputs the cluster name' do
+      cluster_name = Terraform.output(name: 'cluster_name')
+      expect(cluster_name).to(eq(cluster.cluster_name))
+    end
+
+    it 'outputs the autoscaling group name' do
+      autoscaling_group_name = Terraform.output(name: 'autoscaling_group_name')
+      expect(autoscaling_group_name).to(eq(asg.auto_scaling_group_name))
+    end
+  end
 end
