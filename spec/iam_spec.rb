@@ -9,7 +9,21 @@ describe 'IAM policies, profiles and roles' do
   let(:cluster_name) { RSpec.configuration.cluster_name }
 
   context 'cluster instance profile' do
-    # TODO: Work out how to test this
+    subject {
+      instance_profile_response = iam_client.get_instance_profile({
+          instance_profile_name: "cluster-instance-profile-#{component}-#{deployment_identifier}-#{cluster_name}",
+      })
+      instance_profile_response.instance_profile
+    }
+
+    it 'has path /' do
+      expect(subject.path).to(eq('/'))
+    end
+
+    it 'has the cluster instance role' do
+      expect(subject.roles.first.role_name)
+          .to(eq("cluster-instance-role-#{component}-#{deployment_identifier}-#{cluster_name}"))
+    end
   end
 
   context 'cluster instance role' do
@@ -74,6 +88,67 @@ describe 'IAM policies, profiles and roles' do
       expect(policy_document_statement['Resource']).to(eq('*'))
       expect(policy_document_statement['Action']).to(include('logs:CreateLogStream'))
       expect(policy_document_statement['Action']).to(include('logs:PutLogEvents'))
+    end
+  end
+
+  context 'cluster service role' do
+    subject {
+      iam_role("cluster-service-role-#{component}-#{deployment_identifier}-#{cluster_name}")
+    }
+
+    it { should exist }
+    it 'allows assuming a role of ecs' do
+      policy_document = JSON.parse(URI.decode(subject.assume_role_policy_document))
+      expect(policy_document["Statement"].count).to(eq(1))
+
+      policy_document_statement = policy_document["Statement"].first
+
+      expect(policy_document_statement['Effect']).to(eq('Allow'))
+      expect(policy_document_statement['Action']).to(eq('sts:AssumeRole'))
+      expect(policy_document_statement['Principal']['Service']).to(eq('ecs.amazonaws.com'))
+    end
+
+    it {
+      should have_iam_policy("cluster-service-policy-#{component}-#{deployment_identifier}-#{cluster_name}")
+    }
+  end
+
+  context 'cluster service policy' do
+    subject {
+      iam_policy("cluster-service-policy-#{component}-#{deployment_identifier}-#{cluster_name}")
+    }
+
+    let(:policy_document) do
+      policy_version_response = iam_client.get_policy_version({
+          policy_arn: subject.arn,
+          version_id: subject.default_version_id,
+      })
+
+      JSON.parse(URI.decode(
+          policy_version_response.policy_version.document))
+    end
+
+    it { should exist }
+
+    it 'allows ELB actions' do
+      expect(policy_document["Statement"].count).to(eq(1))
+
+      policy_document_statement = policy_document["Statement"].first
+      expect(policy_document_statement['Effect']).to(eq('Allow'))
+      expect(policy_document_statement['Resource']).to(eq('*'))
+      expect(policy_document_statement['Action']).to(include('elasticloadbalancing:RegisterInstancesWithLoadBalancer'))
+      expect(policy_document_statement['Action']).to(include('elasticloadbalancing:DeregisterInstancesFromLoadBalancer'))
+      expect(policy_document_statement['Action']).to(include('elasticloadbalancing:Describe*'))
+    end
+
+    it 'allows EC2 ingress and describe actions' do
+      expect(policy_document["Statement"].count).to(eq(1))
+
+      policy_document_statement = policy_document["Statement"].first
+      expect(policy_document_statement['Effect']).to(eq('Allow'))
+      expect(policy_document_statement['Resource']).to(eq('*'))
+      expect(policy_document_statement['Action']).to(include('ec2:Describe*'))
+      expect(policy_document_statement['Action']).to(include('ec2:AuthorizeSecurityGroupIngress'))
     end
   end
 end
