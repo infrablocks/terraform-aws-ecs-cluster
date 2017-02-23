@@ -1,6 +1,7 @@
 require 'rake'
 require 'rake/tasklib'
 require 'rake_dependencies'
+require 'ruby_terraform'
 require 'net/http'
 require 'zip'
 require 'fileutils'
@@ -9,177 +10,11 @@ require 'lino'
 require_relative 'paths'
 
 module Terraform
-  DEPENDENCY_NAME = 'terraform'
-  DEFAULT_PATH = Paths.from_project_root_directory('vendor', 'terraform')
-  DEFAULT_BINARY = File.join(DEFAULT_PATH, "bin", "terraform")
-  DEFAULT_VERSION = '0.8.6'
+  include RubyTerraform
 
-  class <<self
-    def clean(opts = {})
-      directory = opts[:directory] ||
-          Paths.from_project_root_directory(".terraform")
-      FileUtils.rm_rf(directory)
-    end
-
-    def apply(opts)
-      Commands::Apply.new.execute(opts)
-    end
-
-    def get(opts)
-      Commands::Get.new.execute(opts)
-    end
-
-    def destroy(opts)
-      Commands::Destroy.new.execute(opts)
-    end
-
-    def output(opts)
-      Commands::Output.new.execute(opts)
-    end
-
-    def remote_config(opts)
-      Commands::RemoteConfig.new.execute(opts)
-    end
-
-    def output_from_remote(opts)
-      output_name = opts[:name]
-      remote_opts = opts[:remote]
-
-      clean
-      remote_config(remote_opts)
-      output(name: output_name)
-    end
-  end
-
-  module Commands
-    class Apply
-      attr_reader :binary
-
-      def initialize(binary = DEFAULT_BINARY)
-        @binary = binary
-      end
-
-      def execute(opts)
-        directory = opts[:directory]
-        state = opts[:state]
-        vars = opts[:vars]
-
-        Lino::CommandLineBuilder.for_command(binary)
-            .with_subcommand('apply') do |sub|
-              vars.each do |key, value|
-                sub = sub.with_option('-var', "'#{key}=#{value}'")
-              end
-              sub = sub.with_option('-state', state) if state
-              sub
-            end
-            .with_argument(directory)
-            .build
-            .execute
-      end
-    end
-
-    class Get
-      attr_reader :binary
-
-      def initialize(binary = DEFAULT_BINARY)
-        @binary = binary
-      end
-
-      def execute(opts)
-        directory = opts[:directory]
-        state = opts[:state]
-
-        Lino::CommandLineBuilder.for_command(binary)
-            .with_subcommand('get') do |sub|
-              sub = sub.with_option('-state', state) if state
-              sub
-            end
-            .with_argument(directory)
-            .build
-            .execute
-      end
-    end
-
-    class Destroy
-      attr_reader :binary
-
-      def initialize(binary = DEFAULT_BINARY)
-        @binary = binary
-      end
-
-      def execute(opts)
-        directory = opts[:directory]
-        state = opts[:state]
-        vars = opts[:vars]
-
-        Lino::CommandLineBuilder.for_command(binary)
-            .with_subcommand('destroy') do |sub|
-              vars.each do |key, value|
-                sub = sub.with_option('-var', "'#{key}=#{value}'")
-              end
-              sub = sub.with_option('-state', state) if state
-              sub
-            end
-            .with_argument(directory)
-            .build
-            .execute(stdin: 'yes')
-      end
-    end
-
-    class Output
-      attr_reader :binary
-
-      def initialize(binary = DEFAULT_BINARY)
-        @binary = binary
-      end
-
-      def execute(opts)
-        state = opts[:state]
-        name = opts[:name]
-        stdout = StringIO.new
-
-        builder = Lino::CommandLineBuilder.for_command(binary)
-            .with_option_separator('=')
-            .with_subcommand('output') do |sub|
-              sub = sub.with_option('-state', state) if state
-              sub
-            end
-        builder = builder.with_argument(name) if name
-        builder
-            .build
-            .execute(stdout: stdout)
-
-        result = stdout.string
-        name ?
-            result.chomp :
-            result
-      end
-    end
-
-    class RemoteConfig
-      attr_reader :binary
-
-      def initialize(binary = DEFAULT_BINARY)
-        @binary = binary
-      end
-
-      def execute(opts)
-        backend = opts[:backend]
-        config = opts[:config]
-
-        Lino::CommandLineBuilder.for_command(binary)
-            .with_subcommand('remote')
-            .with_subcommand('config') do |sub|
-              sub = sub.with_option('-backend', backend)
-              config.each do |key, value|
-                sub = sub.with_option('-backend-config', "'#{key}=#{value}'")
-              end
-              sub
-            end
-            .build
-            .execute
-      end
-    end
+  RubyTerraform.configure do |config|
+    config.binary = Paths.from_project_root_directory(
+        'vendor', 'terraform', 'bin', 'terraform')
   end
 
   module Tasks

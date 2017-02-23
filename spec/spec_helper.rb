@@ -1,6 +1,7 @@
 require 'bundler/setup'
 
 require 'awspec'
+require 'securerandom'
 require 'open-uri'
 
 require 'support/shared_contexts/terraform'
@@ -55,45 +56,9 @@ RSpec.configure do |config|
 
     Terraform.clean
     Terraform.get(directory: configuration_directory)
-    Terraform.apply(directory: configuration_directory, vars: {
-        vpc_cidr: variables.vpc_cidr,
-        region: variables.region,
-        availability_zones: variables.availability_zones,
-        private_network_cidr: variables.private_network_cidr,
-
-        component: variables.component,
-        deployment_identifier: variables.deployment_identifier,
-
-        bastion_ami: variables.bastion_ami,
-        bastion_ssh_public_key_path: variables.bastion_ssh_public_key_path,
-        bastion_ssh_allow_cidrs: variables.bastion_ssh_allow_cidrs,
-
-        domain_name: variables.domain_name,
-        public_zone_id: variables.public_zone_id,
-        private_zone_id: variables.private_zone_id,
-
-        cluster_name: variables.cluster_name,
-        cluster_node_ssh_public_key_path: variables.cluster_node_ssh_public_key_path,
-        cluster_node_instance_type: variables.cluster_node_instance_type,
-
-        cluster_minimum_size: variables.cluster_minimum_size,
-        cluster_maximum_size: variables.cluster_maximum_size,
-        cluster_desired_capacity: variables.cluster_desired_capacity,
-    })
-  end
-
-  config.after(:suite) do
-    unless deployment_identifier
-      variables = RSpec.configuration
-      configuration_directory = Paths.from_project_root_directory('spec/infra')
-
-      puts
-      puts "Destroying with deployment identifier: #{variables.deployment_identifier}"
-      puts
-
-      Terraform.clean
-      Terraform.get(directory: configuration_directory)
-      Terraform.destroy(directory: configuration_directory, vars: {
+    Terraform.apply(
+        directory: configuration_directory,
+        vars: {
           vpc_cidr: variables.vpc_cidr,
           region: variables.region,
           availability_zones: variables.availability_zones,
@@ -118,6 +83,47 @@ RSpec.configure do |config|
           cluster_maximum_size: variables.cluster_maximum_size,
           cluster_desired_capacity: variables.cluster_desired_capacity,
       })
+  end
+
+  config.after(:suite) do
+    unless deployment_identifier
+      variables = RSpec.configuration
+      configuration_directory = Paths.from_project_root_directory('spec/infra')
+
+      puts
+      puts "Destroying with deployment identifier: #{variables.deployment_identifier}"
+      puts
+
+      Terraform.clean
+      Terraform.get(directory: configuration_directory)
+      Terraform.destroy(
+          directory: configuration_directory,
+          force: true,
+          vars: {
+            vpc_cidr: variables.vpc_cidr,
+            region: variables.region,
+            availability_zones: variables.availability_zones,
+            private_network_cidr: variables.private_network_cidr,
+
+            component: variables.component,
+            deployment_identifier: variables.deployment_identifier,
+
+            bastion_ami: variables.bastion_ami,
+            bastion_ssh_public_key_path: variables.bastion_ssh_public_key_path,
+            bastion_ssh_allow_cidrs: variables.bastion_ssh_allow_cidrs,
+
+            domain_name: variables.domain_name,
+            public_zone_id: variables.public_zone_id,
+            private_zone_id: variables.private_zone_id,
+
+            cluster_name: variables.cluster_name,
+            cluster_node_ssh_public_key_path: variables.cluster_node_ssh_public_key_path,
+            cluster_node_instance_type: variables.cluster_node_instance_type,
+
+            cluster_minimum_size: variables.cluster_minimum_size,
+            cluster_maximum_size: variables.cluster_maximum_size,
+            cluster_desired_capacity: variables.cluster_desired_capacity,
+        })
 
       puts
     end

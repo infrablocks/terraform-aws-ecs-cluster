@@ -34,7 +34,7 @@ GEM
     i18n (0.8.0)
     jmespath (1.3.1)
     json (1.8.6)
-    lino (1.0.0)
+    lino (1.1.0)
       hamster (~> 3.0)
       open4 (~> 1.3)
     minitar (0.6.1)
@@ -61,6 +61,8 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.5.0)
     rspec-support (3.5.0)
+    ruby-terraform (0.4.0)
+      lino (~> 1.1)
     rubyzip (1.2.1)
     term-ansicolor (1.4.0)
       tins (~> 1.0)
@@ -75,10 +77,11 @@ PLATFORMS
 
 DEPENDENCIES
   awspec (~> 0.65)
-  lino (~> 1.0)
+  lino (~> 1.1)
   rake (~> 11.2)
   rake-dependencies (~> 0.11)
   rspec (~> 3.0)
+  ruby-terraform (~> 0.4)
 
 BUNDLED WITH
-   1.14.4
+   1.14.5
