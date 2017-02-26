@@ -89,6 +89,18 @@ describe 'IAM policies, profiles and roles' do
       expect(policy_document_statement['Action']).to(include('logs:CreateLogStream'))
       expect(policy_document_statement['Action']).to(include('logs:PutLogEvents'))
     end
+
+    it 'allows ECR images to be pulled' do
+      expect(policy_document["Statement"].count).to(eq(1))
+
+      policy_document_statement = policy_document["Statement"].first
+      expect(policy_document_statement['Effect']).to(eq('Allow'))
+      expect(policy_document_statement['Resource']).to(eq('*'))
+      expect(policy_document_statement['Action']).to(include('ecr:GetAuthorizationToken'))
+      expect(policy_document_statement['Action']).to(include('ecr:GetDownloadUrlForLayer'))
+      expect(policy_document_statement['Action']).to(include('ecr:BatchGetImage'))
+      expect(policy_document_statement['Action']).to(include('ecr:BatchCheckLayerAvailability'))
+    end
   end
 
   context 'cluster service role' do
@@ -149,18 +161,6 @@ describe 'IAM policies, profiles and roles' do
       expect(policy_document_statement['Resource']).to(eq('*'))
       expect(policy_document_statement['Action']).to(include('ec2:Describe*'))
       expect(policy_document_statement['Action']).to(include('ec2:AuthorizeSecurityGroupIngress'))
-    end
-
-    it 'allows ECR images to be pulled' do
-      expect(policy_document["Statement"].count).to(eq(1))
-
-      policy_document_statement = policy_document["Statement"].first
-      expect(policy_document_statement['Effect']).to(eq('Allow'))
-      expect(policy_document_statement['Resource']).to(eq('*'))
-      expect(policy_document_statement['Action']).to(include('ecr:GetAuthorizationToken'))
-      expect(policy_document_statement['Action']).to(include('ecr:GetDownloadUrlForLayer'))
-      expect(policy_document_statement['Action']).to(include('ecr:BatchGetImage'))
-      expect(policy_document_statement['Action']).to(include('ecr:BatchCheckLayerAvailability'))
     end
 
     context 'outputs' do
