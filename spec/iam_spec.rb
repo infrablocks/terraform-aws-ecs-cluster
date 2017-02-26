@@ -101,6 +101,15 @@ describe 'IAM policies, profiles and roles' do
       expect(policy_document_statement['Action']).to(include('ecr:BatchGetImage'))
       expect(policy_document_statement['Action']).to(include('ecr:BatchCheckLayerAvailability'))
     end
+
+    it 'allows objects to be fetched from S3' do
+      expect(policy_document["Statement"].count).to(eq(1))
+
+      policy_document_statement = policy_document["Statement"].first
+      expect(policy_document_statement['Effect']).to(eq('Allow'))
+      expect(policy_document_statement['Resource']).to(eq('*'))
+      expect(policy_document_statement['Action']).to(include('s3:GetObject'))
+    end
   end
 
   context 'cluster service role' do

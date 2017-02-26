@@ -15,6 +15,7 @@
         "ecr:GetDownloadUrlForLayer",
         "ecr:BatchGetImage",
         "ecr:BatchCheckLayerAvailability",
+        "s3:GetObject",
         "logs:CreateLogStream",
         "logs:PutLogEvents"
       ],
