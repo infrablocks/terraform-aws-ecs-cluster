@@ -15,7 +15,7 @@ resource "null_resource" "iam_wait" {
 }
 
 data "template_file" "cluster_user_data" {
-  template = "${coalesce(var.cluster_node_user_data_template, file("${path.module}/scripts/user-data.tpl"))}"
+  template = "${coalesce(var.cluster_instance_user_data_template, file("${path.module}/scripts/user-data.tpl"))}"
 
   vars {
     cluster_name = "${aws_ecs_cluster.cluster.name}"
@@ -24,8 +24,8 @@ data "template_file" "cluster_user_data" {
 
 resource "aws_launch_configuration" "cluster" {
   name_prefix = "cluster-${var.component}-${var.deployment_identifier}-${var.cluster_name}-"
-  image_id = "${lookup(var.cluster_node_amis, var.region)}"
-  instance_type = "${var.cluster_node_instance_type}"
+  image_id = "${lookup(var.cluster_instance_amis, var.region)}"
+  instance_type = "${var.cluster_instance_type}"
   key_name = "${aws_key_pair.cluster.key_name}"
 
   iam_instance_profile = "${aws_iam_instance_profile.cluster.name}"

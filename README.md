@@ -42,8 +42,8 @@ module "ecs_cluster" {
   deployment_identifier = "production"
   
   cluster_name = "services"
-  cluster_node_ssh_public_key_path = "~/.ssh/id_rsa"
-  cluster_node_instance_type = "t2.small"
+  cluster_instance_ssh_public_key_path = "~/.ssh/id_rsa"
+  cluster_instance_instance_type = "t2.small"
   
   cluster_minimum_size = 2
   cluster_maximum_size = 10
@@ -56,22 +56,22 @@ Executing `terraform get` will fetch the module.
 
 ### Inputs
 
-| Name                             | Description                                                   | Default            | Required |
-|----------------------------------|---------------------------------------------------------------|:------------------:|:--------:|
-| region                           | The region into which to deploy the VPC                       | -                  | yes      |
-| vpc_id                           | The ID of the VPC into which to deploy the cluster            | -                  | yes      |
-| private_subnet_ids               | The IDs of the private subnets for container instances        | -                  | yes      |
-| private_network_cidr             | The CIDR of the private network allowed access to containers  | 10.0.0.0/8         | yes      |
-| component                        | The component this cluster will contain                       | -                  | yes      |
-| deployment_identifier            | An identifier for this instantiation                          | -                  | yes      |
-| cluster_name                     | The name of the cluster to create                             | default            | yes      |
-| cluster_node_ssh_public_key_path | The path to the public key to use for the container instances | -                  | yes      |
-| cluster_node_instance_type       | The instance type of the container instances                  | t2.medium          | yes      |
-| cluster_node_user_data_template  | The contents of a template for container instance user data   |                    | no       |
-| cluster_node_amis                | A map of regions to AMIs for the container instances          | ECS optimised AMIs | yes      |
-| cluster_minimum_size             | The minimum size of the ECS cluster                           | 1                  | yes      |
-| cluster_maximum_size             | The maximum size of the ECS cluster                           | 10                 | yes      |
-| cluster_desired_capacity         | The desired capacity of the ECS cluster                       | 3                  | yes      |
+| Name                                 | Description                                                   | Default            | Required |
+|--------------------------------------|---------------------------------------------------------------|:------------------:|:--------:|
+| region                               | The region into which to deploy the VPC                       | -                  | yes      |
+| vpc_id                               | The ID of the VPC into which to deploy the cluster            | -                  | yes      |
+| private_subnet_ids                   | The IDs of the private subnets for container instances        | -                  | yes      |
+| private_network_cidr                 | The CIDR of the private network allowed access to containers  | 10.0.0.0/8         | yes      |
+| component                            | The component this cluster will contain                       | -                  | yes      |
+| deployment_identifier                | An identifier for this instantiation                          | -                  | yes      |
+| cluster_name                         | The name of the cluster to create                             | default            | yes      |
+| cluster_instance_ssh_public_key_path | The path to the public key to use for the container instances | -                  | yes      |
+| cluster_instance_instance_type       | The instance type of the container instances                  | t2.medium          | yes      |
+| cluster_instance_user_data_template  | The contents of a template for container instance user data   |                    | no       |
+| cluster_instance_amis                | A map of regions to AMIs for the container instances          | ECS optimised AMIs | yes      |
+| cluster_minimum_size                 | The minimum size of the ECS cluster                           | 1                  | yes      |
+| cluster_maximum_size                 | The maximum size of the ECS cluster                           | 10                 | yes      |
+| cluster_desired_capacity             | The desired capacity of the ECS cluster                       | 3                  | yes      |
 
 Notes:
 * The user data template with be passed the cluster cluster name as `cluster_name`.

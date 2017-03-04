@@ -11,14 +11,14 @@ variable "deployment_identifier" {}
 variable "cluster_name" {
   default = "default"
 }
-variable "cluster_node_ssh_public_key_path" {}
-variable "cluster_node_instance_type" {
+variable "cluster_instance_ssh_public_key_path" {}
+variable "cluster_instance_type" {
   default = "t2.medium"
 }
-variable "cluster_node_user_data_template" {
+variable "cluster_instance_user_data_template" {
   default = ""
 }
-variable "cluster_node_amis" {
+variable "cluster_instance_amis" {
   type = "map"
 
   default = {

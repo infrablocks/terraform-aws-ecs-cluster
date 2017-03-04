@@ -38,9 +38,9 @@ RSpec.configure do |config|
   config.add_setting :private_zone_id, default: 'Z2BVA9QD5NHSW6'
 
   config.add_setting :cluster_name, default: 'test-cluster'
-  config.add_setting :cluster_node_ssh_public_key_path, default: 'config/secrets/keys/cluster/ssh.public'
-  config.add_setting :cluster_node_instance_type, default: 't2.medium'
-  config.add_setting :cluster_node_ami, default: 'ami-3fb6bc5b'
+  config.add_setting :cluster_instance_ssh_public_key_path, default: 'config/secrets/keys/cluster/ssh.public'
+  config.add_setting :cluster_instance_type, default: 't2.medium'
+  config.add_setting :cluster_instance_ami, default: 'ami-3fb6bc5b'
 
   config.add_setting :cluster_minimum_size, default: 1
   config.add_setting :cluster_maximum_size, default: 3
@@ -76,8 +76,8 @@ RSpec.configure do |config|
           private_zone_id: variables.private_zone_id,
 
           cluster_name: variables.cluster_name,
-          cluster_node_ssh_public_key_path: variables.cluster_node_ssh_public_key_path,
-          cluster_node_instance_type: variables.cluster_node_instance_type,
+          cluster_instance_ssh_public_key_path: variables.cluster_instance_ssh_public_key_path,
+          cluster_instance_type: variables.cluster_instance_type,
 
           cluster_minimum_size: variables.cluster_minimum_size,
           cluster_maximum_size: variables.cluster_maximum_size,
@@ -117,8 +117,8 @@ RSpec.configure do |config|
             private_zone_id: variables.private_zone_id,
 
             cluster_name: variables.cluster_name,
-            cluster_node_ssh_public_key_path: variables.cluster_node_ssh_public_key_path,
-            cluster_node_instance_type: variables.cluster_node_instance_type,
+            cluster_instance_ssh_public_key_path: variables.cluster_instance_ssh_public_key_path,
+            cluster_instance_type: variables.cluster_instance_type,
 
             cluster_minimum_size: variables.cluster_minimum_size,
             cluster_maximum_size: variables.cluster_maximum_size,

@@ -29,8 +29,8 @@ module "ecs_cluster" {
   deployment_identifier = "${var.deployment_identifier}"
 
   cluster_name = "${var.cluster_name}"
-  cluster_node_ssh_public_key_path = "${var.cluster_node_ssh_public_key_path}"
-  cluster_node_instance_type = "${var.cluster_node_instance_type}"
+  cluster_instance_ssh_public_key_path = "${var.cluster_instance_ssh_public_key_path}"
+  cluster_instance_type = "${var.cluster_instance_type}"
 
   cluster_minimum_size = "${var.cluster_minimum_size}"
   cluster_maximum_size = "${var.cluster_maximum_size}"

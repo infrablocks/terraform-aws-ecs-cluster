@@ -9,8 +9,8 @@ describe 'ECS Cluster' do
   let(:deployment_identifier) { RSpec.configuration.deployment_identifier }
 
   let(:cluster_name) { RSpec.configuration.cluster_name }
-  let(:cluster_node_instance_type) { RSpec.configuration.cluster_node_instance_type }
-  let(:cluster_node_ami) { RSpec.configuration.cluster_node_ami }
+  let(:cluster_instance_type) { RSpec.configuration.cluster_instance_type }
+  let(:cluster_instance_ami) { RSpec.configuration.cluster_instance_ami }
 
   let(:cluster_minimum_size) { RSpec.configuration.cluster_minimum_size }
   let(:cluster_maximum_size) { RSpec.configuration.cluster_maximum_size }
@@ -26,8 +26,8 @@ describe 'ECS Cluster' do
     }
 
     it { should exist }
-    its(:instance_type) { should eq(cluster_node_instance_type) }
-    its(:image_id) { should eq(cluster_node_ami) }
+    its(:instance_type) { should eq(cluster_instance_type) }
+    its(:image_id) { should eq(cluster_instance_ami) }
 
     its(:key_name) { should eq("cluster-#{component}-#{deployment_identifier}-#{cluster_name}") }
 

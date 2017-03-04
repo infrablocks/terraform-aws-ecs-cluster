@@ -70,9 +70,9 @@ def terraform_vars_for(opts)
       private_zone_id: 'Z2BVA9QD5NHSW6',
 
       cluster_name: 'test-cluster',
-      cluster_node_ssh_public_key_path: 'config/secrets/keys/cluster/ssh.public',
-      cluster_node_instance_type: 't2.medium',
-      cluster_node_ami: 'ami-3fb6bc5b',
+      cluster_instance_ssh_public_key_path: 'config/secrets/keys/cluster/ssh.public',
+      cluster_instance_type: 't2.medium',
+      cluster_instance_ami: 'ami-3fb6bc5b',
 
       cluster_minimum_size: 1,
       cluster_maximum_size: 3,
