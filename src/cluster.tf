@@ -40,6 +40,10 @@ resource "aws_launch_configuration" "cluster" {
     "null_resource.iam_wait"
   ]
 
+  root_block_device {
+    volume_size = "${var.cluster_instance_root_block_device_size}"
+  }
+
   lifecycle {
     create_before_destroy = true
   }

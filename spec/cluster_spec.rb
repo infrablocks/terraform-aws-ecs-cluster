@@ -11,6 +11,7 @@ describe 'ECS Cluster' do
   let(:cluster_name) { RSpec.configuration.cluster_name }
   let(:cluster_instance_type) { RSpec.configuration.cluster_instance_type }
   let(:cluster_instance_ami) { RSpec.configuration.cluster_instance_ami }
+  let(:cluster_instance_root_block_device_size) { RSpec.configuration.cluster_instance_root_block_device_size }
 
   let(:cluster_minimum_size) { RSpec.configuration.cluster_minimum_size }
   let(:cluster_maximum_size) { RSpec.configuration.cluster_maximum_size }
@@ -48,6 +49,11 @@ describe 'ECS Cluster' do
       expect(launch_configuration_name).to(match(/#{component}/))
       expect(launch_configuration_name).to(match(/#{deployment_identifier}/))
       expect(launch_configuration_name).to(match(/#{cluster_name}/))
+    end
+
+    it 'uses the specified size for the root block device' do
+      expect(subject.block_device_mappings[0].ebs.volume_size)
+          .to(eq(cluster_instance_root_block_device_size))
     end
   end
 

@@ -40,6 +40,7 @@ RSpec.configure do |config|
   config.add_setting :cluster_name, default: 'test-cluster'
   config.add_setting :cluster_instance_ssh_public_key_path, default: 'config/secrets/keys/cluster/ssh.public'
   config.add_setting :cluster_instance_type, default: 't2.medium'
+  config.add_setting :cluster_instance_root_block_device_size, default: 50
   config.add_setting :cluster_instance_ami, default: 'ami-3fb6bc5b'
 
   config.add_setting :cluster_minimum_size, default: 1
@@ -78,6 +79,7 @@ RSpec.configure do |config|
           cluster_name: variables.cluster_name,
           cluster_instance_ssh_public_key_path: variables.cluster_instance_ssh_public_key_path,
           cluster_instance_type: variables.cluster_instance_type,
+          cluster_instance_root_block_device_size: variables.cluster_instance_root_block_device_size,
 
           cluster_minimum_size: variables.cluster_minimum_size,
           cluster_maximum_size: variables.cluster_maximum_size,
@@ -119,6 +121,7 @@ RSpec.configure do |config|
             cluster_name: variables.cluster_name,
             cluster_instance_ssh_public_key_path: variables.cluster_instance_ssh_public_key_path,
             cluster_instance_type: variables.cluster_instance_type,
+            cluster_instance_root_block_device_size: variables.cluster_instance_root_block_device_size,
 
             cluster_minimum_size: variables.cluster_minimum_size,
             cluster_maximum_size: variables.cluster_maximum_size,

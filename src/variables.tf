@@ -15,6 +15,9 @@ variable "cluster_instance_ssh_public_key_path" {}
 variable "cluster_instance_type" {
   default = "t2.medium"
 }
+variable "cluster_instance_root_block_device_size" {
+  default = 50
+}
 variable "cluster_instance_user_data_template" {
   default = ""
 }
