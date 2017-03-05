@@ -12,6 +12,7 @@ describe 'ECS Cluster' do
   let(:cluster_instance_type) { RSpec.configuration.cluster_instance_type }
   let(:cluster_instance_ami) { RSpec.configuration.cluster_instance_ami }
   let(:cluster_instance_root_block_device_size) { RSpec.configuration.cluster_instance_root_block_device_size }
+  let(:cluster_instance_docker_block_device_size) { RSpec.configuration.cluster_instance_docker_block_device_size }
 
   let(:cluster_minimum_size) { RSpec.configuration.cluster_minimum_size }
   let(:cluster_maximum_size) { RSpec.configuration.cluster_maximum_size }
@@ -52,8 +53,21 @@ describe 'ECS Cluster' do
     end
 
     it 'uses the specified size for the root block device' do
-      expect(subject.block_device_mappings[0].ebs.volume_size)
+      root_device_mapping = subject.block_device_mappings.find do |d|
+        d.device_name != '/dev/xvdcz'
+      end
+      expect(root_device_mapping.ebs.volume_size)
           .to(eq(cluster_instance_root_block_device_size))
+    end
+
+    it 'uses the specified size and name for the docker block device' do
+      docker_device_mapping = subject.block_device_mappings.find do |d|
+        d.device_name == '/dev/xvdcz'
+      end
+      expect(docker_device_mapping.device_name)
+          .to(eq('/dev/xvdcz'))
+      expect(docker_device_mapping.ebs.volume_size)
+          .to(eq(cluster_instance_docker_block_device_size))
     end
   end
 

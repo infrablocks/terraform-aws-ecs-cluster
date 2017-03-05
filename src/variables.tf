@@ -16,7 +16,13 @@ variable "cluster_instance_type" {
   default = "t2.medium"
 }
 variable "cluster_instance_root_block_device_size" {
-  default = 50
+  default = 10
+}
+variable "cluster_instance_docker_block_device_size" {
+  default = 100
+}
+variable "cluster_instance_docker_block_device_name" {
+  default = "/dev/xvdcz"
 }
 variable "cluster_instance_user_data_template" {
   default = ""

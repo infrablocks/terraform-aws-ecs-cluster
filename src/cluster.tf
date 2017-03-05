@@ -44,6 +44,11 @@ resource "aws_launch_configuration" "cluster" {
     volume_size = "${var.cluster_instance_root_block_device_size}"
   }
 
+  ebs_block_device {
+    device_name = "${var.cluster_instance_docker_block_device_name}"
+    volume_size = "${var.cluster_instance_docker_block_device_size}"
+  }
+
   lifecycle {
     create_before_destroy = true
   }

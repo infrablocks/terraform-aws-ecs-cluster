@@ -32,6 +32,7 @@ module "ecs_cluster" {
   cluster_instance_ssh_public_key_path = "${var.cluster_instance_ssh_public_key_path}"
   cluster_instance_type = "${var.cluster_instance_type}"
   cluster_instance_root_block_device_size = "${var.cluster_instance_root_block_device_size}"
+  cluster_instance_docker_block_device_size = "${var.cluster_instance_docker_block_device_size}"
 
   cluster_minimum_size = "${var.cluster_minimum_size}"
   cluster_maximum_size = "${var.cluster_maximum_size}"
