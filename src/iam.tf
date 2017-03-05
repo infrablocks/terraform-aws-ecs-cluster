@@ -6,7 +6,7 @@ resource "aws_iam_role" "cluster_instance_role" {
 resource "aws_iam_policy" "cluster_instance_policy" {
   name = "cluster-instance-policy-${var.component}-${var.deployment_identifier}-${var.cluster_name}"
   description = "cluster-instance-policy-${var.component}-${var.deployment_identifier}-${var.cluster_name}"
-  policy = "${file("${path.module}/policies/cluster-instance-policy.json")}"
+  policy = "${coalesce(var.cluster_instance_iam_policy_contents, file("${path.module}/policies/cluster-instance-policy.json"))}"
 }
 
 resource "aws_iam_policy_attachment" "cluster_instance_policy_attachment" {
@@ -31,7 +31,7 @@ resource "aws_iam_role" "cluster_service_role" {
 resource "aws_iam_policy" "cluster_service_policy" {
   name = "cluster-service-policy-${var.component}-${var.deployment_identifier}-${var.cluster_name}"
   description = "cluster-service-policy-${var.component}-${var.deployment_identifier}-${var.cluster_name}"
-  policy = "${file("${path.module}/policies/cluster-service-policy.json")}"
+  policy = "${coalesce(var.cluster_service_iam_policy_contents, file("${path.module}/policies/cluster-service-policy.json"))}"
 }
 
 resource "aws_iam_policy_attachment" "cluster_service_policy_attachment" {

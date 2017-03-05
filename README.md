@@ -69,6 +69,8 @@ Executing `terraform get` will fetch the module.
 | cluster_instance_instance_type       | The instance type of the container instances                  | t2.medium          | yes      |
 | cluster_instance_user_data_template  | The contents of a template for container instance user data   |                    | no       |
 | cluster_instance_amis                | A map of regions to AMIs for the container instances          | ECS optimised AMIs | yes      |
+| cluster_instance_iam_policy_contents | The contents of the cluster instance IAM policy               | see src/policies   | no       |
+| cluster_service_iam_policy_contents  | The contents of the cluster service IAM policy                | see src/policies   | no       |
 | cluster_minimum_size                 | The minimum size of the ECS cluster                           | 1                  | yes      |
 | cluster_maximum_size                 | The maximum size of the ECS cluster                           | 10                 | yes      |
 | cluster_desired_capacity             | The desired capacity of the ECS cluster                       | 3                  | yes      |

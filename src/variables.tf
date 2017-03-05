@@ -35,6 +35,12 @@ variable "cluster_instance_amis" {
     ca-central-1 = "ami-ead5688"
   }
 }
+variable "cluster_instance_iam_policy_contents" {
+  default = ""
+}
+variable "cluster_service_iam_policy_contents" {
+  default = ""
+}
 
 variable "cluster_minimum_size" {
   default = 1
