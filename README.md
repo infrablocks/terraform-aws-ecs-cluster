@@ -65,7 +65,7 @@ for usage instructions.
 
 | Name                                 | Description                                                   | Default            | Required |
 |--------------------------------------|---------------------------------------------------------------|:------------------:|:--------:|
-| region                               | The region into which to deploy the VPC                       | -                  | yes      |
+| region                               | The region into which to deploy the cluster                   | -                  | yes      |
 | vpc_id                               | The ID of the VPC into which to deploy the cluster            | -                  | yes      |
 | private_subnet_ids                   | The IDs of the private subnets for container instances        | -                  | yes      |
 | private_network_cidr                 | The CIDR of the private network allowed access to containers  | 10.0.0.0/8         | yes      |
