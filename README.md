@@ -53,6 +53,13 @@ module "ecs_cluster" {
 
 Executing `terraform get` will fetch the module.
 
+As mentioned above, the ECS cluster deploys into an existing base network. Whilst the 
+base network can be created using any mechanism you like, the 
+[AWS Base Networking](https://github.com/tobyclemson/terraform-aws-base-networking)
+module will create everything you need. See the 
+[docs](https://github.com/tobyclemson/terraform-aws-base-networking/blob/master/README.md)
+for usage instructions.
+
 
 ### Inputs
 
@@ -179,7 +186,7 @@ ssh-keygen -t rsa -b 4096 -C integration-test@example.com -N '' -f config/secret
 Contributing
 ------------
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/tobyclemson/terraform-aws-base-networking. 
+Bug reports and pull requests are welcome on GitHub at https://github.com/tobyclemson/terraform-aws-ecs-cluster. 
 This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to 
 the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
