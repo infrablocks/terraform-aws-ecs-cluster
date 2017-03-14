@@ -8,7 +8,7 @@ The ECS cluster requires:
 * Some existing private subnets
  
 The ECS cluster consists of:
-* An cluster in ECS
+* A cluster in ECS
 * A launch configuration and auto-scaling group for a cluster of ECS container instances
 * An SSH key to connect to the ECS container instances
 * A security group for the container instances allowing:
