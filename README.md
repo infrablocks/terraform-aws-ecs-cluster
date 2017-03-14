@@ -83,7 +83,7 @@ for usage instructions.
 | cluster_desired_capacity             | The desired capacity of the ECS cluster                       | 3                  | yes      |
 
 Notes:
-* The user data template with be passed the cluster cluster name as `cluster_name`.
+* The user data template with be passed the cluster name as `cluster_name`.
 * If none is supplied, a default will be used.
 
 ### Outputs
