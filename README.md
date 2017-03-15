@@ -12,16 +12,16 @@ The ECS cluster consists of:
 * A launch configuration and auto-scaling group for a cluster of ECS container instances
 * An SSH key to connect to the ECS container instances
 * A security group for the container instances allowing:
- * Outbound internet access for all containers
- * Inbound TCP access on any port from the VPC network
+  * Outbound internet access for all containers
+  * Inbound TCP access on any port from the VPC network
 * An IAM role and policy for the container instances allowing:
- * ECS interactions
- * ECR image pulls
- * S3 object fetches
- * Logging to cloudwatch
+  * ECS interactions
+  * ECR image pulls
+  * S3 object fetches
+  * Logging to cloudwatch
 * An IAM role and policy for ECS services allowing:
- * Elastic load balancer registration / deregistration
- * EC2 describe actions and security group ingress rule creation
+  * Elastic load balancer registration / deregistration
+  * EC2 describe actions and security group ingress rule creation
 * A CloudWatch log group
 
 Usage
