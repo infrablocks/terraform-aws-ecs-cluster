@@ -1,10 +1,5 @@
-require 'rake'
-require 'rake/tasklib'
 require 'rake_dependencies'
 require 'ruby_terraform'
-require 'net/http'
-require 'zip'
-require 'fileutils'
 require 'lino'
 
 require_relative 'paths'
