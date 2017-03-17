@@ -24,6 +24,8 @@ The ECS cluster consists of:
   * EC2 describe actions and security group ingress rule creation
 * A CloudWatch log group
 
+![Diagram of infrastructure managed by this module](/docs/architecture.png?raw=true)
+
 Usage
 -----
 
