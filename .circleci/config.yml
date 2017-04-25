@@ -1,0 +1,11 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/terraform-aws-ecs-cluster
+    docker:
+      - image: ruby:2.3.1
+    steps:
+      - checkout
+      - run: ./scripts/ci/common/install-git-crypt.sh
+      - run: ./scripts/ci/steps/test.sh
+      - run: ./scripts/ci/steps/release.sh
