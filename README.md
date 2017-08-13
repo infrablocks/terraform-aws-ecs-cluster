@@ -1,6 +1,8 @@
 Terraform AWS ECS Cluster
 =========================
 
+[![CircleCI](https://circleci.com/gh/infrablocks/terraform-aws-ecs-cluster.svg?style=svg)](https://circleci.com/gh/infrablocks/terraform-aws-ecs-cluster)
+
 A Terraform module for building an ECS Cluster in AWS.
 
 The ECS cluster requires:
