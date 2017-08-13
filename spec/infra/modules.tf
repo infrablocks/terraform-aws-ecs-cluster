@@ -15,6 +15,8 @@ module "base_network" {
   domain_name = "${var.domain_name}"
   public_zone_id = "${var.public_zone_id}"
   private_zone_id = "${var.private_zone_id}"
+
+  infrastructure_events_bucket = "${var.infrastructure_events_bucket}"
 }
 
 module "ecs_cluster" {

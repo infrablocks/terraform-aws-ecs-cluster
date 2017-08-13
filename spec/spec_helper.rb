@@ -48,6 +48,8 @@ RSpec.configure do |config|
   config.add_setting :cluster_maximum_size, default: 3
   config.add_setting :cluster_desired_capacity, default: 2
 
+  config.add_setting :infrastructure_events_bucket, default: 'tobyclemson-open-source'
+
   config.before(:suite) do
     variables = RSpec.configuration
     configuration_directory = Paths.from_project_root_directory('spec/infra')
@@ -86,6 +88,8 @@ RSpec.configure do |config|
           cluster_minimum_size: variables.cluster_minimum_size,
           cluster_maximum_size: variables.cluster_maximum_size,
           cluster_desired_capacity: variables.cluster_desired_capacity,
+
+          infrastructure_events_bucket: variables.infrastructure_events_bucket,
       })
   end
 
@@ -129,6 +133,8 @@ RSpec.configure do |config|
             cluster_minimum_size: variables.cluster_minimum_size,
             cluster_maximum_size: variables.cluster_maximum_size,
             cluster_desired_capacity: variables.cluster_desired_capacity,
+
+            infrastructure_events_bucket: variables.infrastructure_events_bucket,
         })
 
       puts
