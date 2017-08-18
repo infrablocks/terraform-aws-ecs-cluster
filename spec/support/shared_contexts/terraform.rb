@@ -8,7 +8,7 @@ shared_context :terraform do
 
   let(:cloudwatch_logs_client) { Aws::CloudWatchLogs::Client.new }
 
-  let(:vars) { TerraformModule.vars }
+  let(:vars) { TerraformModule.configuration.vars}
 
   def output_with_name(name)
     TerraformModule.output_with_name(name)
