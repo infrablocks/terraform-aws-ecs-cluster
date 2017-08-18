@@ -2,13 +2,21 @@ require 'rspec/core/rake_task'
 require 'securerandom'
 require 'git'
 require 'semantic'
+require 'rake_terraform'
 
 require_relative 'lib/public_ip'
-require_relative 'lib/terraform'
 
 DEPLOYMENT_IDENTIFIER = SecureRandom.hex[0, 8]
 
-Terraform::Tasks.install('0.8.6')
+RakeTerraform.define_installation_tasks(
+    path: File.join(Dir.pwd, 'vendor', 'terraform'),
+    version: '0.9.8')
+
+def deployment_identifier_for(args)
+  args.deployment_identifier ||
+      ENV['DEPLOYMENT_IDENTIFIER'] ||
+      DEPLOYMENT_IDENTIFIER
+end
 
 task :default => 'test:integration'
 
@@ -18,38 +26,18 @@ namespace :test do
   end
 end
 
-namespace :provision do
-  desc 'Provisions module in AWS'
-  task :aws, [:deployment_identifier] => ['terraform:ensure'] do |_, args|
-    deployment_identifier = args.deployment_identifier || DEPLOYMENT_IDENTIFIER
-    configuration_directory = Paths.from_project_root_directory('src')
+RakeTerraform.define_command_tasks do |t|
+  t.argument_names = [:deployment_identifier]
 
-    puts "Provisioning with deployment identifier: #{deployment_identifier}"
+  t.configuration_name = 'ECS cluster module'
+  t.source_directory = 'spec/infra'
+  t.work_directory = 'build'
 
-    Terraform.clean
-    Terraform.get(directory: configuration_directory)
-    Terraform.apply(
-        directory: configuration_directory,
-        vars: terraform_vars_for(
-            deployment_identifier: deployment_identifier))
-  end
-end
+  t.state_file = File.join(Dir.pwd, 'terraform.tfstate')
 
-namespace :destroy do
-  desc 'Destroys module in AWS'
-  task :aws, [:deployment_identifier] => ['terraform:ensure'] do |_, args|
-    deployment_identifier = args.deployment_identifier || DEPLOYMENT_IDENTIFIER
-    configuration_directory = Paths.from_project_root_directory('spec', 'infra')
-
-    puts "Destroying with deployment identifier: #{deployment_identifier}"
-
-    Terraform.clean
-    Terraform.get(directory: configuration_directory)
-    Terraform.destroy(
-        directory: configuration_directory,
-        force: true,
-        vars: terraform_vars_for(
-            deployment_identifier: deployment_identifier))
+  t.vars = lambda do |args|
+    terraform_vars_for(
+        deployment_identifier: deployment_identifier_for(args))
   end
 end
 
@@ -76,20 +64,26 @@ def terraform_vars_for(opts)
       deployment_identifier: opts[:deployment_identifier],
 
       bastion_ami: 'ami-bb373ddf',
-      bastion_ssh_public_key_path: 'config/secrets/keys/bastion/ssh.public',
+      bastion_ssh_public_key_path:
+          File.join(Dir.pwd, 'config/secrets/keys/bastion/ssh.public'),
       bastion_ssh_allow_cidrs: PublicIP.as_cidr,
 
       domain_name: 'greasedscone.uk',
-      public_zone_id: 'Z2WA5EVJBZSQ3V',
-      private_zone_id: 'Z2BVA9QD5NHSW6',
+      public_zone_id: 'Z4Q2X3ESOZT4N',
+      private_zone_id: 'Z2CDAFD23Q10HO',
 
       cluster_name: 'test-cluster',
-      cluster_instance_ssh_public_key_path: 'config/secrets/keys/cluster/ssh.public',
+      cluster_instance_ssh_public_key_path:
+          File.join(Dir.pwd, 'config/secrets/keys/cluster/ssh.public'),
       cluster_instance_type: 't2.medium',
       cluster_instance_ami: 'ami-3fb6bc5b',
+      cluster_instance_root_block_device_size: 40,
+      cluster_instance_docker_block_device_size: 60,
 
       cluster_minimum_size: 1,
       cluster_maximum_size: 3,
       cluster_desired_capacity: 2,
+
+      infrastructure_events_bucket: 'tobyclemson-open-source',
   }
 end

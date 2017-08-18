@@ -1,0 +1,29 @@
+---
+vpc_cidr: "10.1.0.0/16"
+region: 'eu-west-2'
+availability_zones: 'eu-west-2a,eu-west-2b'
+private_network_cidr: '10.0.0.0/8'
+
+component: 'test'
+deployment_identifier: '<%= @deployment_identifier %>'
+
+bastion_ami: 'ami-bb373ddf'
+bastion_ssh_public_key_path: '<%= @project_directory %>/config/secrets/keys/bastion/ssh.public'
+bastion_ssh_allow_cidrs: "<%= @public_ip %>/32"
+
+domain_name: 'greasedscone.uk'
+public_zone_id: 'Z4Q2X3ESOZT4N'
+private_zone_id: 'Z2CDAFD23Q10HO'
+
+cluster_name: 'test-cluster'
+cluster_instance_ssh_public_key_path: '<%= @project_directory %>/config/secrets/keys/cluster/ssh.public'
+cluster_instance_type: 't2.medium'
+cluster_instance_ami: 'ami-3fb6bc5b'
+cluster_instance_root_block_device_size: 40
+cluster_instance_docker_block_device_size: 60
+
+cluster_minimum_size: 1
+cluster_maximum_size: 3
+cluster_desired_capacity: 2
+
+infrastructure_events_bucket: 'tobyclemson-open-source'

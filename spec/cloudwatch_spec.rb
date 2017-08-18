@@ -1,16 +1,14 @@
 require 'spec_helper'
 
 describe 'CloudWatch' do
-  include_context :terraform
-
-  let(:component) { RSpec.configuration.component }
-  let(:deployment_identifier) { RSpec.configuration.deployment_identifier }
-  let(:cluster_name) { RSpec.configuration.cluster_name }
-
   let(:log_group){
-    cloudwatch_logs_client.describe_log_groups({
-        log_group_name_prefix: "/#{component}/#{deployment_identifier}/ecs-cluster/#{cluster_name}"
-    }).log_groups.first
+    log_group_name =
+        "/#{vars.component}/#{vars.deployment_identifier}/ecs-cluster/#{vars.cluster_name}"
+
+    cloudwatch_logs_client
+        .describe_log_groups({log_group_name_prefix: log_group_name})
+        .log_groups
+        .first
   }
 
   context 'logging' do
@@ -21,7 +19,7 @@ describe 'CloudWatch' do
 
   context 'outputs' do
     it 'outputs the log group name' do
-      expect(Terraform.output(name: 'log_group')).to(eq(log_group.log_group_name))
+      expect(output_with_name('log_group')).to(eq(log_group.log_group_name))
     end
   end
 end

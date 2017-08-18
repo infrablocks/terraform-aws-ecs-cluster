@@ -25,4 +25,3 @@ variable "cluster_maximum_size" {}
 variable "cluster_desired_capacity" {}
 
 variable "infrastructure_events_bucket" {}
-

@@ -18,9 +18,7 @@ resource "aws_iam_policy_attachment" "cluster_instance_policy_attachment" {
 resource "aws_iam_instance_profile" "cluster" {
   name = "cluster-instance-profile-${var.component}-${var.deployment_identifier}-${var.cluster_name}"
   path = "/"
-  roles = [
-    "${aws_iam_role.cluster_instance_role.name}"
-  ]
+  role = "${aws_iam_role.cluster_instance_role.name}"
 }
 
 resource "aws_iam_role" "cluster_service_role" {
