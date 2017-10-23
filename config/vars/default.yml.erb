@@ -7,12 +7,6 @@ private_network_cidr: '10.0.0.0/8'
 component: 'test'
 deployment_identifier: '<%= @deployment_identifier %>'
 
-bastion_ami: 'ami-bb373ddf'
-bastion_ssh_public_key_path: '<%= @project_directory %>/config/secrets/keys/bastion/ssh.public'
-bastion_ssh_allow_cidrs: "<%= @public_ip %>/32"
-
-domain_name: 'greasedscone.uk'
-public_zone_id: 'Z4Q2X3ESOZT4N'
 private_zone_id: 'Z2CDAFD23Q10HO'
 
 cluster_name: 'test-cluster'
