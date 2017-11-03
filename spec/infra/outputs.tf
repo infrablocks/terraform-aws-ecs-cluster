@@ -34,12 +34,28 @@ output "instance_role_id" {
   value = "${module.ecs_cluster.instance_role_id}"
 }
 
+output "instance_policy_arn" {
+  value = "${module.ecs_cluster.instance_policy_arn}"
+}
+
+output "instance_policy_id" {
+  value = "${module.ecs_cluster.instance_policy_id}"
+}
+
 output "service_role_arn" {
   value = "${module.ecs_cluster.service_role_arn}"
 }
 
 output "service_role_id" {
   value = "${module.ecs_cluster.service_role_id}"
+}
+
+output "service_policy_arn" {
+  value = "${module.ecs_cluster.service_policy_arn}"
+}
+
+output "service_policy_id" {
+  value = "${module.ecs_cluster.service_policy_id}"
 }
 
 output "log_group" {

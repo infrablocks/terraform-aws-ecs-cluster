@@ -20,16 +20,19 @@ describe 'IAM policies, profiles and roles' do
 
     it 'has the cluster instance role' do
       expect(subject.roles.first.role_name)
-          .to(eq("cluster-instance-role-#{vars.component}-#{vars.deployment_identifier}-#{vars.cluster_name}"))
+          .to(eq(iam_role(output_with_name('instance_role_id')).name))
     end
   end
 
   context 'cluster instance role' do
     subject {
-      iam_role("cluster-instance-role-#{vars.component}-#{vars.deployment_identifier}-#{vars.cluster_name}")
+      iam_role(output_with_name('instance_role_id'))
     }
 
     it { should exist }
+    its(:description) {
+      should eq("cluster-instance-role-#{vars.component}-#{vars.deployment_identifier}-#{vars.cluster_name}")
+    }
     it 'allows assuming a role of ec2' do
       policy_document =
           JSON.parse(URI.decode(subject.assume_role_policy_document))
@@ -44,13 +47,13 @@ describe 'IAM policies, profiles and roles' do
     end
 
     it {
-      should have_iam_policy("cluster-instance-policy-#{vars.component}-#{vars.deployment_identifier}-#{vars.cluster_name}")
+      should have_iam_policy(output_with_name('instance_policy_id'))
     }
   end
 
   context 'cluster instance policy' do
     subject {
-      iam_policy("cluster-instance-policy-#{vars.component}-#{vars.deployment_identifier}-#{vars.cluster_name}")
+      iam_policy(output_with_name('instance_policy_id'))
     }
 
     let(:policy_document) do
@@ -64,6 +67,14 @@ describe 'IAM policies, profiles and roles' do
     end
 
     it { should exist }
+    it 'has correct description' do
+      policy = iam_client
+                   .get_policy(policy_arn: output_with_name('instance_policy_arn'))
+                   .policy
+
+      expect(policy.description)
+          .to(eq("cluster-instance-policy-#{vars.component}-#{vars.deployment_identifier}-#{vars.cluster_name}"))
+    end
 
     it 'allows ECS actions' do
       expect(policy_document["Statement"].count).to(eq(1))
@@ -127,10 +138,13 @@ describe 'IAM policies, profiles and roles' do
 
   context 'cluster service role' do
     subject {
-      iam_role("cluster-service-role-#{vars.component}-#{vars.deployment_identifier}-#{vars.cluster_name}")
+      iam_role(output_with_name('service_role_id'))
     }
 
     it { should exist }
+    its(:description) {
+      should eq("cluster-service-role-#{vars.component}-#{vars.deployment_identifier}-#{vars.cluster_name}")
+    }
     it 'allows assuming a role of ecs' do
       policy_document =
           JSON.parse(URI.decode(subject.assume_role_policy_document))
@@ -145,13 +159,13 @@ describe 'IAM policies, profiles and roles' do
     end
 
     it {
-      should have_iam_policy("cluster-service-policy-#{vars.component}-#{vars.deployment_identifier}-#{vars.cluster_name}")
+      should have_iam_policy(output_with_name('service_policy_id'))
     }
   end
 
   context 'cluster service policy' do
     subject {
-      iam_policy("cluster-service-policy-#{vars.component}-#{vars.deployment_identifier}-#{vars.cluster_name}")
+      iam_policy(output_with_name('service_policy_id'))
     }
 
     let(:policy_document) do
@@ -165,6 +179,14 @@ describe 'IAM policies, profiles and roles' do
     end
 
     it { should exist }
+    it 'has correct description' do
+      policy = iam_client
+          .get_policy(policy_arn: output_with_name('service_policy_arn'))
+          .policy
+
+      expect(policy.description)
+          .to(eq("cluster-service-policy-#{vars.component}-#{vars.deployment_identifier}-#{vars.cluster_name}"))
+    end
 
     it 'allows ELB actions' do
       expect(policy_document["Statement"].count).to(eq(1))
@@ -194,10 +216,16 @@ describe 'IAM policies, profiles and roles' do
 
     context 'outputs' do
       let(:cluster_instance_role) {
-        iam_role("cluster-instance-role-#{vars.component}-#{vars.deployment_identifier}-#{vars.cluster_name}")
+        iam_role(output_with_name('instance_role_id'))
       }
       let(:cluster_service_role){
-        iam_role("cluster-service-role-#{vars.component}-#{vars.deployment_identifier}-#{vars.cluster_name}")
+        iam_role(output_with_name('service_role_id'))
+      }
+      let(:cluster_instance_policy) {
+        iam_policy(output_with_name('instance_policy_id'))
+      }
+      let(:cluster_service_policy){
+        iam_policy(output_with_name('service_policy_id'))
       }
 
       it 'outputs instance role arn' do
@@ -205,19 +233,19 @@ describe 'IAM policies, profiles and roles' do
             .to(eq(cluster_instance_role.arn))
       end
 
-      it 'outputs instance role id' do
-        expect(output_with_name('instance_role_id'))
-            .to(eq(cluster_instance_role.role_id))
-      end
-
       it 'outputs service role arn' do
         expect(output_with_name('service_role_arn'))
             .to(eq(cluster_service_role.arn))
       end
 
-      it 'outputs service role id' do
-        expect(output_with_name('service_role_id'))
-            .to(eq(cluster_service_role.role_id))
+      it 'outputs instance policy arn' do
+        expect(output_with_name('instance_policy_arn'))
+            .to(eq(cluster_instance_policy.arn))
+      end
+
+      it 'outputs service policy arn' do
+        expect(output_with_name('service_policy_arn'))
+            .to(eq(cluster_service_policy.arn))
       end
     end
   end
