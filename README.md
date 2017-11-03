@@ -48,7 +48,7 @@ module "ecs_cluster" {
   deployment_identifier = "production"
   
   cluster_name = "services"
-  cluster_instance_ssh_public_key_path = "~/.ssh/id_rsa"
+  cluster_instance_ssh_public_key_path = "~/.ssh/id_rsa.pub"
   cluster_instance_type = "t2.small"
   
   cluster_minimum_size = 2
