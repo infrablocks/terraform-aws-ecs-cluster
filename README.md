@@ -27,7 +27,7 @@ The ECS cluster consists of:
   * EC2 describe actions and security group ingress rule creation
 * A CloudWatch log group
 
-![Diagram of infrastructure managed by this module](/docs/architecture.png?raw=true)
+![Diagram of infrastructure managed by this module](https://raw.githubusercontent.com/infrablocks/terraform-aws-ecs-cluster/master/docs/architecture.png)
 
 Usage
 -----
@@ -37,7 +37,8 @@ configuration:
 
 ```hcl-terraform
 module "ecs_cluster" {
-  source = "git@github.com:tobyclemson/terraform-aws-ecs-cluster.git//src"
+  source = "infrablocks/ecs-cluster/aws"
+  version = "0.2.2"
   
   region = "eu-west-2"
   vpc_id = "vpc-fb7dc365"
@@ -57,8 +58,6 @@ module "ecs_cluster" {
 }
 ```
 
-Executing `terraform get` will fetch the module.
-
 As mentioned above, the ECS cluster deploys into an existing base network. 
 Whilst the base network can be created using any mechanism you like, the 
 [AWS Base Networking](https://github.com/tobyclemson/terraform-aws-base-networking)
@@ -69,24 +68,27 @@ for usage instructions.
 
 ### Inputs
 
-| Name                                 | Description                                                   | Default            | Required |
-|--------------------------------------|---------------------------------------------------------------|:------------------:|:--------:|
-| region                               | The region into which to deploy the cluster                   | -                  | yes      |
-| vpc_id                               | The ID of the VPC into which to deploy the cluster            | -                  | yes      |
-| private_subnet_ids                   | The IDs of the private subnets for container instances        | -                  | yes      |
-| private_network_cidr                 | The CIDR of the private network allowed access to containers  | 10.0.0.0/8         | yes      |
-| component                            | The component this cluster will contain                       | -                  | yes      |
-| deployment_identifier                | An identifier for this instantiation                          | -                  | yes      |
-| cluster_name                         | The name of the cluster to create                             | default            | yes      |
-| cluster_instance_ssh_public_key_path | The path to the public key to use for the container instances | -                  | yes      |
-| cluster_instance_type       | The instance type of the container instances                  | t2.medium          | yes      |
-| cluster_instance_user_data_template  | The contents of a template for container instance user data   |                    | no       |
-| cluster_instance_amis                | A map of regions to AMIs for the container instances          | ECS optimised AMIs | yes      |
-| cluster_instance_iam_policy_contents | The contents of the cluster instance IAM policy               | see src/policies   | no       |
-| cluster_service_iam_policy_contents  | The contents of the cluster service IAM policy                | see src/policies   | no       |
-| cluster_minimum_size                 | The minimum size of the ECS cluster                           | 1                  | yes      |
-| cluster_maximum_size                 | The maximum size of the ECS cluster                           | 10                 | yes      |
-| cluster_desired_capacity             | The desired capacity of the ECS cluster                       | 3                  | yes      |
+| Name                                      | Description                                                   | Default            | Required |
+|-------------------------------------------|---------------------------------------------------------------|:------------------:|:--------:|
+| region                                    | The region into which to deploy the cluster                   | -                  | yes      |
+| vpc_id                                    | The ID of the VPC into which to deploy the cluster            | -                  | yes      |
+| private_subnet_ids                        | The IDs of the private subnets for container instances        | -                  | yes      |
+| private_network_cidr                      | The CIDR of the private network allowed access to containers  | 10.0.0.0/8         | yes      |
+| component                                 | The component this cluster will contain                       | -                  | yes      |
+| deployment_identifier                     | An identifier for this instantiation                          | -                  | yes      |
+| cluster_name                              | The name of the cluster to create                             | default            | yes      |
+| cluster_instance_ssh_public_key_path      | The path to the public key to use for the container instances | -                  | yes      |
+| cluster_instance_type                     | The instance type of the container instances                  | t2.medium          | yes      |
+| cluster_instance_root_block_device_size   | The size in GB of the root block device on cluster instances  | 10                 | yes      |
+| cluster_instance_docker_block_device_size | The size in GB of the docker block device on cluster instances| 100                | yes      | 
+| cluster_instance_docker_block_device_name | The name of the docker block device on cluster instances      | /dev/xvdcz         | yes      |
+| cluster_instance_user_data_template       | The contents of a template for container instance user data   | see user-data      | no       |
+| cluster_instance_amis                     | A map of regions to AMIs for the container instances          | ECS optimised AMIs | yes      |
+| cluster_instance_iam_policy_contents      | The contents of the cluster instance IAM policy               | see policies       | no       |
+| cluster_service_iam_policy_contents       | The contents of the cluster service IAM policy                | see policies       | no       |
+| cluster_minimum_size                      | The minimum size of the ECS cluster                           | 1                  | yes      |
+| cluster_maximum_size                      | The maximum size of the ECS cluster                           | 10                 | yes      |
+| cluster_desired_capacity                  | The desired capacity of the ECS cluster                       | 3                  | yes      |
 
 Notes:
 * The user data template with be passed the cluster name as `cluster_name`.
@@ -102,8 +104,12 @@ Notes:
 | launch_configuration_name | The name of the launch configuration for the ECS container instances |
 | instance_role_arn         | The ARN of the container instance role                               |
 | instance_role_id          | The ID of the container instance role                                |
+| instance_policy_arn       | The ARN of the container instance policy                             |
+| instance_policy_id        | The ID of the container instance policy                              |
 | service_role_arn          | The ARN of the ECS service role                                      |
 | service_role_id           | The ID of the ECS service role                                       |
+| service_policy_arn        | The ARN of the ECS service policy                                    |
+| service_policy_id         | The ID of the ECS service policy                                     |
 | log_group                 | The name of the default log group for the cluster                    |
 
 ### Required Permissions
@@ -218,17 +224,30 @@ infrastructure, execute:
 ./go
 ```
 
-To provision the module test contents:
+To provision the module prerequisites:
 
 ```bash
-./go provision:aws[<deployment_identifier>]
+./go deployment:prerequisites:provision[<deployment_identifier>]
 ```
 
-To destroy the module test contents:
+To provision the module contents:
 
 ```bash
-./go destroy:aws[<deployment_identifier>]
+./go deployment:harness:provision[<deployment_identifier>]
 ```
+
+To destroy the module contents:
+
+```bash
+./go deployment:harness:destroy[<deployment_identifier>]
+```
+
+To destroy the module prerequisites:
+
+```bash
+./go deployment:prerequisites:destroy[<deployment_identifier>]
+```
+
 
 ### Common Tasks
 

@@ -1,6 +1,1 @@
-config/secrets/* filter=git-crypt diff=git-crypt
-config/secrets/aws/* filter=git-crypt diff=git-crypt
-config/secrets/ci/* filter=git-crypt diff=git-crypt
-config/secrets/keys/* filter=git-crypt diff=git-crypt
-config/secrets/keys/bastion/* filter=git-crypt diff=git-crypt
-config/secrets/keys/cluster/* filter=git-crypt diff=git-crypt
+config/secrets/** filter=git-crypt diff=git-crypt

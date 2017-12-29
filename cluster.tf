@@ -15,7 +15,7 @@ resource "null_resource" "iam_wait" {
 }
 
 data "template_file" "cluster_user_data" {
-  template = "${coalesce(var.cluster_instance_user_data_template, file("${path.module}/scripts/user-data.tpl"))}"
+  template = "${coalesce(var.cluster_instance_user_data_template, file("${path.module}/user-data/cluster.tpl"))}"
 
   vars {
     cluster_name = "${aws_ecs_cluster.cluster.name}"

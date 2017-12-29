@@ -1,24 +1,17 @@
-module "base_network" {
-  source = "git@github.com:infrablocks/terraform-aws-base-networking.git?ref=0.1.14//src"
+data "terraform_remote_state" "prerequisites" {
+  backend = "local"
 
-  vpc_cidr = "${var.vpc_cidr}"
-  region = "${var.region}"
-  availability_zones = "${var.availability_zones}"
-
-  component = "${var.component}"
-  deployment_identifier = "${var.deployment_identifier}"
-
-  private_zone_id = "${var.private_zone_id}"
-
-  infrastructure_events_bucket = "${var.infrastructure_events_bucket}"
+  config {
+    path = "${path.module}/../../../../state/prerequisites.tfstate"
+  }
 }
 
 module "ecs_cluster" {
-  source = "../../../src"
+  source = "../../../../"
 
   region = "${var.region}"
-  vpc_id = "${module.base_network.vpc_id}"
-  private_subnet_ids = "${module.base_network.private_subnet_ids}"
+  vpc_id = "${data.terraform_remote_state.prerequisites.vpc_id}"
+  private_subnet_ids = "${data.terraform_remote_state.prerequisites.private_subnet_ids}"
   private_network_cidr = "${var.private_network_cidr}"
 
   component = "${var.component}"

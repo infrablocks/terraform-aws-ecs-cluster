@@ -17,6 +17,15 @@ RSpec.configure do |config|
 
   config.include_context :terraform
 
-  config.before(:suite) { TerraformModule.provision }
-  config.after(:suite) { TerraformModule.destroy }
+  config.before(:suite) do
+    TerraformModule.provision_for(:prerequisites)
+    TerraformModule.provision_for(:harness)
+  end
+  config.after(:suite) do
+    begin
+      TerraformModule.destroy_for(:harness)
+    ensure
+      TerraformModule.destroy_for(:prerequisites)
+    end
+  end
 end

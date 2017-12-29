@@ -4,14 +4,16 @@ module Paths
       join_and_expand(self_directory, '..')
     end
 
-    def from_project_root_directory *segments
+    def from_project_root_directory(*segments)
       join_and_expand(project_root_directory, *segments)
     end
 
-    private
+    def join_and_expand(*segments)
+      File.expand_path(join(*segments))
+    end
 
-    def join_and_expand *segments
-      File.expand_path(File.join(*segments.compact))
+    def join(*segments)
+      File.join(*segments.compact)
     end
 
     def self_directory

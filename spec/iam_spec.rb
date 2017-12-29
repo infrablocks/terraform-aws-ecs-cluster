@@ -20,13 +20,13 @@ describe 'IAM policies, profiles and roles' do
 
     it 'has the cluster instance role' do
       expect(subject.roles.first.role_name)
-          .to(eq(iam_role(output_with_name('instance_role_id')).name))
+          .to(eq(iam_role(output_for(:harness, 'instance_role_id')).name))
     end
   end
 
   context 'cluster instance role' do
     subject {
-      iam_role(output_with_name('instance_role_id'))
+      iam_role(output_for(:harness, 'instance_role_id'))
     }
 
     it { should exist }
@@ -47,13 +47,13 @@ describe 'IAM policies, profiles and roles' do
     end
 
     it {
-      should have_iam_policy(output_with_name('instance_policy_id'))
+      should have_iam_policy(output_for(:harness, 'instance_policy_id'))
     }
   end
 
   context 'cluster instance policy' do
     subject {
-      iam_policy(output_with_name('instance_policy_id'))
+      iam_policy(output_for(:harness, 'instance_policy_id'))
     }
 
     let(:policy_document) do
@@ -69,7 +69,7 @@ describe 'IAM policies, profiles and roles' do
     it { should exist }
     it 'has correct description' do
       policy = iam_client
-                   .get_policy(policy_arn: output_with_name('instance_policy_arn'))
+                   .get_policy(policy_arn: output_for(:harness, 'instance_policy_arn'))
                    .policy
 
       expect(policy.description)
@@ -138,7 +138,7 @@ describe 'IAM policies, profiles and roles' do
 
   context 'cluster service role' do
     subject {
-      iam_role(output_with_name('service_role_id'))
+      iam_role(output_for(:harness, 'service_role_id'))
     }
 
     it { should exist }
@@ -159,13 +159,13 @@ describe 'IAM policies, profiles and roles' do
     end
 
     it {
-      should have_iam_policy(output_with_name('service_policy_id'))
+      should have_iam_policy(output_for(:harness, 'service_policy_id'))
     }
   end
 
   context 'cluster service policy' do
     subject {
-      iam_policy(output_with_name('service_policy_id'))
+      iam_policy(output_for(:harness, 'service_policy_id'))
     }
 
     let(:policy_document) do
@@ -181,7 +181,7 @@ describe 'IAM policies, profiles and roles' do
     it { should exist }
     it 'has correct description' do
       policy = iam_client
-          .get_policy(policy_arn: output_with_name('service_policy_arn'))
+          .get_policy(policy_arn: output_for(:harness, 'service_policy_arn'))
           .policy
 
       expect(policy.description)
@@ -216,35 +216,45 @@ describe 'IAM policies, profiles and roles' do
 
     context 'outputs' do
       let(:cluster_instance_role) {
-        iam_role(output_with_name('instance_role_id'))
+        iam_role(output_for(:harness, 'instance_role_id'))
       }
       let(:cluster_service_role){
-        iam_role(output_with_name('service_role_id'))
+        iam_role(output_for(:harness, 'service_role_id'))
       }
       let(:cluster_instance_policy) {
-        iam_policy(output_with_name('instance_policy_id'))
+        iam_policy(output_for(:harness, 'instance_policy_id'))
       }
       let(:cluster_service_policy){
-        iam_policy(output_with_name('service_policy_id'))
+        iam_policy(output_for(:harness, 'service_policy_id'))
       }
 
       it 'outputs instance role arn' do
-        expect(output_with_name('instance_role_arn'))
+        expect(output_for(:harness, 'instance_role_arn'))
             .to(eq(cluster_instance_role.arn))
       end
 
-      it 'outputs service role arn' do
-        expect(output_with_name('service_role_arn'))
-            .to(eq(cluster_service_role.arn))
+      it 'outputs instance role id' do
+        expect(output_for(:harness, 'instance_role_id'))
+            .to(eq(cluster_instance_role.role_id))
       end
 
       it 'outputs instance policy arn' do
-        expect(output_with_name('instance_policy_arn'))
+        expect(output_for(:harness, 'instance_policy_arn'))
             .to(eq(cluster_instance_policy.arn))
       end
 
+      it 'outputs service role arn' do
+        expect(output_for(:harness, 'service_role_arn'))
+            .to(eq(cluster_service_role.arn))
+      end
+
+      it 'outputs service role id' do
+        expect(output_for(:harness, 'service_role_id'))
+            .to(eq(cluster_service_role.role_id))
+      end
+
       it 'outputs service policy arn' do
-        expect(output_with_name('service_policy_arn'))
+        expect(output_for(:harness, 'service_policy_arn'))
             .to(eq(cluster_service_policy.arn))
       end
     end

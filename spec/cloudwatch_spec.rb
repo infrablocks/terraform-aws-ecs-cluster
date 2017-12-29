@@ -19,7 +19,7 @@ describe 'CloudWatch' do
 
   context 'outputs' do
     it 'outputs the log group name' do
-      expect(output_with_name('log_group')).to(eq(log_group.log_group_name))
+      expect(output_for(:harness, 'log_group')).to(eq(log_group.log_group_name))
     end
   end
 end

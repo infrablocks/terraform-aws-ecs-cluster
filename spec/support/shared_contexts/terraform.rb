@@ -8,9 +8,16 @@ shared_context :terraform do
 
   let(:cloudwatch_logs_client) { Aws::CloudWatchLogs::Client.new }
 
-  let(:vars) { TerraformModule.configuration.vars}
+  let(:vars) {TerraformModule.configuration.for(:harness).vars}
 
-  def output_with_name(name)
-    TerraformModule.output_with_name(name)
+  def output_for(role, name)
+    TerraformModule.output_for(role, name)
+  end
+
+  def reprovision(override_vars)
+    TerraformModule.provision_for(
+        :harness,
+        TerraformModule.configuration.for(:harness)
+            .vars.to_h.merge(override_vars))
   end
 end
