@@ -7,14 +7,14 @@ A Terraform module for building an ECS Cluster in AWS.
 
 The ECS cluster requires:
 * An existing VPC
-* Some existing private subnets
+* Some existing subnets
  
 The ECS cluster consists of:
 * A cluster in ECS
 * A launch configuration and auto-scaling group for a cluster of ECS container 
   instances
 * An SSH key to connect to the ECS container instances
-* A security group for the container instances allowing:
+* A security group for the container instances optionally allowing:
   * Outbound internet access for all containers
   * Inbound TCP access on any port from the VPC network
 * An IAM role and policy for the container instances allowing:
@@ -38,12 +38,11 @@ configuration:
 ```hcl-terraform
 module "ecs_cluster" {
   source = "infrablocks/ecs-cluster/aws"
-  version = "0.2.2"
+  version = "0.2.5"
   
   region = "eu-west-2"
   vpc_id = "vpc-fb7dc365"
-  private_subnet_ids = "subnet-eb32c271,subnet-64872d1f"
-  private_network_cidr = "192.168.0.0/16"
+  subnet_ids = "subnet-eb32c271,subnet-64872d1f"
   
   component = "important-component"
   deployment_identifier = "production"
@@ -68,27 +67,30 @@ for usage instructions.
 
 ### Inputs
 
-| Name                                      | Description                                                   | Default            | Required |
-|-------------------------------------------|---------------------------------------------------------------|:------------------:|:--------:|
-| region                                    | The region into which to deploy the cluster                   | -                  | yes      |
-| vpc_id                                    | The ID of the VPC into which to deploy the cluster            | -                  | yes      |
-| private_subnet_ids                        | The IDs of the private subnets for container instances        | -                  | yes      |
-| private_network_cidr                      | The CIDR of the private network allowed access to containers  | 10.0.0.0/8         | yes      |
-| component                                 | The component this cluster will contain                       | -                  | yes      |
-| deployment_identifier                     | An identifier for this instantiation                          | -                  | yes      |
-| cluster_name                              | The name of the cluster to create                             | default            | yes      |
-| cluster_instance_ssh_public_key_path      | The path to the public key to use for the container instances | -                  | yes      |
-| cluster_instance_type                     | The instance type of the container instances                  | t2.medium          | yes      |
-| cluster_instance_root_block_device_size   | The size in GB of the root block device on cluster instances  | 10                 | yes      |
-| cluster_instance_docker_block_device_size | The size in GB of the docker block device on cluster instances| 100                | yes      | 
-| cluster_instance_docker_block_device_name | The name of the docker block device on cluster instances      | /dev/xvdcz         | yes      |
-| cluster_instance_user_data_template       | The contents of a template for container instance user data   | see user-data      | no       |
-| cluster_instance_amis                     | A map of regions to AMIs for the container instances          | ECS optimised AMIs | yes      |
-| cluster_instance_iam_policy_contents      | The contents of the cluster instance IAM policy               | see policies       | no       |
-| cluster_service_iam_policy_contents       | The contents of the cluster service IAM policy                | see policies       | no       |
-| cluster_minimum_size                      | The minimum size of the ECS cluster                           | 1                  | yes      |
-| cluster_maximum_size                      | The maximum size of the ECS cluster                           | 10                 | yes      |
-| cluster_desired_capacity                  | The desired capacity of the ECS cluster                       | 3                  | yes      |
+| Name                                      | Description                                                                                                      | Default            | Required                                 |
+|-------------------------------------------|------------------------------------------------------------------------------------------------------------------|:------------------:|:----------------------------------------:|
+| region                                    | The region into which to deploy the cluster                                                                      | -                  | yes                                      |
+| vpc_id                                    | The ID of the VPC into which to deploy the cluster                                                               | -                  | yes                                      |
+| subnet_ids                                | The IDs of the subnets for container instances                                                                   | -                  | yes                                      |
+| component                                 | The component this cluster will contain                                                                          | -                  | yes                                      |
+| deployment_identifier                     | An identifier for this instantiation                                                                             | -                  | yes                                      |
+| cluster_name                              | The name of the cluster to create                                                                                | default            | yes                                      |
+| cluster_instance_ssh_public_key_path      | The path to the public key to use for the container instances                                                    | -                  | yes                                      |
+| cluster_instance_type                     | The instance type of the container instances                                                                     | t2.medium          | yes                                      |
+| cluster_instance_root_block_device_size   | The size in GB of the root block device on cluster instances                                                     | 10                 | yes                                      |
+| cluster_instance_docker_block_device_size | The size in GB of the docker block device on cluster instances                                                   | 100                | yes                                      | 
+| cluster_instance_docker_block_device_name | The name of the docker block device on cluster instances                                                         | /dev/xvdcz         | yes                                      |
+| cluster_instance_user_data_template       | The contents of a template for container instance user data                                                      | see user-data      | no                                       |
+| cluster_instance_amis                     | A map of regions to AMIs for the container instances                                                             | ECS optimised AMIs | yes                                      |
+| cluster_instance_iam_policy_contents      | The contents of the cluster instance IAM policy                                                                  | see policies       | no                                       |
+| cluster_service_iam_policy_contents       | The contents of the cluster service IAM policy                                                                   | see policies       | no                                       |
+| cluster_minimum_size                      | The minimum size of the ECS cluster                                                                              | 1                  | yes                                      |
+| cluster_maximum_size                      | The maximum size of the ECS cluster                                                                              | 10                 | yes                                      |
+| cluster_desired_capacity                  | The desired capacity of the ECS cluster                                                                          | 3                  | yes                                      |
+| include_default_ingress_rule              | Whether or not to include the default ingress rule on the ECS container instances security group ("yes" or "no") | "yes"              | yes                                      |
+| include_default_egress_rule               | Whether or not to include the default egress rule on the ECS container instances security group ("yes" or "no")  | "yes"              | yes                                      |
+| allowed_cidrs                             | The CIDRs allowed access to containers                                                                           | ["10.0.0.0/8"]     | if include_default_ingress_rule is "yes" | 
+| egress_cidrs                              | The CIDRs accessible from containers                                                                             | ["0.0.0.0/0"]      | if include_default_egress_rule is "yes"  | 
 
 Notes:
 * The user data template with be passed the cluster name as `cluster_name`.
@@ -96,21 +98,22 @@ Notes:
 
 ### Outputs
 
-| Name                      | Description                                                          |
-|---------------------------|----------------------------------------------------------------------|
-| cluster_id                | The ID of the created ECS cluster                                    |
-| cluster_name              | The name of the created ECS cluster                                  |
-| autoscaling_group_name    | The name of the autoscaling group for the ECS container instances    |
-| launch_configuration_name | The name of the launch configuration for the ECS container instances |
-| instance_role_arn         | The ARN of the container instance role                               |
-| instance_role_id          | The ID of the container instance role                                |
-| instance_policy_arn       | The ARN of the container instance policy                             |
-| instance_policy_id        | The ID of the container instance policy                              |
-| service_role_arn          | The ARN of the ECS service role                                      |
-| service_role_id           | The ID of the ECS service role                                       |
-| service_policy_arn        | The ARN of the ECS service policy                                    |
-| service_policy_id         | The ID of the ECS service policy                                     |
-| log_group                 | The name of the default log group for the cluster                    |
+| Name                      | Description                                                              |
+|---------------------------|--------------------------------------------------------------------------|
+| cluster_id                | The ID of the created ECS cluster                                        |
+| cluster_name              | The name of the created ECS cluster                                      |
+| autoscaling_group_name    | The name of the autoscaling group for the ECS container instances        |
+| launch_configuration_name | The name of the launch configuration for the ECS container instances     |
+| security_group_id         | The ID of the security group associated with the ECS container instances |
+| instance_role_arn         | The ARN of the container instance role                                   |
+| instance_role_id          | The ID of the container instance role                                    |
+| instance_policy_arn       | The ARN of the container instance policy                                 |
+| instance_policy_id        | The ID of the container instance policy                                  |
+| service_role_arn          | The ARN of the ECS service role                                          |
+| service_role_id           | The ID of the ECS service role                                           |
+| service_policy_arn        | The ARN of the ECS service policy                                        |
+| service_policy_id         | The ID of the ECS service policy                                         |
+| log_group                 | The name of the default log group for the cluster                        |
 
 ### Required Permissions
 

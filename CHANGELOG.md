@@ -1,3 +1,9 @@
+## 0.2.5 (December 31st, 2017)
+
+IMPROVEMENTS:
+
+* Updated README with correct inputs, outputs and usage.
+
 ## 0.2.4 (December 30th, 2017)
 
 BACKWARDS INCOMPATIBILITIES / NOTES:
