@@ -1,3 +1,10 @@
+## 0.2.6 (December 31st, 2017)
+
+IMPROVEMENTS:
+
+* The `associate_public_ip_addresses` variable allows public IPs to be 
+  associated to ECS container instances. By default its value is `no`.
+
 ## 0.2.5 (December 31st, 2017)
 
 IMPROVEMENTS:

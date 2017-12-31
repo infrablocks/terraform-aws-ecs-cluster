@@ -46,6 +46,8 @@ resource "aws_launch_configuration" "cluster" {
     "${aws_security_group.cluster.id}"
   ]
 
+  associate_public_ip_address = "${var.associate_public_ip_addresses == "yes" ? true : false}"
+
   depends_on = [
     "null_resource.iam_wait"
   ]

@@ -87,6 +87,11 @@ variable "cluster_desired_capacity" {
   default = 3
 }
 
+variable "associate_public_ip_addresses" {
+  description = "Whether or not to associate public IP addresses with ECS container instances (\"yes\" or \"no\")."
+  default = "no"
+}
+
 variable "include_default_ingress_rule" {
   description = "Whether or not to include the default ingress rule on the ECS container instances security group (\"yes\" or \"no\")."
   default = "yes"
