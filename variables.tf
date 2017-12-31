@@ -4,8 +4,8 @@ variable "region" {
 variable "vpc_id" {
   description = "The ID of the VPC into which to deploy the cluster."
 }
-variable "private_subnet_ids" {
-  description = "The IDs of the private subnets for container instances."
+variable "subnet_ids" {
+  description = "The IDs of the subnets for container instances."
 }
 variable "private_network_cidr" {
   description = "The CIDR of the private network allowed access to containers."
