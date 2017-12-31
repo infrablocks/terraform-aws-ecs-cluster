@@ -18,6 +18,11 @@ output "launch_configuration_name" {
   value = "${aws_launch_configuration.cluster.name}"
 }
 
+output "security_group_id" {
+  description = "The ID of the security group associated with the ECS container instances."
+  value = "${aws_security_group.cluster.id}"
+}
+
 output "instance_role_arn" {
   description = "The ARN of the container instance role."
   value = "${aws_iam_role.cluster_instance_role.arn}"

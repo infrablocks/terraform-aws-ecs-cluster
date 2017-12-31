@@ -6,10 +6,20 @@ BACKWARDS INCOMPATIBILITIES / NOTES:
   This can be overridden using the `cluster_instance_amis` variable.
 * The `private_subnet_ids` variable has been renamed to `subnet_ids` as there
   is nothing requiring the subnets to be private
+* The `private_network_cidr` variable has been renamed to `allowed_cidrs` and
+  its type has changed to list.
   
 IMPROVEMENTS:
 
 * The cluster now uses the latest ECS optimised amazon linux image by default.
+* The default security group ingress and egress rules are now optional and
+  configurable. A list of CIDRs for both ingress and egress can be specified
+  using `allowed_cidrs` and `egress_cidrs` respectively. The default rules
+  can be disabled using `include_default_ingress_rule` and 
+  `include_default_egress_rule`.
+* The security group ID is now available via an output named 
+  `security_group_id` so that additional rules can be added outside of the 
+  module.  
 
 ## 0.2.3 (December 29th, 2017)
 

@@ -7,10 +7,6 @@ variable "vpc_id" {
 variable "subnet_ids" {
   description = "The IDs of the subnets for container instances."
 }
-variable "private_network_cidr" {
-  description = "The CIDR of the private network allowed access to containers."
-  default = "10.0.0.0/8"
-}
 
 variable "component" {
   description = "The component this cluster will contain."
@@ -89,4 +85,23 @@ variable "cluster_maximum_size" {
 variable "cluster_desired_capacity" {
   description = "The desired capacity of the ECS cluster."
   default = 3
+}
+
+variable "include_default_ingress_rule" {
+  description = "Whether or not to include the default ingress rule on the ECS container instances security group (\"yes\" or \"no\")."
+  default = "yes"
+}
+variable "include_default_egress_rule" {
+  description = "Whether or not to include the default egress rule on the ECS container instances security group (\"yes\" or \"no\")."
+  default = "yes"
+}
+variable "allowed_cidrs" {
+  description = "The CIDRs allowed access to containers."
+  type = "list"
+  default = ["10.0.0.0/8"]
+}
+variable "egress_cidrs" {
+  description = "The CIDRs accessible from containers."
+  type = "list"
+  default = ["0.0.0.0/0"]
 }

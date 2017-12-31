@@ -1,5 +1,4 @@
 variable "region" {}
-variable "private_network_cidr" {}
 
 variable "component" {}
 variable "deployment_identifier" {}
@@ -16,3 +15,12 @@ variable "cluster_instance_docker_block_device_size" {}
 variable "cluster_minimum_size" {}
 variable "cluster_maximum_size" {}
 variable "cluster_desired_capacity" {}
+
+variable "include_default_ingress_rule" {}
+variable "include_default_egress_rule" {}
+variable "allowed_cidrs" {
+  type = "list"
+}
+variable "egress_cidrs" {
+  type = "list"
+}

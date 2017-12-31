@@ -98,26 +98,45 @@ describe 'ECS Cluster' do
     it {should have_tag('DeploymentIdentifier').value(vars.deployment_identifier)}
     its(:vpc_id) {should eq(output_for(:prerequisites, 'vpc_id'))}
 
-    it 'allows inbound TCP connectivity on all ports from any address within the VPC' do
-      expect(subject.inbound_rule_count).to(eq(1))
-
-      ingress_rule = subject.ip_permissions.first
-
-      expect(ingress_rule.from_port).to(eq(1))
-      expect(ingress_rule.to_port).to(eq(65535))
-      expect(ingress_rule.ip_protocol).to(eq('tcp'))
-      expect(ingress_rule.ip_ranges.map(&:cidr_ip)).to(eq([vars.private_network_cidr]))
+    it 'outputs the security group ID' do
+      expect(output_for(:harness, 'security_group_id')).to(eq(subject.id))
     end
 
-    it 'allows outbound TCP connectivity on all ports and protocols anywhere' do
-      expect(subject.outbound_rule_count).to(be(1))
+    context 'when default ingress and egress are included' do
+      it 'allows inbound TCP connectivity on all ports from any address within the VPC' do
+        expect(subject.inbound_rule_count).to(eq(1))
 
-      egress_rule = subject.ip_permissions_egress.first
+        ingress_rule = subject.ip_permissions.first
 
-      expect(egress_rule.from_port).to(be_nil)
-      expect(egress_rule.to_port).to(be_nil)
-      expect(egress_rule.ip_protocol).to(eq('-1'))
-      expect(egress_rule.ip_ranges.map(&:cidr_ip)).to(eq(['0.0.0.0/0']))
+        expect(ingress_rule.from_port).to(eq(1))
+        expect(ingress_rule.to_port).to(eq(65535))
+        expect(ingress_rule.ip_protocol).to(eq('tcp'))
+        expect(ingress_rule.ip_ranges.map(&:cidr_ip)).to(eq(vars.allowed_cidrs))
+      end
+
+      it 'allows outbound TCP connectivity on all ports and protocols anywhere' do
+        expect(subject.outbound_rule_count).to(be(1))
+
+        egress_rule = subject.ip_permissions_egress.first
+
+        expect(egress_rule.from_port).to(be_nil)
+        expect(egress_rule.to_port).to(be_nil)
+        expect(egress_rule.ip_protocol).to(eq('-1'))
+        expect(egress_rule.ip_ranges.map(&:cidr_ip)).to(eq(vars.egress_cidrs))
+      end
+    end
+
+    context 'when default ingress and egress are not included' do
+      before(:all) do
+        reprovision(
+            include_default_ingress_rule: 'no',
+            include_default_egress_rule: 'no')
+      end
+
+      it 'has no ingress or egress rules' do
+        expect(subject.inbound_rule_count).to(eq(0))
+        expect(subject.outbound_rule_count).to(eq(0))
+      end
     end
   end
 

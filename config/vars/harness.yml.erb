@@ -1,6 +1,5 @@
 ---
 region: 'eu-west-2'
-private_network_cidr: '10.0.0.0/8'
 
 component: 'test'
 deployment_identifier: '<%= @deployment_identifier %>'
@@ -17,3 +16,11 @@ cluster_maximum_size: 3
 cluster_desired_capacity: 2
 
 ami_id_in_region: "ami-3fb6bc5b"
+
+include_default_ingress_rule: "yes"
+include_default_egress_rule: "yes"
+
+allowed_cidrs:
+  - '10.1.0.0/16'
+egress_cidrs:
+  - '10.1.0.0/16'

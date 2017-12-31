@@ -14,6 +14,11 @@ output "launch_configuration_name" {
   value = "${module.ecs_cluster.launch_configuration_name}"
 }
 
+output "security_group_id" {
+  description = "The ID of the security group associated with the ECS container instances."
+  value = "${module.ecs_cluster.security_group_id}"
+}
+
 output "instance_role_arn" {
   value = "${module.ecs_cluster.instance_role_arn}"
 }

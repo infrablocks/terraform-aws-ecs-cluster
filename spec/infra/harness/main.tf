@@ -12,7 +12,6 @@ module "ecs_cluster" {
   region = "${var.region}"
   vpc_id = "${data.terraform_remote_state.prerequisites.vpc_id}"
   subnet_ids = "${data.terraform_remote_state.prerequisites.private_subnet_ids}"
-  private_network_cidr = "${var.private_network_cidr}"
 
   component = "${var.component}"
   deployment_identifier = "${var.deployment_identifier}"
@@ -27,4 +26,10 @@ module "ecs_cluster" {
   cluster_minimum_size = "${var.cluster_minimum_size}"
   cluster_maximum_size = "${var.cluster_maximum_size}"
   cluster_desired_capacity = "${var.cluster_desired_capacity}"
+
+  include_default_ingress_rule = "${var.include_default_ingress_rule}"
+  include_default_egress_rule = "${var.include_default_egress_rule}"
+
+  allowed_cidrs = "${var.allowed_cidrs}"
+  egress_cidrs = "${var.egress_cidrs}"
 }
