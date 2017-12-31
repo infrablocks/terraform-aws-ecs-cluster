@@ -8,9 +8,43 @@ describe 'ECS Cluster' do
       launch_configuration(output_for(:harness, 'launch_configuration_name'))
     }
 
-    it { should exist }
-    its(:instance_type) { should eq(vars.cluster_instance_type) }
-    its(:image_id) { should eq(vars.cluster_instance_ami) }
+    it {should exist}
+    its(:instance_type) {should eq(vars.cluster_instance_type)}
+
+    context 'by default, uses latest amazon linux optimised for ECS' do
+      let(:latest_ecs_optimised_ami_id) {
+        response = ec2_client.describe_images(
+            {
+                owners: ['amazon'],
+                filters: [
+                    {
+                        name: 'name',
+                        values: ['amzn-ami-*.f-amazon-ecs-optimized']
+                    }
+                ]
+            })
+        most_recent_image = response.images.max_by do |image|
+          DateTime.parse(image.creation_date)
+        end
+
+        most_recent_image.image_id
+      }
+
+      its(:image_id) {should eq(latest_ecs_optimised_ami_id)}
+    end
+
+    context 'when AMIs specified' do
+      it 'uses provided image ID' do
+        reprovision(
+            cluster_instance_amis:
+                '{' + vars.region + '="' + vars.ami_id_in_region + '"}')
+
+        expect(
+            launch_configuration(
+                output_for(:harness, 'launch_configuration_name'))
+                .image_id).to eq(vars.ami_id_in_region)
+      end
+    end
 
     its(:key_name) do
       should eq("cluster-#{vars.component}-#{vars.deployment_identifier}-#{vars.cluster_name}")
@@ -27,7 +61,7 @@ describe 'ECS Cluster' do
       DOC
     end
 
-    it { should have_security_group("#{vars.component}-#{vars.deployment_identifier}-#{vars.cluster_name}") }
+    it {should have_security_group("#{vars.component}-#{vars.deployment_identifier}-#{vars.cluster_name}")}
 
     it 'has a name containing the component, deployment_identifier and cluster_name' do
       launch_configuration_name = output_for(:harness, 'launch_configuration_name')
@@ -57,12 +91,12 @@ describe 'ECS Cluster' do
   end
 
   context 'security group' do
-    subject { security_group("#{vars.component}-#{vars.deployment_identifier}-#{vars.cluster_name}") }
+    subject {security_group("#{vars.component}-#{vars.deployment_identifier}-#{vars.cluster_name}")}
 
-    it { should exist }
-    it { should have_tag('Component').value(vars.component) }
-    it { should have_tag('DeploymentIdentifier').value(vars.deployment_identifier) }
-    its(:vpc_id) { should eq(output_for(:prerequisites, 'vpc_id')) }
+    it {should exist}
+    it {should have_tag('Component').value(vars.component)}
+    it {should have_tag('DeploymentIdentifier').value(vars.deployment_identifier)}
+    its(:vpc_id) {should eq(output_for(:prerequisites, 'vpc_id'))}
 
     it 'allows inbound TCP connectivity on all ports from any address within the VPC' do
       expect(subject.inbound_rule_count).to(eq(1))
@@ -88,36 +122,36 @@ describe 'ECS Cluster' do
   end
 
   context 'autoscaling group' do
-    subject { autoscaling_group("asg-#{vars.component}-#{vars.deployment_identifier}-#{vars.cluster_name}") }
+    subject {autoscaling_group("asg-#{vars.component}-#{vars.deployment_identifier}-#{vars.cluster_name}")}
 
-    it { should exist }
-    its(:min_size) { should eq(vars.cluster_minimum_size) }
-    its(:max_size) { should eq(vars.cluster_maximum_size) }
+    it {should exist}
+    its(:min_size) {should eq(vars.cluster_minimum_size)}
+    its(:max_size) {should eq(vars.cluster_maximum_size)}
     its(:launch_configuration_name) do
       should eq(output_for(:harness, 'launch_configuration_name'))
     end
-    its(:desired_capacity) { should eq(vars.cluster_desired_capacity) }
+    its(:desired_capacity) {should eq(vars.cluster_desired_capacity)}
 
     it 'uses all private subnets' do
       expect(subject.vpc_zone_identifier.split(','))
           .to(contain_exactly(*output_for(:prerequisites, 'private_subnet_ids').split(',')))
     end
 
-    it { should have_tag('Name').value("cluster-worker-#{vars.component}-#{vars.deployment_identifier}-#{vars.cluster_name}")}
-    it { should have_tag('Component').value(vars.component) }
-    it { should have_tag('DeploymentIdentifier').value(vars.deployment_identifier) }
-    it { should have_tag('ClusterName').value(vars.cluster_name) }
+    it {should have_tag('Name').value("cluster-worker-#{vars.component}-#{vars.deployment_identifier}-#{vars.cluster_name}")}
+    it {should have_tag('Component').value(vars.component)}
+    it {should have_tag('DeploymentIdentifier').value(vars.deployment_identifier)}
+    it {should have_tag('ClusterName').value(vars.cluster_name)}
   end
 
   context 'cluster' do
-    subject { ecs_cluster("#{vars.component}-#{vars.deployment_identifier}-#{vars.cluster_name}") }
+    subject {ecs_cluster("#{vars.component}-#{vars.deployment_identifier}-#{vars.cluster_name}")}
 
-    it { should exist }
+    it {should exist}
   end
 
   context 'outputs' do
-    let(:cluster) { ecs_cluster("#{vars.component}-#{vars.deployment_identifier}-#{vars.cluster_name}") }
-    let(:asg) { autoscaling_group("asg-#{vars.component}-#{vars.deployment_identifier}-#{vars.cluster_name}") }
+    let(:cluster) {ecs_cluster("#{vars.component}-#{vars.deployment_identifier}-#{vars.cluster_name}")}
+    let(:asg) {autoscaling_group("asg-#{vars.component}-#{vars.deployment_identifier}-#{vars.cluster_name}")}
 
     it 'outputs the cluster id' do
       expect(output_for(:harness, 'cluster_id'))

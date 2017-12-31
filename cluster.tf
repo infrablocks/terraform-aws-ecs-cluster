@@ -14,6 +14,16 @@ resource "null_resource" "iam_wait" {
   }
 }
 
+data "aws_ami" "amazon_linux" {
+  most_recent = true
+  owners = ["amazon"]
+
+  filter {
+    name = "name"
+    values = ["amzn-ami-*.f-amazon-ecs-optimized"]
+  }
+}
+
 data "template_file" "cluster_user_data" {
   template = "${coalesce(var.cluster_instance_user_data_template, file("${path.module}/user-data/cluster.tpl"))}"
 
@@ -24,7 +34,7 @@ data "template_file" "cluster_user_data" {
 
 resource "aws_launch_configuration" "cluster" {
   name_prefix = "cluster-${var.component}-${var.deployment_identifier}-${var.cluster_name}-"
-  image_id = "${lookup(var.cluster_instance_amis, var.region)}"
+  image_id = "${coalesce(lookup(var.cluster_instance_amis, var.region), data.aws_ami.amazon_linux.image_id)}"
   instance_type = "${var.cluster_instance_type}"
   key_name = "${aws_key_pair.cluster.key_name}"
 

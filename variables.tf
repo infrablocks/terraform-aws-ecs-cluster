@@ -51,17 +51,22 @@ variable "cluster_instance_amis" {
   type = "map"
 
   default = {
-    us-east-1 = "ami-b2df2ca4"
-    us-east-2 = "ami-832b0ee6"
-    us-west-1 = "ami-dd104dbd"
-    us-west-2 = "ami-022b9262"
-    eu-west-1 = "ami-a7f2acc1"
-    eu-west-2 = "ami-3fb6bc5b"
-    eu-central-1 = "ami-ec2be583"
-    ap-northeast-1 = "ami-c393d6a4"
-    ap-southeast-1 = "ami-a88530cb"
-    ap-southeast-2 = "ami-8af8ffe9"
-    ca-central-1 = "ami-ead5688"
+    us-east-1 = ""
+    us-east-2 = ""
+    us-west-1 = ""
+    us-west-2 = ""
+    ap-south-1 = ""
+    ap-northeast-1 = ""
+    ap-northeast-2 = ""
+    ap-southeast-1 = ""
+    ap-southeast-2 = ""
+    ca-central-1 = ""
+    cn-north-1 = ""
+    eu-central-1 = ""
+    eu-west-1 = ""
+    eu-west-2 = ""
+    eu-west-3 = ""
+    sa-east-1 = ""
   }
 }
 variable "cluster_instance_iam_policy_contents" {
