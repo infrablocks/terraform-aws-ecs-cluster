@@ -5,6 +5,7 @@ require 'semantic'
 require 'rake_terraform'
 
 require_relative 'lib/configuration'
+require_relative 'lib/version'
 
 configuration = Configuration.new
 
@@ -64,7 +65,7 @@ namespace :release do
     repo = Git.open('.')
     tags = repo.tags
     latest_tag = tags.map { |tag| Semantic::Version.new(tag.name) }.max
-    next_tag = latest_tag.increment!(:patch)
+    next_tag = latest_tag.rc!
     repo.add_tag(next_tag.to_s)
     repo.push('origin', 'master', tags: true)
   end
