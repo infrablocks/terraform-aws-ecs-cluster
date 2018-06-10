@@ -19,7 +19,7 @@ describe 'ECS Cluster' do
                 filters: [
                     {
                         name: 'name',
-                        values: ['amzn-ami-*.f-amazon-ecs-optimized']
+                        values: ['amzn-ami-*-amazon-ecs-optimized']
                     }
                 ]
             })
