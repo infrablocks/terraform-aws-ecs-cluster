@@ -10,7 +10,7 @@ output "cluster_name" {
 
 output "autoscaling_group_name" {
   description = "The name of the autoscaling group for the ECS container instances."
-  value = "${aws_autoscaling_group.cluster.name}"
+  value = "${aws_cloudformation_stack.cluster.outputs["AutoScalingGroupName"]}"
 }
 
 output "launch_configuration_name" {

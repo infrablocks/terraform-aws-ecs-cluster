@@ -86,6 +86,10 @@ variable "cluster_desired_capacity" {
   description = "The desired capacity of the ECS cluster."
   default = 3
 }
+variable "cluster_rolling_update_maximum_batch_size" {
+  description = "The maximum number of instances in the ECS cluster that will be updated at a time."
+  default = 1
+}
 
 variable "associate_public_ip_addresses" {
   description = "Whether or not to associate public IP addresses with ECS container instances (\"yes\" or \"no\")."
