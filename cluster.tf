@@ -66,42 +66,44 @@ resource "aws_launch_configuration" "cluster" {
   }
 }
 
-resource "aws_autoscaling_group" "cluster" {
-  name = "asg-${var.component}-${var.deployment_identifier}-${var.cluster_name}"
-
-  vpc_zone_identifier = [
-    "${split(",", var.subnet_ids)}"
-  ]
-
-  launch_configuration = "${aws_launch_configuration.cluster.name}"
-
-  min_size = "${var.cluster_minimum_size}"
-  max_size = "${var.cluster_maximum_size}"
-  desired_capacity = "${var.cluster_desired_capacity}"
-
-  tag {
-    key = "Name"
-    value = "cluster-worker-${var.component}-${var.deployment_identifier}-${var.cluster_name}"
-    propagate_at_launch = true
-  }
-
-  tag{
-    key = "Component"
-    value = "${var.component}"
-    propagate_at_launch = true
-  }
-
-  tag {
-    key = "DeploymentIdentifier"
-    value = "${var.deployment_identifier}"
-    propagate_at_launch = true
-  }
-
-  tag {
-    key = "ClusterName"
-    value = "${var.cluster_name}"
-    propagate_at_launch = true
-  }
+resource "aws_cloudformation_stack" "cluster" {
+  name = "${replace("asg-${var.component}-${var.deployment_identifier}-${var.cluster_name}", "/[^-a-zA-Z0-9]/", "-")}"
+  template_body = <<EOF
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Terraform-managed CF Stack for Auto-Scaling Group
+Resources:
+  AutoScalingGroup:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      AutoScalingGroupName: asg-${var.component}-${var.deployment_identifier}-${var.cluster_name}
+      VPCZoneIdentifier: ${jsonencode(split(",", var.subnet_ids))}
+      LaunchConfigurationName: ${aws_launch_configuration.cluster.name}
+      MinSize: ${var.cluster_minimum_size}
+      MaxSize: ${var.cluster_maximum_size}
+      DesiredCapacity: ${var.cluster_desired_capacity}
+      Tags:
+        - Key: Name
+          Value: cluster-worker-${var.component}-${var.deployment_identifier}-${var.cluster_name}
+          PropagateAtLaunch: True
+        - Key: Component
+          Value: ${var.component}
+          PropagateAtLaunch: True
+        - Key: DeploymentIdentifier
+          Value: ${var.deployment_identifier}
+          PropagateAtLaunch: True
+        - Key: ClusterName
+          Value: ${var.cluster_name}
+          PropagateAtLaunch: True
+    UpdatePolicy:
+      AutoScalingRollingUpdate:
+        MaxBatchSize: ${var.cluster_rolling_update_maximum_batch_size}
+        MinInstancesInService: ${var.cluster_maximum_size - var.cluster_rolling_update_maximum_batch_size}
+Outputs:
+  AutoScalingGroupName:
+    Description: The name of the Auto-Scaling Group
+    Value: !Ref AutoScalingGroup
+EOF
 }
 
 resource "aws_ecs_cluster" "cluster" {
