@@ -81,7 +81,6 @@ Resources:
       LaunchConfigurationName: ${aws_launch_configuration.cluster.name}
       MinSize: ${var.cluster_minimum_size}
       MaxSize: ${var.cluster_maximum_size}
-      DesiredCapacity: ${var.cluster_desired_capacity}
       Tags:
         - Key: Name
           Value: cluster-worker-${var.component}-${var.deployment_identifier}-${var.cluster_name}
@@ -98,7 +97,13 @@ Resources:
     UpdatePolicy:
       AutoScalingRollingUpdate:
         MaxBatchSize: ${var.cluster_rolling_update_maximum_batch_size}
-        MinInstancesInService: ${var.cluster_maximum_size - var.cluster_rolling_update_maximum_batch_size}
+        MinInstancesInService: ${var.cluster_rolling_update_min_instances_in_service}
+        SuspendProcesses:
+          - HealthCheck
+          - ReplaceUnhealthy
+          - AZRebalance
+          - AlarmNotification
+          - ScheduledActions
 Outputs:
   AutoScalingGroupName:
     Description: The name of the Auto-Scaling Group
