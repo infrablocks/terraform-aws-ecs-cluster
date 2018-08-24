@@ -75,20 +75,20 @@ variable "cluster_service_iam_policy_contents" {
 }
 
 variable "cluster_minimum_size" {
-  description = "The minimum size of the ECS cluster."
-  default = 1
+  description = "The minimum size of the ECS cluster. (Also sets the desired capacity upon initial deployment.)"
+  default = 3
 }
 variable "cluster_maximum_size" {
   description = "The maximum size of the ECS cluster."
   default = 10
 }
-variable "cluster_desired_capacity" {
-  description = "The desired capacity of the ECS cluster."
-  default = 3
-}
 variable "cluster_rolling_update_maximum_batch_size" {
   description = "The maximum number of instances in the ECS cluster that will be updated at a time."
   default = 1
+}
+variable "cluster_rolling_update_min_instances_in_service" {
+  description = "The minimum number of instances that must be in service within the autoscaling group during a rolling update."
+  default = 0
 }
 
 variable "associate_public_ip_addresses" {
