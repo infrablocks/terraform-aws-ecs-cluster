@@ -4,7 +4,7 @@ module Semantic
       new_version = clone
 
       if new_version.pre.nil?
-        new_version.increment!(:minor)
+        new_version = new_version.increment!(:minor)
         new_version.pre = 'rc.1'
         return new_version
       end
