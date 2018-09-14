@@ -85,7 +85,7 @@ resource "aws_autoscaling_group" "cluster" {
     propagate_at_launch = true
   }
 
-  tag{
+  tag {
     key = "Component"
     value = "${var.component}"
     propagate_at_launch = true
