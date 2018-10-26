@@ -30,9 +30,17 @@ variable "cluster_instance_root_block_device_size" {
   description = "The size in GB of the root block device on cluster instances."
   default = 10
 }
+variable "cluster_instance_root_block_device_type" {
+  description = "The type of the root block device on cluster instances ('standard', 'gp2', or 'io1')."
+  default = "standard"
+}
 variable "cluster_instance_docker_block_device_size" {
   description = "The size in GB of the docker block device on cluster instances."
   default = 100
+}
+variable "cluster_instance_docker_block_device_type" {
+  description = "The type of the docker block device on cluster instances ('standard', 'gp2', or 'io1')."
+  default = "standard"
 }
 variable "cluster_instance_docker_block_device_name" {
   description = "The name of the docker block device on cluster instances."

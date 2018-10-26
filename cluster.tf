@@ -54,11 +54,13 @@ resource "aws_launch_configuration" "cluster" {
 
   root_block_device {
     volume_size = "${var.cluster_instance_root_block_device_size}"
+    volume_type = "${var.cluster_instance_root_block_device_type}"
   }
 
   ebs_block_device {
     device_name = "${var.cluster_instance_docker_block_device_name}"
     volume_size = "${var.cluster_instance_docker_block_device_size}"
+    volume_type = "${var.cluster_instance_docker_block_device_type}"
   }
 
   lifecycle {
