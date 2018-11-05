@@ -12,6 +12,8 @@ variable "cluster_instance_amis" {
 variable "cluster_instance_root_block_device_size" {}
 variable "cluster_instance_docker_block_device_size" {}
 
+variable "cluster_instance_default_amazon_linux_version" {}
+
 variable "cluster_minimum_size" {}
 variable "cluster_maximum_size" {}
 variable "cluster_desired_capacity" {}

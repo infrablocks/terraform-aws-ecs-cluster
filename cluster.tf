@@ -14,7 +14,7 @@ resource "null_resource" "iam_wait" {
   }
 }
 
-data "aws_ami" "amazon_linux" {
+data "aws_ami" "amazon_linux_1" {
   most_recent = true
   owners = ["amazon"]
 
@@ -22,6 +22,24 @@ data "aws_ami" "amazon_linux" {
     name = "name"
     values = ["amzn-ami-*-amazon-ecs-optimized"]
   }
+}
+
+data "aws_ami" "amazon_linux_2" {
+  most_recent = true
+  owners = ["amazon"]
+
+  filter {
+    name = "name"
+    values = ["amzn2-ami-ecs-hvm-*-ebs"]
+  }
+}
+
+data "template_file" "default_ami_id" {
+  template = "${var.cluster_instance_default_amazon_linux_version == "1" ? data.aws_ami.amazon_linux_1.image_id : data.aws_ami.amazon_linux_2.image_id}"
+}
+
+data "template_file" "ami_id" {
+  template = "${coalesce(lookup(var.cluster_instance_amis, var.region), data.template_file.default_ami_id.rendered)}"
 }
 
 data "template_file" "cluster_user_data" {
@@ -32,9 +50,11 @@ data "template_file" "cluster_user_data" {
   }
 }
 
-resource "aws_launch_configuration" "cluster" {
+resource "aws_launch_configuration" "cluster_with_docker_volume" {
+  count = "${data.template_file.ami_id.rendered == data.aws_ami.amazon_linux_1.image_id ? "1" : "0"}"
+
   name_prefix = "cluster-${var.component}-${var.deployment_identifier}-${var.cluster_name}-"
-  image_id = "${coalesce(lookup(var.cluster_instance_amis, var.region), data.aws_ami.amazon_linux.image_id)}"
+  image_id = "${data.template_file.ami_id.rendered}"
   instance_type = "${var.cluster_instance_type}"
   key_name = "${aws_key_pair.cluster.key_name}"
 
@@ -68,6 +88,38 @@ resource "aws_launch_configuration" "cluster" {
   }
 }
 
+resource "aws_launch_configuration" "cluster_without_docker_volume" {
+  count = "${data.template_file.ami_id.rendered != data.aws_ami.amazon_linux_1.image_id ? "1" : "0"}"
+
+  name_prefix = "cluster-${var.component}-${var.deployment_identifier}-${var.cluster_name}-"
+  image_id = "${data.template_file.ami_id.rendered}"
+  instance_type = "${var.cluster_instance_type}"
+  key_name = "${aws_key_pair.cluster.key_name}"
+
+  iam_instance_profile = "${aws_iam_instance_profile.cluster.name}"
+
+  user_data = "${data.template_file.cluster_user_data.rendered}"
+
+  security_groups = [
+    "${aws_security_group.cluster.id}"
+  ]
+
+  associate_public_ip_address = "${var.associate_public_ip_addresses == "yes" ? true : false}"
+
+  depends_on = [
+    "null_resource.iam_wait"
+  ]
+
+  root_block_device {
+    volume_size = "${var.cluster_instance_root_block_device_size}"
+    volume_type = "${var.cluster_instance_root_block_device_type}"
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
 resource "aws_autoscaling_group" "cluster" {
   name = "asg-${var.component}-${var.deployment_identifier}-${var.cluster_name}"
 
@@ -75,7 +127,7 @@ resource "aws_autoscaling_group" "cluster" {
     "${split(",", var.subnet_ids)}"
   ]
 
-  launch_configuration = "${aws_launch_configuration.cluster.name}"
+  launch_configuration = "${data.template_file.ami_id.rendered == data.aws_ami.amazon_linux_1.image_id ? element(concat(aws_launch_configuration.cluster_with_docker_volume.*.name, list("")), 0) : element(concat(aws_launch_configuration.cluster_without_docker_volume.*.name, list("")), 0)}"
 
   min_size = "${var.cluster_minimum_size}"
   max_size = "${var.cluster_maximum_size}"

@@ -67,37 +67,47 @@ for usage instructions.
 
 ### Inputs
 
-| Name                                      | Description                                                                                                      | Default            | Required                                 |
-|-------------------------------------------|------------------------------------------------------------------------------------------------------------------|:------------------:|:----------------------------------------:|
-| region                                    | The region into which to deploy the cluster                                                                      | -                  | yes                                      |
-| vpc_id                                    | The ID of the VPC into which to deploy the cluster                                                               | -                  | yes                                      |
-| subnet_ids                                | The IDs of the subnets for container instances                                                                   | -                  | yes                                      |
-| component                                 | The component this cluster will contain                                                                          | -                  | yes                                      |
-| deployment_identifier                     | An identifier for this instantiation                                                                             | -                  | yes                                      |
-| cluster_name                              | The name of the cluster to create                                                                                | default            | yes                                      |
-| cluster_instance_ssh_public_key_path      | The path to the public key to use for the container instances                                                    | -                  | yes                                      |
-| cluster_instance_type                     | The instance type of the container instances                                                                     | t2.medium          | yes                                      |
-| cluster_instance_root_block_device_size   | The size in GB of the root block device on cluster instances                                                     | 10                 | yes                                      |
-| cluster_instance_root_block_device_type   | The type of the root block device on cluster instances ('standard', 'gp2', or 'io1')                             | standard           | yes                                      |
-| cluster_instance_docker_block_device_size | The size in GB of the docker block device on cluster instances                                                   | 100                | yes                                      | 
-| cluster_instance_docker_block_device_type | The type of the docker block device on cluster instances ('standard', 'gp2', or 'io1')                           | standard           | yes                                      |
-| cluster_instance_docker_block_device_name | The name of the docker block device on cluster instances                                                         | /dev/xvdcz         | yes                                      |
-| cluster_instance_user_data_template       | The contents of a template for container instance user data                                                      | see user-data      | no                                       |
-| cluster_instance_amis                     | A map of regions to AMIs for the container instances                                                             | ECS optimised AMIs | yes                                      |
-| cluster_instance_iam_policy_contents      | The contents of the cluster instance IAM policy                                                                  | see policies       | no                                       |
-| cluster_service_iam_policy_contents       | The contents of the cluster service IAM policy                                                                   | see policies       | no                                       |
-| cluster_minimum_size                      | The minimum size of the ECS cluster                                                                              | 1                  | yes                                      |
-| cluster_maximum_size                      | The maximum size of the ECS cluster                                                                              | 10                 | yes                                      |
-| cluster_desired_capacity                  | The desired capacity of the ECS cluster                                                                          | 3                  | yes                                      |
-| associate_public_ip_addresses             | Whether or not to associate public IP addresses with ECS container instances ("yes" or "no")                     | "no"               | yes                                      |
-| include_default_ingress_rule              | Whether or not to include the default ingress rule on the ECS container instances security group ("yes" or "no") | "yes"              | yes                                      |
-| include_default_egress_rule               | Whether or not to include the default egress rule on the ECS container instances security group ("yes" or "no")  | "yes"              | yes                                      |
-| allowed_cidrs                             | The CIDRs allowed access to containers                                                                           | ["10.0.0.0/8"]     | if include_default_ingress_rule is "yes" | 
-| egress_cidrs                              | The CIDRs accessible from containers                                                                             | ["0.0.0.0/0"]      | if include_default_egress_rule is "yes"  | 
+| Name                                          | Description                                                                                                             | Default            | Required                                 |
+|-----------------------------------------------|-------------------------------------------------------------------------------------------------------------------------|:------------------:|:----------------------------------------:|
+| region                                        | The region into which to deploy the cluster                                                                             | -                  | yes                                      |
+| vpc_id                                        | The ID of the VPC into which to deploy the cluster                                                                      | -                  | yes                                      |
+| subnet_ids                                    | The IDs of the subnets for container instances                                                                          | -                  | yes                                      |
+| component                                     | The component this cluster will contain                                                                                 | -                  | yes                                      |
+| deployment_identifier                         | An identifier for this instantiation                                                                                    | -                  | yes                                      |
+| cluster_name                                  | The name of the cluster to create                                                                                       | default            | yes                                      |
+| cluster_instance_ssh_public_key_path          | The path to the public key to use for the container instances                                                           | -                  | yes                                      |
+| cluster_instance_type                         | The instance type of the container instances                                                                            | t2.medium          | yes                                      |
+| cluster_instance_root_block_device_size       | The size in GB of the root block device on cluster instances                                                            | 10                 | yes                                      |
+| cluster_instance_root_block_device_type       | The type of the root block device on cluster instances ('standard', 'gp2', or 'io1')                                    | standard           | yes                                      |
+| cluster_instance_docker_block_device_size     | The size in GB of the docker block device on cluster instances (only applies to Amazon Linux 1)                         | 100                | yes                                      | 
+| cluster_instance_docker_block_device_type     | The type of the docker block device on cluster instances ('standard', 'gp2', or 'io1') (only applies to Amazon Linux 1) | standard           | yes                                      |
+| cluster_instance_docker_block_device_name     | The name of the docker block device on cluster instances (only applies to Amazon Linux 1)                               | /dev/xvdcz         | yes                                      |
+| cluster_instance_user_data_template           | The contents of a template for container instance user data                                                             | see user-data      | no                                       |
+| cluster_instance_default_amazon_linux_version | The version of Amazon Linux to use by default when no AMIs are provided                                                 | 2                  | no                                       |
+| cluster_instance_amis                         | A map of regions to AMIs for the container instances                                                                    | ECS optimised AMIs | yes                                      |
+| cluster_instance_iam_policy_contents          | The contents of the cluster instance IAM policy                                                                         | see policies       | no                                       |
+| cluster_service_iam_policy_contents           | The contents of the cluster service IAM policy                                                                          | see policies       | no                                       |
+| cluster_minimum_size                          | The minimum size of the ECS cluster                                                                                     | 1                  | yes                                      |
+| cluster_maximum_size                          | The maximum size of the ECS cluster                                                                                     | 10                 | yes                                      |
+| cluster_desired_capacity                      | The desired capacity of the ECS cluster                                                                                 | 3                  | yes                                      |
+| associate_public_ip_addresses                 | Whether or not to associate public IP addresses with ECS container instances ("yes" or "no")                            | "no"               | yes                                      |
+| include_default_ingress_rule                  | Whether or not to include the default ingress rule on the ECS container instances security group ("yes" or "no")        | "yes"              | yes                                      |
+| include_default_egress_rule                   | Whether or not to include the default egress rule on the ECS container instances security group ("yes" or "no")         | "yes"              | yes                                      |
+| allowed_cidrs                                 | The CIDRs allowed access to containers                                                                                  | ["10.0.0.0/8"]     | if include_default_ingress_rule is "yes" | 
+| egress_cidrs                                  | The CIDRs accessible from containers                                                                                    | ["0.0.0.0/0"]      | if include_default_egress_rule is "yes"  | 
 
 Notes:
-* The user data template with be passed the cluster name as `cluster_name`.
-* If none is supplied, a default will be used.
+* By default, the latest available Amazon Linux 2 AMI is used.
+* When Amazon Linux 1 AMIs are requested, an additional EBS volume is attached 
+  which can be customised using the `cluster_instance_docker_block_device_size`,
+  `cluster_instance_docker_block_device_type` and 
+  `cluster_instance_docker_block_device_name` variables.
+* When a specific AMI is provided via `cluster_instance_amis` (a map of region 
+  to AMI ID), only the root block device can be customised, using the 
+  `cluster_instance_root_block_device_size` and 
+  `cluster_instance_root_block_device_type` variables.
+* The user data template with be passed the cluster name as `cluster_name`. If 
+  none is supplied, a default will be used.
 
 ### Outputs
 

@@ -11,26 +11,80 @@ describe 'ECS Cluster' do
     it {should exist}
     its(:instance_type) {should eq(vars.cluster_instance_type)}
 
-    context 'by default, uses latest amazon linux optimised for ECS' do
-      let(:latest_ecs_optimised_ami_id) {
-        response = ec2_client.describe_images(
-            {
-                owners: ['amazon'],
-                filters: [
-                    {
-                        name: 'name',
-                        values: ['amzn-ami-*-amazon-ecs-optimized']
-                    }
-                ]
-            })
-        most_recent_image = response.images.max_by do |image|
-          DateTime.parse(image.creation_date)
+    context 'by default' do
+      before do
+        reprovision(
+            cluster_instance_default_amazon_linux_version: '2')
+      end
+
+      context 'uses latest amazon linux 2 optimised for ECS' do
+        let(:latest_amazon_linux_2_ecs_optimised_ami_id) {
+          response = ec2_client.describe_images(
+              {
+                  owners: ['amazon'],
+                  filters: [
+                      {
+                          name: 'name',
+                          values: ['amzn2-ami-ecs-hvm-*-ebs']
+                      }
+                  ]
+              })
+          most_recent_image = response.images.max_by do |image|
+            DateTime.parse(image.creation_date)
+          end
+
+          most_recent_image.image_id
+        }
+
+        its(:image_id) do
+          should eq(latest_amazon_linux_2_ecs_optimised_ami_id)
         end
+      end
 
-        most_recent_image.image_id
-      }
+      it 'does not add a docker block device' do
+        expect(subject.block_device_mappings.size).to(eq(1))
+      end
+    end
 
-      its(:image_id) {should eq(latest_ecs_optimised_ami_id)}
+    context 'when default version specified' do
+      before do
+        reprovision(
+            cluster_instance_default_amazon_linux_version: '1')
+      end
+
+      context 'uses latest amazon linux 1 optimised for ECS' do
+        let(:latest_amazon_linux_1_ecs_optimised_ami_id) {
+          response = ec2_client.describe_images(
+              {
+                  owners: ['amazon'],
+                  filters: [
+                      {
+                          name: 'name',
+                          values: ['amzn-ami-*-amazon-ecs-optimized']
+                      }
+                  ]
+              })
+          most_recent_image = response.images.max_by do |image|
+            DateTime.parse(image.creation_date)
+          end
+
+          most_recent_image.image_id
+        }
+
+        its(:image_id) do
+          should eq(latest_amazon_linux_1_ecs_optimised_ami_id)
+        end
+      end
+
+      it 'uses the specified size and name for the docker block device' do
+        docker_device_mapping = subject.block_device_mappings.find do |d|
+          d.device_name == '/dev/xvdcz'
+        end
+        expect(docker_device_mapping.device_name)
+            .to(eq('/dev/xvdcz'))
+        expect(docker_device_mapping.ebs.volume_size)
+            .to(eq(vars.cluster_instance_docker_block_device_size))
+      end
     end
 
     context 'when AMIs specified' do
@@ -77,16 +131,6 @@ describe 'ECS Cluster' do
       end
       expect(root_device_mapping.ebs.volume_size)
           .to(eq(vars.cluster_instance_root_block_device_size))
-    end
-
-    it 'uses the specified size and name for the docker block device' do
-      docker_device_mapping = subject.block_device_mappings.find do |d|
-        d.device_name == '/dev/xvdcz'
-      end
-      expect(docker_device_mapping.device_name)
-          .to(eq('/dev/xvdcz'))
-      expect(docker_device_mapping.ebs.volume_size)
-          .to(eq(vars.cluster_instance_docker_block_device_size))
     end
   end
 
