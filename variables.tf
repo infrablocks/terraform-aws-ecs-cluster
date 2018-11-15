@@ -114,3 +114,8 @@ variable "egress_cidrs" {
   type = "list"
   default = ["0.0.0.0/0"]
 }
+variable "cluster_target_group_arns" {
+  description = "The target group arn list to attach the instaces in the cluster to"
+  type = "list"
+  default = []
+}

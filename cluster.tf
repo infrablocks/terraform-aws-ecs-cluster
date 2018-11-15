@@ -81,6 +81,7 @@ Resources:
       LaunchConfigurationName: ${aws_launch_configuration.cluster.name}
       MinSize: ${var.cluster_minimum_size}
       MaxSize: ${var.cluster_maximum_size}
+      TargetGroupARNs: ${jsonencode(var.cluster_target_group_arns)}
       Tags:
         - Key: Name
           Value: cluster-worker-${var.component}-${var.deployment_identifier}-${var.cluster_name}
