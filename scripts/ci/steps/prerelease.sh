@@ -17,4 +17,4 @@ set -e
 
 git crypt unlock
 
-./go version:release
+./go version:bump[rc]

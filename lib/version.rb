@@ -1,5 +1,16 @@
 module Semantic
-  class Version
+  module Extensions
+    def release!
+      if pre.nil?
+        raise RuntimeError.new(
+            "Error: no pre segment, this version is not a pre-release version.")
+      end
+
+      new_version = clone
+      new_version.build = new_version.pre = nil
+      new_version
+    end
+
     def rc!
       new_version = clone
 
@@ -15,7 +26,11 @@ module Semantic
       end
 
       raise RuntimeError.new(
-          "Error: pre segment '#{new_version.pre}' is does not look like 'rc.n'")
+          "Error: pre segment '#{new_version.pre}' does not look like 'rc.n'.")
     end
+  end
+
+  class Version
+    prepend Extensions
   end
 end
