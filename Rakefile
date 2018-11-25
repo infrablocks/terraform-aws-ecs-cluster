@@ -9,9 +9,19 @@ require_relative 'lib/version'
 
 configuration = Configuration.new
 
+def repo
+  Git.open('.')
+end
+
+def latest_tag
+  repo.tags.map do |tag|
+    Semantic::Version.new(tag.name)
+  end.max
+end
+
 RakeTerraform.define_installation_tasks(
     path: File.join(Dir.pwd, 'vendor', 'terraform'),
-    version: '0.11.1')
+    version: '0.11.10')
 
 task :default => 'test:integration'
 
@@ -59,14 +69,18 @@ namespace :deployment do
   end
 end
 
-namespace :release do
-  desc 'Increment and push tag'
-  task :tag do
-    repo = Git.open('.')
-    tags = repo.tags
-    latest_tag = tags.map { |tag| Semantic::Version.new(tag.name) }.max
-    next_tag = latest_tag.rc!
+namespace :version do
+  task :bump, [:type] do |_, args|
+    next_tag = latest_tag.send("#{args.type}!")
     repo.add_tag(next_tag.to_s)
     repo.push('origin', 'master', tags: true)
+    puts "Bumped version to #{next_tag}."
+  end
+
+  task :release do
+    next_tag = latest_tag.release!
+    repo.add_tag(next_tag.to_s)
+    repo.push('origin', 'master', tags: true)
+    puts "Released version #{next_tag}."
   end
 end

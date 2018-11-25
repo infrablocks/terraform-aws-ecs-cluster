@@ -20,6 +20,7 @@ module "ecs_cluster" {
   cluster_instance_ssh_public_key_path = "${var.cluster_instance_ssh_public_key_path}"
   cluster_instance_type = "${var.cluster_instance_type}"
   cluster_instance_amis = "${var.cluster_instance_amis}"
+  cluster_instance_default_amazon_linux_version = "${var.cluster_instance_default_amazon_linux_version}"
   cluster_instance_root_block_device_size = "${var.cluster_instance_root_block_device_size}"
   cluster_instance_docker_block_device_size = "${var.cluster_instance_docker_block_device_size}"
 
