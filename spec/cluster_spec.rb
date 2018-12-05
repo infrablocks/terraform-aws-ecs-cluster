@@ -25,7 +25,7 @@ describe 'ECS Cluster' do
                   filters: [
                       {
                           name: 'name',
-                          values: ['amzn2-ami-ecs-hvm-*-ebs']
+                          values: ['amzn2-ami-ecs-hvm-*-x86_64-ebs']
                       }
                   ]
               })
