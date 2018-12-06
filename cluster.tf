@@ -30,7 +30,7 @@ data "aws_ami" "amazon_linux_2" {
 
   filter {
     name = "name"
-    values = ["amzn2-ami-ecs-hvm-*-ebs"]
+    values = ["amzn2-ami-ecs-hvm-*-x86_64-ebs"]
   }
 }
 
@@ -139,7 +139,7 @@ resource "aws_autoscaling_group" "cluster" {
     propagate_at_launch = true
   }
 
-  tag{
+  tag {
     key = "Component"
     value = "${var.component}"
     propagate_at_launch = true
