@@ -1,11 +1,11 @@
 output "cluster_id" {
   description = "The ID of the created ECS cluster."
-  value = "${aws_ecs_cluster.cluster.id}"
+  value = "${ join("", aws_ecs_cluster.cluster.*.id) }"
 }
 
 output "cluster_name" {
   description = "The name of the created ECS cluster."
-  value = "${aws_ecs_cluster.cluster.name}"
+  value = "${ join("", aws_ecs_cluster.cluster.*.name) }"
 }
 
 output "autoscaling_group_name" {
@@ -22,7 +22,7 @@ output "launch_configuration_name" {
 
 output "security_group_id" {
   description = "The ID of the security group associated with the ECS container instances."
-  value = "${aws_security_group.cluster.id}"
+  value = "${ join("", aws_security_group.cluster.*.id) }"
 }
 
 output "instance_role_arn" {
