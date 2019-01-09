@@ -1,16 +1,16 @@
 output "cluster_id" {
   description = "The ID of the created ECS cluster."
-  value = "${ join("", aws_ecs_cluster.cluster.*.id) }"
+  value = "${element(concat(aws_ecs_cluster.cluster.*.id, list("")), 0)}"
 }
 
 output "cluster_name" {
   description = "The name of the created ECS cluster."
-  value = "${ join("", aws_ecs_cluster.cluster.*.name) }"
+  value = "${element(concat(aws_ecs_cluster.cluster.*.name, list("")), 0)}"
 }
 
 output "autoscaling_group_name" {
   description = "The name of the autoscaling group for the ECS container instances."
-  value = "${aws_autoscaling_group.cluster.name}"
+  value = "${element(concat(aws_autoscaling_group.cluster.*.name, list("")), 0)}"
 }
 
 output "launch_configuration_name" {
@@ -22,50 +22,50 @@ output "launch_configuration_name" {
 
 output "security_group_id" {
   description = "The ID of the security group associated with the ECS container instances."
-  value = "${ join("", aws_security_group.cluster.*.id) }"
+  value = "${element(concat(aws_security_group.cluster.*.id, list("")), 0)}"
 }
 
 output "instance_role_arn" {
   description = "The ARN of the container instance role."
-  value = "${aws_iam_role.cluster_instance_role.arn}"
+  value = "${element(concat(aws_iam_role.cluster_instance_role.*.arn, list("")), 0)}"
 }
 
 output "instance_role_id" {
   description = "The ID of the container instance role."
-  value = "${aws_iam_role.cluster_instance_role.unique_id}"
+  value = "${element(concat(aws_iam_role.cluster_instance_role.*.unique_id, list("")), 0)}"
 }
 
 output "instance_policy_arn" {
   description = "The ARN of the container instance policy."
-  value = "${aws_iam_policy.cluster_instance_policy.arn}"
+  value = "${element(concat(aws_iam_policy.cluster_instance_policy.*.arn, list("")), 0)}"
 }
 
 output "instance_policy_id" {
   description = "The ID of the container instance policy."
-  value = "${aws_iam_policy.cluster_instance_policy.id}"
+  value = "${element(concat(aws_iam_policy.cluster_instance_policy.*.id, list("")), 0)}"
 }
 
 output "service_role_arn" {
   description = "The ARN of the ECS service role."
-  value = "${aws_iam_role.cluster_service_role.arn}"
+  value = "${element(concat(aws_iam_role.cluster_service_role.*.arn, list("")), 0)}"
 }
 
 output "service_role_id" {
   description = "The ID of the ECS service role."
-  value = "${aws_iam_role.cluster_service_role.unique_id}"
+  value = "${element(concat(aws_iam_role.cluster_service_role.*.unique_id, list("")), 0)}"
 }
 
 output "service_policy_arn" {
   description = "The ARN of the ECS service policy."
-  value = "${aws_iam_policy.cluster_service_policy.arn}"
+  value = "${element(concat(aws_iam_policy.cluster_service_policy.*.arn, list("")), 0)}"
 }
 
 output "service_policy_id" {
   description = "The ID of the ECS service policy."
-  value = "${aws_iam_policy.cluster_service_policy.id}"
+  value = "${element(concat(aws_iam_policy.cluster_service_policy.*.id, list("")), 0)}"
 }
 
 output "log_group" {
   description = "The name of the default log group for the cluster."
-  value = "${aws_cloudwatch_log_group.cluster.name}"
+  value = "${element(concat(aws_cloudwatch_log_group.cluster.*.name, list("")), 0)}"
 }
