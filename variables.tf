@@ -30,7 +30,7 @@ variable "cluster_instance_ssh_public_key_path" {
 
 variable "cluster_instance_root_block_device_size" {
   description = "The size in GB of the root block device on cluster instances."
-  default = 10
+  default = 30
 }
 variable "cluster_instance_root_block_device_type" {
   description = "The type of the root block device on cluster instances ('standard', 'gp2', or 'io1')."
