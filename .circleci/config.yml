@@ -3,7 +3,7 @@ jobs:
   test:
     working_directory: ~/terraform-aws-ecs-cluster
     docker:
-      - image: ruby:2.3.1
+      - image: ruby:2.3.8
     steps:
       - checkout
       - run: ./scripts/ci/common/install-git-crypt.sh
@@ -11,7 +11,7 @@ jobs:
   prerelease:
     working_directory: ~/terraform-aws-ecs-cluster
     docker:
-      - image: ruby:2.3.1
+      - image: ruby:2.3.8
     steps:
       - checkout
       - run: ./scripts/ci/common/install-git-crypt.sh
@@ -19,7 +19,7 @@ jobs:
   release:
     working_directory: ~/terraform-aws-ecs-cluster
     docker:
-      - image: ruby:2.3.1
+      - image: ruby:2.3.8
     steps:
       - checkout
       - run: ./scripts/ci/common/install-git-crypt.sh
