@@ -3,7 +3,7 @@ resource "aws_security_group" "cluster" {
   description = "Container access for component: ${var.component}, deployment: ${var.deployment_identifier}, cluster: ${var.cluster_name}"
   vpc_id = "${var.vpc_id}"
 
-  tags {
+  tags = {
     Name = "${var.component}-${var.deployment_identifier}-${var.cluster_name}"
     Component = "${var.component}"
     DeploymentIdentifier = "${var.deployment_identifier}"

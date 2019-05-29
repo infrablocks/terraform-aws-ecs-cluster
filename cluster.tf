@@ -45,7 +45,7 @@ data "template_file" "ami_id" {
 data "template_file" "cluster_user_data" {
   template = "${coalesce(var.cluster_instance_user_data_template, file("${path.module}/user-data/cluster.tpl"))}"
 
-  vars {
+  vars = {
     cluster_name = "${aws_ecs_cluster.cluster.name}"
   }
 }
