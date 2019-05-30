@@ -123,7 +123,9 @@ resource "aws_launch_configuration" "cluster_without_docker_volume" {
 resource "aws_autoscaling_group" "cluster" {
   name = "asg-${var.component}-${var.deployment_identifier}-${var.cluster_name}"
 
-  vpc_zone_identifier = "${var.subnet_ids}"
+  vpc_zone_identifier = [
+    "${split(",", var.subnet_ids)}"
+  ]
 
   launch_configuration = "${data.template_file.ami_id.rendered == data.aws_ami.amazon_linux_1.image_id ? element(concat(aws_launch_configuration.cluster_with_docker_volume.*.name, list("")), 0) : element(concat(aws_launch_configuration.cluster_without_docker_volume.*.name, list("")), 0)}"
 

@@ -11,7 +11,7 @@ module "ecs_cluster" {
 
   region = "${var.region}"
   vpc_id = "${data.terraform_remote_state.prerequisites.vpc_id}"
-  subnet_ids = "${split(",", data.terraform_remote_state.prerequisites.private_subnet_ids)}"
+  subnet_ids = "${data.terraform_remote_state.prerequisites.private_subnet_ids}"
 
   component = "${var.component}"
   deployment_identifier = "${var.deployment_identifier}"
