@@ -71,7 +71,7 @@ for usage instructions.
 |-----------------------------------------------|-------------------------------------------------------------------------------------------------------------------------|:------------------:|:----------------------------------------:|
 | region                                        | The region into which to deploy the cluster                                                                             | -                  | yes                                      |
 | vpc_id                                        | The ID of the VPC into which to deploy the cluster                                                                      | -                  | yes                                      |
-| subnet_ids                                    | The IDs of the subnets for container instances                                                                          | -                  | yes                                      |
+| subnet_ids                                    | The list of IDs of the subnets for container instances                                                                  | -                  | yes                                      |
 | component                                     | The component this cluster will contain                                                                                 | -                  | yes                                      |
 | deployment_identifier                         | An identifier for this instantiation                                                                                    | -                  | yes                                      |
 | cluster_name                                  | The name of the cluster to create                                                                                       | default            | yes                                      |
@@ -108,6 +108,9 @@ Notes:
   `cluster_instance_root_block_device_type` variables.
 * The user data template with be passed the cluster name as `cluster_name`. If 
   none is supplied, a default will be used.
+* When upgrading to version 0.6.0 you will need to change subnet_ids from being
+  passed as a string to a list. Before: `subnet_ids = "${join(",", aws_subnet.private.*.id)}"`,
+  after: `subnet_ids = "${aws_subnet.private.*.id}"` or `subnet_ids = ["${split(",", var.subnet_ids)}"]`
 
 ### Outputs
 
