@@ -5,8 +5,7 @@ variable "vpc_id" {
   description = "The ID of the VPC into which to deploy the cluster."
 }
 variable "subnet_ids" {
-  description = "The list of IDs of the subnets for container instances."
-  type = "list"
+  description = "The IDs of the subnets for container instances."
 }
 
 variable "component" {
