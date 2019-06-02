@@ -1,7 +1,7 @@
 data "terraform_remote_state" "prerequisites" {
   backend = "local"
 
-  config {
+  config = {
     path = "${path.module}/../../../../state/prerequisites.tfstate"
   }
 }
@@ -10,8 +10,8 @@ module "ecs_cluster" {
   source = "../../../../"
 
   region = "${var.region}"
-  vpc_id = "${data.terraform_remote_state.prerequisites.vpc_id}"
-  subnet_ids = "${data.terraform_remote_state.prerequisites.private_subnet_ids}"
+  vpc_id = "${data.terraform_remote_state.prerequisites.outputs.vpc_id}"
+  subnet_ids = "${data.terraform_remote_state.prerequisites.outputs.private_subnet_ids}"
 
   component = "${var.component}"
   deployment_identifier = "${var.deployment_identifier}"

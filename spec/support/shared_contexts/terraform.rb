@@ -10,6 +10,8 @@ shared_context :terraform do
 
   let(:vars) {TerraformModule.configuration.for(:harness).vars}
 
+  let(:spec_vars) {Vars.load_from(Paths.from_project_root_directory('config', 'vars', 'spec.yml'), {})}
+
   def output_for(role, name)
     TerraformModule.output_for(role, name)
   end
