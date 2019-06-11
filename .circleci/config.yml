@@ -32,23 +32,31 @@ workflows:
       - test:
           filters:
             branches:
-              only: master
+              only:
+                - master
+                - terraform011
       - prerelease:
           requires:
             - test
           filters:
             branches:
-              only: master
+              only:
+                - master
+                - terraform011
       - hold:
           type: approval
           requires:
             - prerelease
           filters:
             branches:
-              only: master
+              only:
+                - master
+                - terraform011
       - release:
           requires:
             - hold
           filters:
             branches:
-              only: master
+              only:
+                - master
+                - terraform011
