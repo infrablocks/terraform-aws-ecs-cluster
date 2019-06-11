@@ -13,9 +13,13 @@ def repo
   Git.open('.')
 end
 
+def current_branch
+  ENV['CIRCLE_BRANCH'] || 'master'
+end
+
 def latest_tag
-  repo.tags.map do |tag|
-    Semantic::Version.new(tag.name)
+  `git tag --merged #{current_branch}`.split("\n").map do |tag|
+    Semantic::Version.new(tag)
   end.max
 end
 
@@ -73,14 +77,14 @@ namespace :version do
   task :bump, [:type] do |_, args|
     next_tag = latest_tag.send("#{args.type}!")
     repo.add_tag(next_tag.to_s)
-    repo.push('origin', 'master', tags: true)
+    repo.push('origin', current_branch, tags: true)
     puts "Bumped version to #{next_tag}."
   end
 
   task :release do
     next_tag = latest_tag.release!
     repo.add_tag(next_tag.to_s)
-    repo.push('origin', 'master', tags: true)
+    repo.push('origin', current_branch, tags: true)
     puts "Released version #{next_tag}."
   end
 end
