@@ -8,9 +8,7 @@ cluster_name: 'test-cluster'
 cluster_instance_ssh_public_key_path: '<%= @project_directory %>/config/secrets/keys/cluster/ssh.public'
 cluster_instance_type: 't2.medium'
 cluster_instance_amis: '{eu-west-2=""}'
-cluster_instance_default_amazon_linux_version: '2'
 cluster_instance_root_block_device_size: 40
-cluster_instance_docker_block_device_size: 60
 
 cluster_minimum_size: 1
 cluster_maximum_size: 3
@@ -23,3 +21,5 @@ allowed_cidrs:
   - '10.1.0.0/16'
 egress_cidrs:
   - '10.1.0.0/16'
+
+launch_configuration_create_before_destroy: "yes"

@@ -10,9 +10,6 @@ variable "cluster_instance_amis" {
   type = "map"
 }
 variable "cluster_instance_root_block_device_size" {}
-variable "cluster_instance_docker_block_device_size" {}
-
-variable "cluster_instance_default_amazon_linux_version" {}
 
 variable "cluster_minimum_size" {}
 variable "cluster_maximum_size" {}
@@ -26,3 +23,5 @@ variable "allowed_cidrs" {
 variable "egress_cidrs" {
   type = "list"
 }
+
+variable "launch_configuration_create_before_destroy" {}
