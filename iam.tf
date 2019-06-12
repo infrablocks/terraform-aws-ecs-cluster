@@ -1,6 +1,11 @@
 resource "aws_iam_role" "cluster_instance_role" {
   description = "cluster-instance-role-${var.component}-${var.deployment_identifier}-${var.cluster_name}"
   assume_role_policy = "${file("${path.module}/policies/cluster-instance-role.json")}"
+
+  tags = {
+    Component = "${var.component}"
+    DeploymentIdentifier = "${var.deployment_identifier}"
+  }
 }
 
 resource "aws_iam_policy" "cluster_instance_policy" {
@@ -23,6 +28,11 @@ resource "aws_iam_instance_profile" "cluster" {
 resource "aws_iam_role" "cluster_service_role" {
   description = "cluster-service-role-${var.component}-${var.deployment_identifier}-${var.cluster_name}"
   assume_role_policy = "${file("${path.module}/policies/cluster-service-role.json")}"
+
+  tags = {
+    Component = "${var.component}"
+    DeploymentIdentifier = "${var.deployment_identifier}"
+  }
 }
 
 resource "aws_iam_policy" "cluster_service_policy" {

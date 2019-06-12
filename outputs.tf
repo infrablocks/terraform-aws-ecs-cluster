@@ -15,9 +15,9 @@ output "autoscaling_group_name" {
 
 output "launch_configuration_name" {
   description = "The name of the launch configuration for the ECS container instances."
-  value = "${data.template_file.ami_id.rendered == data.aws_ami.amazon_linux_1.image_id ?
-    element(concat(aws_launch_configuration.cluster_with_docker_volume.*.name, list("")), 0) :
-    element(concat(aws_launch_configuration.cluster_without_docker_volume.*.name, list("")), 0)}"
+  value = "${var.launch_configuration_create_before_destroy == "yes" ?
+    element(concat(aws_launch_configuration.cluster_without_docker_volume.*.name, list("")), 0) :
+    element(concat(aws_launch_configuration.cluster_with_destroy.*.name, list("")), 0)}"
 }
 
 output "security_group_id" {

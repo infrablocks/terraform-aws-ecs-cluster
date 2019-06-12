@@ -79,11 +79,7 @@ for usage instructions.
 | cluster_instance_type                         | The instance type of the container instances                                                                            | t2.medium          | yes                                      |
 | cluster_instance_root_block_device_size       | The size in GB of the root block device on cluster instances                                                            | 30                 | yes                                      |
 | cluster_instance_root_block_device_type       | The type of the root block device on cluster instances ('standard', 'gp2', or 'io1')                                    | standard           | yes                                      |
-| cluster_instance_docker_block_device_size     | The size in GB of the docker block device on cluster instances (only applies to Amazon Linux 1)                         | 100                | yes                                      | 
-| cluster_instance_docker_block_device_type     | The type of the docker block device on cluster instances ('standard', 'gp2', or 'io1') (only applies to Amazon Linux 1) | standard           | yes                                      |
-| cluster_instance_docker_block_device_name     | The name of the docker block device on cluster instances (only applies to Amazon Linux 1)                               | /dev/xvdcz         | yes                                      |
 | cluster_instance_user_data_template           | The contents of a template for container instance user data                                                             | see user-data      | no                                       |
-| cluster_instance_default_amazon_linux_version | The version of Amazon Linux to use by default when no AMIs are provided                                                 | 2                  | no                                       |
 | cluster_instance_amis                         | A map of regions to AMIs for the container instances                                                                    | ECS optimised AMIs | yes                                      |
 | cluster_instance_iam_policy_contents          | The contents of the cluster instance IAM policy                                                                         | see policies       | no                                       |
 | cluster_service_iam_policy_contents           | The contents of the cluster service IAM policy                                                                          | see policies       | no                                       |
@@ -95,13 +91,12 @@ for usage instructions.
 | include_default_egress_rule                   | Whether or not to include the default egress rule on the ECS container instances security group ("yes" or "no")         | "yes"              | yes                                      |
 | allowed_cidrs                                 | The CIDRs allowed access to containers                                                                                  | ["10.0.0.0/8"]     | if include_default_ingress_rule is "yes" | 
 | egress_cidrs                                  | The CIDRs accessible from containers                                                                                    | ["0.0.0.0/0"]      | if include_default_egress_rule is "yes"  | 
+| launch_configuration_create_before_destroy    | Whether or not to destroy the launch configuration before creating a new one ("yes" or "no")                            | "yes"              | no                                       |
 
 Notes:
 * By default, the latest available Amazon Linux 2 AMI is used.
-* When Amazon Linux 1 AMIs are requested, an additional EBS volume is attached 
-  which can be customised using the `cluster_instance_docker_block_device_size`,
-  `cluster_instance_docker_block_device_type` and 
-  `cluster_instance_docker_block_device_name` variables.
+* For Amazon Linux 1 AMIs use version <= 0.6.0 of this module for terraform 0.11
+  or version = 1.0.0 for terraform 0.12.
 * When a specific AMI is provided via `cluster_instance_amis` (a map of region 
   to AMI ID), only the root block device can be customised, using the 
   `cluster_instance_root_block_device_size` and 

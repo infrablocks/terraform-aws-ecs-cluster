@@ -36,28 +36,12 @@ variable "cluster_instance_root_block_device_type" {
   description = "The type of the root block device on cluster instances ('standard', 'gp2', or 'io1')."
   default = "standard"
 }
-variable "cluster_instance_docker_block_device_size" {
-  description = "The size in GB of the docker block device on cluster instances."
-  default = 100
-}
-variable "cluster_instance_docker_block_device_type" {
-  description = "The type of the docker block device on cluster instances ('standard', 'gp2', or 'io1')."
-  default = "standard"
-}
-variable "cluster_instance_docker_block_device_name" {
-  description = "The name of the docker block device on cluster instances."
-  default = "/dev/xvdcz"
-}
 
 variable "cluster_instance_user_data_template" {
   description = "The contents of a template for container instance user data."
   default = ""
 }
 
-variable "cluster_instance_default_amazon_linux_version" {
-  description = "The Amazon Linux version to use for the default AMI (\"1\" or \"2\")."
-  default = "2"
-}
 variable "cluster_instance_amis" {
   description = "A map of regions to AMIs for the container instances."
   type = "map"
@@ -126,4 +110,9 @@ variable "egress_cidrs" {
   description = "The CIDRs accessible from containers."
   type = "list"
   default = ["0.0.0.0/0"]
+}
+
+variable "launch_configuration_create_before_destroy" {
+  description = "Whether or not to destroy the launch configuration before creating a new one (\"yes\" or \"no\")."
+  default = "yes"
 }

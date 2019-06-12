@@ -14,7 +14,7 @@ describe 'ECS Cluster' do
     context 'by default' do
       before do
         reprovision(
-            cluster_instance_default_amazon_linux_version: '2')
+            launch_configuration_create_before_destroy: 'yes')
       end
 
       context 'uses latest amazon linux 2 optimised for ECS' do
@@ -46,21 +46,23 @@ describe 'ECS Cluster' do
       end
     end
 
-    context 'when default version specified' do
+    context 'when create_before_destroy is set to "no"' do
       before do
         reprovision(
-            cluster_instance_default_amazon_linux_version: '1')
+            launch_configuration_create_before_destroy: 'no')
       end
 
-      context 'uses latest amazon linux 1 optimised for ECS' do
-        let(:latest_amazon_linux_1_ecs_optimised_ami_id) {
+      # Duplicates tests above - not sure if there is a better way to test lifecycle other than
+      #   just to reprovision and make sure it doesn't break.
+      context 'uses latest amazon linux 2 optimised for ECS' do
+        let(:latest_amazon_linux_2_ecs_optimised_ami_id) {
           response = ec2_client.describe_images(
               {
                   owners: ['amazon'],
                   filters: [
                       {
                           name: 'name',
-                          values: ['amzn-ami-*-amazon-ecs-optimized']
+                          values: ['amzn2-ami-ecs-hvm-*-x86_64-ebs']
                       }
                   ]
               })
@@ -72,18 +74,12 @@ describe 'ECS Cluster' do
         }
 
         its(:image_id) do
-          should eq(latest_amazon_linux_1_ecs_optimised_ami_id)
+          should eq(latest_amazon_linux_2_ecs_optimised_ami_id)
         end
       end
 
-      it 'uses the specified size and name for the docker block device' do
-        docker_device_mapping = subject.block_device_mappings.find do |d|
-          d.device_name == '/dev/xvdcz'
-        end
-        expect(docker_device_mapping.device_name)
-            .to(eq('/dev/xvdcz'))
-        expect(docker_device_mapping.ebs.volume_size)
-            .to(eq(vars.cluster_instance_docker_block_device_size))
+      it 'does not add a docker block device' do
+        expect(subject.block_device_mappings.size).to(eq(1))
       end
     end
 
@@ -185,7 +181,7 @@ describe 'ECS Cluster' do
   end
 
   context 'autoscaling group' do
-    subject {autoscaling_group("asg-#{vars.component}-#{vars.deployment_identifier}-#{vars.cluster_name}")}
+    subject {autoscaling_group(output_for(:harness, 'autoscaling_group_name'))}
 
     it {should exist}
     its(:min_size) {should eq(vars.cluster_minimum_size)}
@@ -214,7 +210,7 @@ describe 'ECS Cluster' do
 
   context 'outputs' do
     let(:cluster) {ecs_cluster("#{vars.component}-#{vars.deployment_identifier}-#{vars.cluster_name}")}
-    let(:asg) {autoscaling_group("asg-#{vars.component}-#{vars.deployment_identifier}-#{vars.cluster_name}")}
+    let(:asg) {autoscaling_group(output_for(:harness, 'autoscaling_group_name'))}
 
     it 'outputs the cluster id' do
       expect(output_for(:harness, 'cluster_id'))
