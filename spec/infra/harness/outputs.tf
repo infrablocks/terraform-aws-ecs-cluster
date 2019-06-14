@@ -6,6 +6,10 @@ output "cluster_name" {
   value = "${module.ecs_cluster.cluster_name}"
 }
 
+output "cluster_arn" {
+  value = "${module.ecs_cluster.cluster_arn}"
+}
+
 output "autoscaling_group_name" {
   value = "${module.ecs_cluster.autoscaling_group_name}"
 }

@@ -116,3 +116,9 @@ variable "launch_configuration_create_before_destroy" {
   description = "Whether or not to destroy the launch configuration before creating a new one (\"yes\" or \"no\")."
   default = "yes"
 }
+
+variable "security_groups" {
+  description = "The list of security group IDs to associate with the cluster."
+  type = "list"
+  default = []
+}

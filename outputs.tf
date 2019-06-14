@@ -8,6 +8,11 @@ output "cluster_name" {
   value = "${element(concat(aws_ecs_cluster.cluster.*.name, list("")), 0)}"
 }
 
+output "cluster_arn" {
+  description = "The ARN of the created ECS cluster."
+  value = "${element(concat(aws_ecs_cluster.cluster.*.arn, list("")), 0)}"
+}
+
 output "autoscaling_group_name" {
   description = "The name of the autoscaling group for the ECS container instances."
   value = "${element(concat(aws_autoscaling_group.cluster.*.name, list("")), 0)}"
@@ -21,8 +26,8 @@ output "launch_configuration_name" {
 }
 
 output "security_group_id" {
-  description = "The ID of the security group associated with the ECS container instances."
-  value = "${element(concat(aws_security_group.cluster.*.id, list("")), 0)}"
+  description = "The ID of the security group associated with the ECS container instances if no custom security groups were provided."
+  value = "${length(var.security_groups) > 0 ? "" : element(concat(aws_security_group.cluster.*.id, list("")), 0)}"
 }
 
 output "instance_role_arn" {

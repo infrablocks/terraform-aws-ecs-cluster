@@ -83,6 +83,24 @@ describe 'ECS Cluster' do
       end
     end
 
+    context 'when custom security groups are provided' do
+      before(:all) do
+        reprovision(
+            security_groups: '["' + output_for(:prerequisites, 'security_groups_ids').gsub(',', '","') + '"]')
+      end
+
+      it {should have_security_group("#{vars.component}-#{vars.deployment_identifier}-0")}
+      it {should have_security_group("#{vars.component}-#{vars.deployment_identifier}-1")}
+
+      it 'should have correct number of security groups' do
+        expect(subject.security_groups.size).to(eq(2))
+      end
+
+      it 'does not output the security group ID' do
+        expect(output_for(:harness, 'security_group_id')).to(eq(''))
+      end
+    end
+
     context 'when AMIs specified' do
       it 'uses provided image ID' do
         reprovision(
@@ -196,6 +214,14 @@ describe 'ECS Cluster' do
           .to(contain_exactly(*output_for(:prerequisites, 'private_subnet_ids').split(',')))
     end
 
+    it 'has a name containing the component, deployment_identifier and cluster_name' do
+      autoscaling_group_name = output_for(:harness, 'autoscaling_group_name')
+
+      expect(autoscaling_group_name).to(match(/#{vars.component}/))
+      expect(autoscaling_group_name).to(match(/#{vars.deployment_identifier}/))
+      expect(autoscaling_group_name).to(match(/#{vars.cluster_name}/))
+    end
+
     it {should have_tag('Name').value("cluster-worker-#{vars.component}-#{vars.deployment_identifier}-#{vars.cluster_name}")}
     it {should have_tag('Component').value(vars.component)}
     it {should have_tag('DeploymentIdentifier').value(vars.deployment_identifier)}
@@ -206,25 +232,8 @@ describe 'ECS Cluster' do
     subject {ecs_cluster("#{vars.component}-#{vars.deployment_identifier}-#{vars.cluster_name}")}
 
     it {should exist}
-  end
-
-  context 'outputs' do
-    let(:cluster) {ecs_cluster("#{vars.component}-#{vars.deployment_identifier}-#{vars.cluster_name}")}
-    let(:asg) {autoscaling_group(output_for(:harness, 'autoscaling_group_name'))}
-
-    it 'outputs the cluster id' do
-      expect(output_for(:harness, 'cluster_id'))
-          .to(eq(cluster.cluster_arn))
-    end
-
-    it 'outputs the cluster name' do
-      expect(output_for(:harness, 'cluster_name'))
-          .to(eq(cluster.cluster_name))
-    end
-
-    it 'outputs the autoscaling group name' do
-      expect(output_for(:harness, 'autoscaling_group_name'))
-          .to(eq(asg.auto_scaling_group_name))
-    end
+    its(:cluster_arn) {should eq(output_for(:harness, 'cluster_id'))}
+    its(:cluster_arn) {should eq(output_for(:harness, 'cluster_arn'))}
+    its(:cluster_name) {should eq(output_for(:harness, 'cluster_name'))}
   end
 end
