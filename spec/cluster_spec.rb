@@ -83,21 +83,17 @@ describe 'ECS Cluster' do
       end
     end
 
-    context 'when custom security groups are provided' do
+    context 'when additional security groups are provided' do
       before(:all) do
         reprovision(
-            security_groups: '["' + output_for(:prerequisites, 'security_groups_ids').gsub(',', '","') + '"]')
+            additional_security_groups: '["' + output_for(:prerequisites, 'security_groups_ids').gsub(',', '","') + '"]')
       end
 
       it {should have_security_group("#{vars.component}-#{vars.deployment_identifier}-0")}
       it {should have_security_group("#{vars.component}-#{vars.deployment_identifier}-1")}
 
       it 'should have correct number of security groups' do
-        expect(subject.security_groups.size).to(eq(2))
-      end
-
-      it 'does not output the security group ID' do
-        expect(output_for(:harness, 'security_group_id')).to(eq(''))
+        expect(subject.security_groups.size).to(eq(3))
       end
     end
 

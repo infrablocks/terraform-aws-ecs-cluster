@@ -117,8 +117,8 @@ variable "launch_configuration_create_before_destroy" {
   default = "yes"
 }
 
-variable "security_groups" {
-  description = "The list of security group IDs to associate with the cluster."
+variable "additional_security_groups" {
+  description = "The list of additional security group IDs to associate with the cluster."
   type = "list"
   default = []
 }

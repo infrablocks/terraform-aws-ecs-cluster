@@ -27,7 +27,7 @@ output "launch_configuration_name" {
 
 output "security_group_id" {
   description = "The ID of the security group associated with the ECS container instances if no custom security groups were provided."
-  value = "${length(var.security_groups) > 0 ? "" : element(concat(aws_security_group.cluster.*.id, list("")), 0)}"
+  value = "${element(concat(aws_security_group.cluster.*.id, list("")), 0)}"
 }
 
 output "instance_role_arn" {

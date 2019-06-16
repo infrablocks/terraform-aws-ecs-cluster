@@ -92,7 +92,7 @@ for usage instructions.
 | allowed_cidrs                              | The CIDRs allowed access to containers                                                                           | ["10.0.0.0/8"]     | if include_default_ingress_rule is "yes" | 
 | egress_cidrs                               | The CIDRs accessible from containers                                                                             | ["0.0.0.0/0"]      | if include_default_egress_rule is "yes"  | 
 | launch_configuration_create_before_destroy | Whether or not to destroy the launch configuration before creating a new one ("yes" or "no")                     | "yes"              | no                                       |
-| security_groups                            | The list of security group IDs to associate with the cluster                                                     | []                 | no                                       |
+| additional_security_groups                 | The list of additional security group IDs to associate with the cluster                                          | []                 | no                                       |
 
 Notes:
 * By default, the latest available Amazon Linux 2 AMI is used.
@@ -107,23 +107,23 @@ Notes:
 
 ### Outputs
 
-| Name                      | Description                                                                                                         |
-|---------------------------|---------------------------------------------------------------------------------------------------------------------|
-| cluster_id                | The ID of the created ECS cluster                                                                                   |
-| cluster_name              | The name of the created ECS cluster                                                                                 |
-| cluster_arn               | The ARN of the created ECS cluster                                                                                  |
-| autoscaling_group_name    | The name of the autoscaling group for the ECS container instances                                                   |
-| launch_configuration_name | The name of the launch configuration for the ECS container instances                                                |
-| security_group_id         | The ID of the security group associated with the ECS container instances if no custom security groups were provided |
-| instance_role_arn         | The ARN of the container instance role                                                                              |
-| instance_role_id          | The ID of the container instance role                                                                               |
-| instance_policy_arn       | The ARN of the container instance policy                                                                            |
-| instance_policy_id        | The ID of the container instance policy                                                                             |
-| service_role_arn          | The ARN of the ECS service role                                                                                     |
-| service_role_id           | The ID of the ECS service role                                                                                      |
-| service_policy_arn        | The ARN of the ECS service policy                                                                                   |
-| service_policy_id         | The ID of the ECS service policy                                                                                    |
-| log_group                 | The name of the default log group for the cluster                                                                   |
+| Name                      | Description                                                                      |
+|---------------------------|----------------------------------------------------------------------------------|
+| cluster_id                | The ID of the created ECS cluster                                                |
+| cluster_name              | The name of the created ECS cluster                                              |
+| cluster_arn               | The ARN of the created ECS cluster                                               |
+| autoscaling_group_name    | The name of the autoscaling group for the ECS container instances                |
+| launch_configuration_name | The name of the launch configuration for the ECS container instances             |
+| security_group_id         | The ID of the default security group associated with the ECS container instances |
+| instance_role_arn         | The ARN of the container instance role                                           |
+| instance_role_id          | The ID of the container instance role                                            |
+| instance_policy_arn       | The ARN of the container instance policy                                         |
+| instance_policy_id        | The ID of the container instance policy                                          |
+| service_role_arn          | The ARN of the ECS service role                                                  |
+| service_role_id           | The ID of the ECS service role                                                   |
+| service_policy_arn        | The ARN of the ECS service policy                                                |
+| service_policy_id         | The ID of the ECS service policy                                                 |
+| log_group                 | The name of the default log group for the cluster                                |
 
 ### Required Permissions
 
