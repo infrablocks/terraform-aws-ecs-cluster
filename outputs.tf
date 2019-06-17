@@ -26,7 +26,7 @@ output "launch_configuration_name" {
 }
 
 output "security_group_id" {
-  description = "The ID of the security group associated with the ECS container instances if no custom security groups were provided."
+  description = "The ID of the default security group associated with the ECS container instances."
   value = "${element(concat(aws_security_group.cluster.*.id, list("")), 0)}"
 }
 

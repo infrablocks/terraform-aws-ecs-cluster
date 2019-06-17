@@ -86,7 +86,7 @@ describe 'ECS Cluster' do
     context 'when additional security groups are provided' do
       before(:all) do
         reprovision(
-            additional_security_groups: '["' + output_for(:prerequisites, 'security_groups_ids').gsub(',', '","') + '"]')
+            additional_security_groups: '["' + output_for(:prerequisites, 'security_group_ids').gsub(',', '","') + '"]')
       end
 
       it {should have_security_group("#{vars.component}-#{vars.deployment_identifier}-0")}
