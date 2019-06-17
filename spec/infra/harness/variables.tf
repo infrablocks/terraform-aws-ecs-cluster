@@ -26,7 +26,7 @@ variable "egress_cidrs" {
 
 variable "launch_configuration_create_before_destroy" {}
 
-variable "additional_security_groups" {
+variable "security_groups" {
   type = "list"
   default = []
 }

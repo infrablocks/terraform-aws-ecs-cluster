@@ -92,7 +92,7 @@ for usage instructions.
 | allowed_cidrs                              | The CIDRs allowed access to containers                                                                           | ["10.0.0.0/8"]     | if include_default_ingress_rule is "yes" | 
 | egress_cidrs                               | The CIDRs accessible from containers                                                                             | ["0.0.0.0/0"]      | if include_default_egress_rule is "yes"  | 
 | launch_configuration_create_before_destroy | Whether or not to destroy the launch configuration before creating a new one ("yes" or "no")                     | "yes"              | no                                       |
-| additional_security_groups                 | The list of additional security group IDs to associate with the cluster                                          | []                 | no                                       |
+| security_groups                            | The list of security group IDs to associate with the cluster in addition to the default security group           | []                 | no                                       |
 
 Notes:
 * By default, the latest available Amazon Linux 2 AMI is used.
