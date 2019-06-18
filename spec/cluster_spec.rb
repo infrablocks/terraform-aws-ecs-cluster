@@ -83,6 +83,20 @@ describe 'ECS Cluster' do
       end
     end
 
+    context 'when custom security groups are provided' do
+      before(:all) do
+        reprovision(
+            security_groups: '["' + output_for(:prerequisites, 'security_group_ids').gsub(',', '","') + '"]')
+      end
+
+      it {should have_security_group("#{vars.component}-#{vars.deployment_identifier}-0")}
+      it {should have_security_group("#{vars.component}-#{vars.deployment_identifier}-1")}
+
+      it 'should have correct number of security groups' do
+        expect(subject.security_groups.size).to(eq(3))
+      end
+    end
+
     context 'when AMIs specified' do
       it 'uses provided image ID' do
         reprovision(

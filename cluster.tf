@@ -48,9 +48,7 @@ resource "aws_launch_configuration" "cluster_with_destroy" {
 
   user_data = "${data.template_file.cluster_user_data.rendered}"
 
-  security_groups = [
-    "${aws_security_group.cluster.id}"
-  ]
+  security_groups = "${concat(list(aws_security_group.cluster.id), var.security_groups)}"
 
   associate_public_ip_address = "${var.associate_public_ip_addresses == "yes" ? true : false}"
 
@@ -81,9 +79,7 @@ resource "aws_launch_configuration" "cluster_without_docker_volume" {
 
   user_data = "${data.template_file.cluster_user_data.rendered}"
 
-  security_groups = [
-    "${aws_security_group.cluster.id}"
-  ]
+  security_groups = "${concat(list(aws_security_group.cluster.id), var.security_groups)}"
 
   associate_public_ip_address = "${var.associate_public_ip_addresses == "yes" ? true : false}"
 
