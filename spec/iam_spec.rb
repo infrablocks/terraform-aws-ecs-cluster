@@ -200,6 +200,10 @@ describe 'IAM policies, profiles and roles' do
           .to(include('elasticloadbalancing:DeregisterInstancesFromLoadBalancer'))
       expect(policy_document_statement['Action'])
           .to(include('elasticloadbalancing:Describe*'))
+      expect(policy_document_statement['Action'])
+          .to(include('elasticloadbalancing:RegisterTargets'))
+      expect(policy_document_statement['Action'])
+          .to(include('elasticloadbalancing:DeregisterTargets'))
     end
 
     it 'allows EC2 ingress and describe actions' do
