@@ -106,7 +106,7 @@ locals {
 resource "aws_autoscaling_group" "cluster" {
   name_prefix = "asg-${local.launch_config_name}-"
 
-  vpc_zone_identifier = "${join(",", var.subnet_ids)}"
+  vpc_zone_identifier = [join(",", var.subnet_ids)]
 
   launch_configuration = "${var.launch_configuration_create_before_destroy == "yes" ? element(concat(aws_launch_configuration.cluster_without_docker_volume.*.name, list("")), 0) : element(concat(aws_launch_configuration.cluster_with_destroy.*.name, list("")), 0)}"
 
