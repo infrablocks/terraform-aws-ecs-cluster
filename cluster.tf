@@ -16,10 +16,10 @@ resource "null_resource" "iam_wait" {
 
 data "aws_ami" "amazon_linux_2" {
   most_recent = true
-  owners = ["amazon"]
+  owners      = ["amazon"]
 
   filter {
-    name = "name"
+    name   = "name"
     values = ["amzn2-ami-ecs-hvm-*-x86_64-ebs"]
   }
 }
@@ -39,10 +39,10 @@ data "template_file" "cluster_user_data" {
 resource "aws_launch_configuration" "cluster_with_destroy" {
   count = "${var.launch_configuration_create_before_destroy == "yes" ? 0 : 1}"
 
-  name_prefix = "cluster-${var.component}-${var.deployment_identifier}-${var.cluster_name}-"
-  image_id = "${data.template_file.ami_id.rendered}"
+  name_prefix   = "cluster-${var.component}-${var.deployment_identifier}-${var.cluster_name}-"
+  image_id      = "${data.template_file.ami_id.rendered}"
   instance_type = "${var.cluster_instance_type}"
-  key_name = "${aws_key_pair.cluster.key_name}"
+  key_name      = "${aws_key_pair.cluster.key_name}"
 
   iam_instance_profile = "${aws_iam_instance_profile.cluster.name}"
 
@@ -70,10 +70,10 @@ resource "aws_launch_configuration" "cluster_with_destroy" {
 resource "aws_launch_configuration" "cluster_without_docker_volume" {
   count = "${var.launch_configuration_create_before_destroy == "yes" ? 1 : 0}"
 
-  name_prefix = "cluster-${var.component}-${var.deployment_identifier}-${var.cluster_name}-"
-  image_id = "${data.template_file.ami_id.rendered}"
+  name_prefix   = "cluster-${var.component}-${var.deployment_identifier}-${var.cluster_name}-"
+  image_id      = "${data.template_file.ami_id.rendered}"
   instance_type = "${var.cluster_instance_type}"
-  key_name = "${aws_key_pair.cluster.key_name}"
+  key_name      = "${aws_key_pair.cluster.key_name}"
 
   iam_instance_profile = "${aws_iam_instance_profile.cluster.name}"
 
@@ -100,41 +100,41 @@ resource "aws_launch_configuration" "cluster_without_docker_volume" {
 locals {
   launch_config_name = "${var.launch_configuration_create_before_destroy == "yes" ?
     element(concat(aws_launch_configuration.cluster_without_docker_volume.*.name, list("")), 0) :
-    element(concat(aws_launch_configuration.cluster_with_destroy.*.name, list("")), 0)}"
+  element(concat(aws_launch_configuration.cluster_with_destroy.*.name, list("")), 0)}"
 }
 
 resource "aws_autoscaling_group" "cluster" {
   name_prefix = "asg-${local.launch_config_name}-"
 
-  vpc_zone_identifier = "${split(",", var.subnet_ids)}"
+  vpc_zone_identifier = "${join(",", var.subnet_ids)}"
 
   launch_configuration = "${var.launch_configuration_create_before_destroy == "yes" ? element(concat(aws_launch_configuration.cluster_without_docker_volume.*.name, list("")), 0) : element(concat(aws_launch_configuration.cluster_with_destroy.*.name, list("")), 0)}"
 
-  min_size = "${var.cluster_minimum_size}"
-  max_size = "${var.cluster_maximum_size}"
+  min_size         = "${var.cluster_minimum_size}"
+  max_size         = "${var.cluster_maximum_size}"
   desired_capacity = "${var.cluster_desired_capacity}"
 
   tag {
-    key = "Name"
-    value = "cluster-worker-${var.component}-${var.deployment_identifier}-${var.cluster_name}"
+    key                 = "Name"
+    value               = "cluster-worker-${var.component}-${var.deployment_identifier}-${var.cluster_name}"
     propagate_at_launch = true
   }
 
   tag {
-    key = "Component"
-    value = "${var.component}"
+    key                 = "Component"
+    value               = "${var.component}"
     propagate_at_launch = true
   }
 
   tag {
-    key = "DeploymentIdentifier"
-    value = "${var.deployment_identifier}"
+    key                 = "DeploymentIdentifier"
+    value               = "${var.deployment_identifier}"
     propagate_at_launch = true
   }
 
   tag {
-    key = "ClusterName"
-    value = "${var.cluster_name}"
+    key                 = "ClusterName"
+    value               = "${var.cluster_name}"
     propagate_at_launch = true
   }
 }
