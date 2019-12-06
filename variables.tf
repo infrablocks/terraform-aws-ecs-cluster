@@ -5,6 +5,7 @@ variable "vpc_id" {
   description = "The ID of the VPC into which to deploy the cluster."
 }
 variable "subnet_ids" {
+  type = list(string)
   description = "The IDs of the subnets for container instances."
 }
 
@@ -44,7 +45,7 @@ variable "cluster_instance_user_data_template" {
 
 variable "cluster_instance_amis" {
   description = "A map of regions to AMIs for the container instances."
-  type = "map"
+  type = map(string)
 
   default = {
     us-east-1 = ""
@@ -103,22 +104,17 @@ variable "include_default_egress_rule" {
 }
 variable "allowed_cidrs" {
   description = "The CIDRs allowed access to containers."
-  type = "list"
+  type = list(string)
   default = ["10.0.0.0/8"]
 }
 variable "egress_cidrs" {
   description = "The CIDRs accessible from containers."
-  type = "list"
+  type = list(string)
   default = ["0.0.0.0/0"]
-}
-
-variable "launch_configuration_create_before_destroy" {
-  description = "Whether or not to destroy the launch configuration before creating a new one (\"yes\" or \"no\")."
-  default = "yes"
 }
 
 variable "security_groups" {
   description = "The list of security group IDs to associate with the cluster."
-  type = "list"
+  type = list(string)
   default = []
 }

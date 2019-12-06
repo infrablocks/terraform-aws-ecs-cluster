@@ -11,82 +11,42 @@ describe 'ECS Cluster' do
     it {should exist}
     its(:instance_type) {should eq(vars.cluster_instance_type)}
 
-    context 'by default' do
-      before do
-        reprovision(
-            launch_configuration_create_before_destroy: 'yes')
-      end
-
-      context 'uses latest amazon linux 2 optimised for ECS' do
-        let(:latest_amazon_linux_2_ecs_optimised_ami_id) {
-          response = ec2_client.describe_images(
-              {
-                  owners: ['amazon'],
-                  filters: [
-                      {
-                          name: 'name',
-                          values: ['amzn2-ami-ecs-hvm-*-x86_64-ebs']
-                      }
-                  ]
-              })
-          most_recent_image = response.images.max_by do |image|
-            DateTime.parse(image.creation_date)
-          end
-
-          most_recent_image.image_id
-        }
-
-        its(:image_id) do
-          should eq(latest_amazon_linux_2_ecs_optimised_ami_id)
+    context 'uses latest amazon linux 2 optimised for ECS' do
+      let(:latest_amazon_linux_2_ecs_optimised_ami_id) {
+        response = ec2_client.describe_images(
+            {
+                owners: ['amazon'],
+                filters: [
+                    {
+                        name: 'name',
+                        values: ['amzn2-ami-ecs-hvm-*-x86_64-ebs']
+                    }
+                ]
+            })
+        most_recent_image = response.images.max_by do |image|
+          DateTime.parse(image.creation_date)
         end
-      end
 
-      it 'does not add a docker block device' do
-        expect(subject.block_device_mappings.size).to(eq(1))
+        most_recent_image.image_id
+      }
+
+      its(:image_id) do
+        should eq(latest_amazon_linux_2_ecs_optimised_ami_id)
       end
     end
 
-    context 'when create_before_destroy is set to "no"' do
-      before do
-        reprovision(
-            launch_configuration_create_before_destroy: 'no')
-      end
-
-      # Duplicates tests above - not sure if there is a better way to test lifecycle other than
-      #   just to reprovision and make sure it doesn't break.
-      context 'uses latest amazon linux 2 optimised for ECS' do
-        let(:latest_amazon_linux_2_ecs_optimised_ami_id) {
-          response = ec2_client.describe_images(
-              {
-                  owners: ['amazon'],
-                  filters: [
-                      {
-                          name: 'name',
-                          values: ['amzn2-ami-ecs-hvm-*-x86_64-ebs']
-                      }
-                  ]
-              })
-          most_recent_image = response.images.max_by do |image|
-            DateTime.parse(image.creation_date)
-          end
-
-          most_recent_image.image_id
-        }
-
-        its(:image_id) do
-          should eq(latest_amazon_linux_2_ecs_optimised_ami_id)
-        end
-      end
-
-      it 'does not add a docker block device' do
-        expect(subject.block_device_mappings.size).to(eq(1))
-      end
+    it 'does not add a docker block device' do
+      expect(subject.block_device_mappings.size).to(eq(1))
     end
 
     context 'when custom security groups are provided' do
       before(:all) do
+        security_group_ids =
+            output_for(:prerequisites, 'security_group_ids', parse: true)
         reprovision(
-            security_groups: '["' + output_for(:prerequisites, 'security_group_ids').gsub(',', '","') + '"]')
+            security_groups:
+                '["' + security_group_ids.join('","') + '"]'
+        )
       end
 
       it {should have_security_group("#{vars.component}-#{vars.deployment_identifier}-0")}
@@ -99,14 +59,16 @@ describe 'ECS Cluster' do
 
     context 'when AMIs specified' do
       it 'uses provided image ID' do
+        ami_id = configuration.for(:harness).ami_id_in_region
+        puts ami_id
         reprovision(
             cluster_instance_amis:
-                '{' + vars.region + '="' + spec_vars.ami_id_in_region + '"}')
+                '{' + vars.region + '="' + ami_id + '"}')
 
         expect(
             launch_configuration(
                 output_for(:harness, 'launch_configuration_name'))
-                .image_id).to eq(spec_vars.ami_id_in_region)
+                .image_id).to eq(ami_id)
       end
     end
 
@@ -207,7 +169,8 @@ describe 'ECS Cluster' do
 
     it 'uses all private subnets' do
       expect(subject.vpc_zone_identifier.split(','))
-          .to(contain_exactly(*output_for(:prerequisites, 'private_subnet_ids').split(',')))
+          .to(contain_exactly(
+              *output_for(:prerequisites, 'private_subnet_ids', parse: true)))
     end
 
     it {should have_tag('Name').value("cluster-worker-#{vars.component}-#{vars.deployment_identifier}-#{vars.cluster_name}")}

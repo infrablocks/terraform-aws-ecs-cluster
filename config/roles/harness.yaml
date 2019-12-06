@@ -1,0 +1,27 @@
+---
+source_directory: "spec/infra/harness"
+state_file: "%{hiera('project_directory')}/state/harness.tfstate"
+ami_id_in_region: "%{hiera('custom_ami_id')}"
+vars:
+  region: "%{hiera('region')}"
+
+  component: "%{hiera('component')}"
+  deployment_identifier: "%{hiera('deployment_identifier')}"
+
+  cluster_name: "%{hiera('cluster_name')}"
+  cluster_instance_ssh_public_key_path: "%{hiera('cluster_instance_ssh_public_key_path')}"
+  cluster_instance_type: "%{hiera('cluster_instance_type')}"
+  cluster_instance_amis: "%{hiera('cluster_instance_amis')}"
+  cluster_instance_root_block_device_size: "%{hiera('cluster_instance_root_block_device_size')}"
+
+  cluster_minimum_size: "%{hiera('cluster_minimum_size')}"
+  cluster_maximum_size: "%{hiera('cluster_maximum_size')}"
+  cluster_desired_capacity: "%{hiera('cluster_desired_capacity')}"
+
+  include_default_ingress_rule: "%{hiera('include_default_ingress_rule')}"
+  include_default_egress_rule: "%{hiera('include_default_egress_rule')}"
+
+  security_groups: "%{hiera('security_groups')}"
+
+  allowed_cidrs: "%{hiera('allowed_cidrs')}"
+  egress_cidrs: "%{hiera('egress_cidrs')}"

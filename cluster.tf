@@ -1,12 +1,12 @@
 resource "null_resource" "iam_wait" {
   depends_on = [
-    "aws_iam_role.cluster_instance_role",
-    "aws_iam_policy.cluster_instance_policy",
-    "aws_iam_policy_attachment.cluster_instance_policy_attachment",
-    "aws_iam_instance_profile.cluster",
-    "aws_iam_role.cluster_service_role",
-    "aws_iam_policy.cluster_service_policy",
-    "aws_iam_policy_attachment.cluster_service_policy_attachment"
+    aws_iam_role.cluster_instance_role,
+    aws_iam_policy.cluster_instance_policy,
+    aws_iam_policy_attachment.cluster_instance_policy_attachment,
+    aws_iam_instance_profile.cluster,
+    aws_iam_role.cluster_service_role,
+    aws_iam_policy.cluster_service_policy,
+    aws_iam_policy_attachment.cluster_service_policy_attachment
   ]
 
   provisioner "local-exec" {
@@ -25,94 +25,51 @@ data "aws_ami" "amazon_linux_2" {
 }
 
 data "template_file" "ami_id" {
-  template = "${coalesce(lookup(var.cluster_instance_amis, var.region), data.aws_ami.amazon_linux_2.image_id)}"
+  template = coalesce(lookup(var.cluster_instance_amis, var.region), data.aws_ami.amazon_linux_2.image_id)
 }
 
 data "template_file" "cluster_user_data" {
-  template = "${coalesce(var.cluster_instance_user_data_template, file("${path.module}/user-data/cluster.tpl"))}"
+  template = coalesce(var.cluster_instance_user_data_template, file("${path.module}/user-data/cluster.tpl"))
 
   vars = {
-    cluster_name = "${aws_ecs_cluster.cluster.name}"
+    cluster_name = aws_ecs_cluster.cluster.name
   }
 }
 
-resource "aws_launch_configuration" "cluster_with_destroy" {
-  count = "${var.launch_configuration_create_before_destroy == "yes" ? 0 : 1}"
-
+resource "aws_launch_configuration" "cluster" {
   name_prefix = "cluster-${var.component}-${var.deployment_identifier}-${var.cluster_name}-"
-  image_id = "${data.template_file.ami_id.rendered}"
-  instance_type = "${var.cluster_instance_type}"
-  key_name = "${aws_key_pair.cluster.key_name}"
+  image_id = data.template_file.ami_id.rendered
+  instance_type = var.cluster_instance_type
+  key_name = aws_key_pair.cluster.key_name
 
-  iam_instance_profile = "${aws_iam_instance_profile.cluster.name}"
+  iam_instance_profile = aws_iam_instance_profile.cluster.name
 
-  user_data = "${data.template_file.cluster_user_data.rendered}"
+  user_data = data.template_file.cluster_user_data.rendered
 
-  security_groups = "${concat(list(aws_security_group.cluster.id), var.security_groups)}"
+  security_groups = concat(list(aws_security_group.cluster.id), var.security_groups)
 
-  associate_public_ip_address = "${var.associate_public_ip_addresses == "yes" ? true : false}"
+  associate_public_ip_address = var.associate_public_ip_addresses == "yes" ? true : false
 
   depends_on = [
-    "null_resource.iam_wait"
+    null_resource.iam_wait
   ]
 
   root_block_device {
-    volume_size = "${var.cluster_instance_root_block_device_size}"
-    volume_type = "${var.cluster_instance_root_block_device_type}"
+    volume_size = var.cluster_instance_root_block_device_size
+    volume_type = var.cluster_instance_root_block_device_type
   }
-
-  lifecycle {
-    create_before_destroy = false
-  }
-}
-
-// The name is kept for compatibility with previous versions
-resource "aws_launch_configuration" "cluster_without_docker_volume" {
-  count = "${var.launch_configuration_create_before_destroy == "yes" ? 1 : 0}"
-
-  name_prefix = "cluster-${var.component}-${var.deployment_identifier}-${var.cluster_name}-"
-  image_id = "${data.template_file.ami_id.rendered}"
-  instance_type = "${var.cluster_instance_type}"
-  key_name = "${aws_key_pair.cluster.key_name}"
-
-  iam_instance_profile = "${aws_iam_instance_profile.cluster.name}"
-
-  user_data = "${data.template_file.cluster_user_data.rendered}"
-
-  security_groups = "${concat(list(aws_security_group.cluster.id), var.security_groups)}"
-
-  associate_public_ip_address = "${var.associate_public_ip_addresses == "yes" ? true : false}"
-
-  depends_on = [
-    "null_resource.iam_wait"
-  ]
-
-  root_block_device {
-    volume_size = "${var.cluster_instance_root_block_device_size}"
-    volume_type = "${var.cluster_instance_root_block_device_type}"
-  }
-
-  lifecycle {
-    create_before_destroy = true
-  }
-}
-
-locals {
-  launch_config_name = "${var.launch_configuration_create_before_destroy == "yes" ?
-    element(concat(aws_launch_configuration.cluster_without_docker_volume.*.name, list("")), 0) :
-    element(concat(aws_launch_configuration.cluster_with_destroy.*.name, list("")), 0)}"
 }
 
 resource "aws_autoscaling_group" "cluster" {
-  name_prefix = "asg-${local.launch_config_name}-"
+  name_prefix = "asg-${aws_launch_configuration.cluster.name}-"
 
-  vpc_zone_identifier = "${split(",", var.subnet_ids)}"
+  vpc_zone_identifier = var.subnet_ids
 
-  launch_configuration = "${var.launch_configuration_create_before_destroy == "yes" ? element(concat(aws_launch_configuration.cluster_without_docker_volume.*.name, list("")), 0) : element(concat(aws_launch_configuration.cluster_with_destroy.*.name, list("")), 0)}"
+  launch_configuration = aws_launch_configuration.cluster.name
 
-  min_size = "${var.cluster_minimum_size}"
-  max_size = "${var.cluster_maximum_size}"
-  desired_capacity = "${var.cluster_desired_capacity}"
+  min_size = var.cluster_minimum_size
+  max_size = var.cluster_maximum_size
+  desired_capacity = var.cluster_desired_capacity
 
   tag {
     key = "Name"
@@ -122,19 +79,19 @@ resource "aws_autoscaling_group" "cluster" {
 
   tag {
     key = "Component"
-    value = "${var.component}"
+    value = var.component
     propagate_at_launch = true
   }
 
   tag {
     key = "DeploymentIdentifier"
-    value = "${var.deployment_identifier}"
+    value = var.deployment_identifier
     propagate_at_launch = true
   }
 
   tag {
     key = "ClusterName"
-    value = "${var.cluster_name}"
+    value = var.cluster_name
     propagate_at_launch = true
   }
 }
@@ -142,9 +99,9 @@ resource "aws_autoscaling_group" "cluster" {
 resource "aws_ecs_cluster" "cluster" {
   name = "${var.component}-${var.deployment_identifier}-${var.cluster_name}"
 
-  depends_on = ["null_resource.iam_wait"]
+  depends_on = [null_resource.iam_wait]
 
   tags = {
-    DeploymentIdentifier = "${var.deployment_identifier}"
+    DeploymentIdentifier = var.deployment_identifier
   }
 }

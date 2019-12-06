@@ -13,25 +13,23 @@ def repo
   Git.open('.')
 end
 
-def current_branch
-  ENV['CIRCLE_BRANCH'] || 'master'
-end
-
 def latest_tag
-  `git tag --merged #{current_branch}`.split("\n").map do |tag|
-    Semantic::Version.new(tag)
+  repo.tags.map do |tag|
+    Semantic::Version.new(tag.name)
   end.max
 end
 
 RakeTerraform.define_installation_tasks(
     path: File.join(Dir.pwd, 'vendor', 'terraform'),
-    version: '0.12.2')
+    version: '0.12.15')
 
 task :default => 'test:integration'
 
 namespace :test do
   RSpec::Core::RakeTask.new(:integration => ['terraform:ensure']) do |t|
     ENV['AWS_REGION'] = 'eu-west-2'
+    ENV['TF_PLUGIN_CACHE_DIR'] =
+        "#{Paths.project_root_directory}/vendor/terraform/plugins"
   end
 end
 
@@ -40,11 +38,14 @@ namespace :deployment do
     RakeTerraform.define_command_tasks do |t|
       t.argument_names = [:deployment_identifier]
 
-      t.configuration_name = 'preliminary infrastructure'
-      t.source_directory = configuration.for(:prerequisites).source_directory
-      t.work_directory = configuration.for(:prerequisites).work_directory
+      t.configuration_name = 'prerequisites'
+      t.source_directory =
+          configuration.for(:prerequisites).source_directory
+      t.work_directory =
+          configuration.for(:prerequisites).work_directory
 
-      t.state_file = configuration.for(:prerequisites).state_file
+      t.state_file =
+          configuration.for(:prerequisites).state_file
 
       t.vars = lambda do |args|
         configuration.for(:prerequisites, args)
@@ -58,7 +59,7 @@ namespace :deployment do
     RakeTerraform.define_command_tasks do |t|
       t.argument_names = [:deployment_identifier]
 
-      t.configuration_name = 'ECS cluster module'
+      t.configuration_name = 'harness'
       t.source_directory = configuration.for(:harness).source_directory
       t.work_directory = configuration.for(:harness).work_directory
 
@@ -77,14 +78,14 @@ namespace :version do
   task :bump, [:type] do |_, args|
     next_tag = latest_tag.send("#{args.type}!")
     repo.add_tag(next_tag.to_s)
-    repo.push('origin', current_branch, tags: true)
+    repo.push('origin', 'master', tags: true)
     puts "Bumped version to #{next_tag}."
   end
 
   task :release do
     next_tag = latest_tag.release!
     repo.add_tag(next_tag.to_s)
-    repo.push('origin', current_branch, tags: true)
+    repo.push('origin', 'master', tags: true)
     puts "Released version #{next_tag}."
   end
 end
