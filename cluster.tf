@@ -40,7 +40,7 @@ resource "aws_launch_configuration" "cluster" {
   name_prefix = "cluster-${var.component}-${var.deployment_identifier}-${var.cluster_name}-"
   image_id = data.template_file.ami_id.rendered
   instance_type = var.cluster_instance_type
-  key_name = aws_key_pair.cluster.key_name
+  key_name = var.cluster_instance_ssh_public_key_path == "" ? "" : element(concat(aws_key_pair.cluster.*.key_name, list("")), 0)
 
   iam_instance_profile = aws_iam_instance_profile.cluster.name
 
