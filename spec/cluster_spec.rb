@@ -102,7 +102,7 @@ describe 'ECS Cluster' do
         d.device_name != '/dev/xvdcz'
       end
       expect(root_device_mapping.ebs.volume_size)
-          .to(eq(vars.cluster_instance_root_block_device_size))
+          .to(eq(vars.cluster_instance_root_block_device_size.to_i))
     end
   end
 
@@ -160,12 +160,14 @@ describe 'ECS Cluster' do
     subject {autoscaling_group(output_for(:harness, 'autoscaling_group_name'))}
 
     it {should exist}
-    its(:min_size) {should eq(vars.cluster_minimum_size)}
-    its(:max_size) {should eq(vars.cluster_maximum_size)}
+    its(:min_size) {should eq(vars.cluster_minimum_size.to_i)}
+    its(:max_size) {should eq(vars.cluster_maximum_size.to_i)}
     its(:launch_configuration_name) do
       should eq(output_for(:harness, 'launch_configuration_name'))
     end
-    its(:desired_capacity) {should eq(vars.cluster_desired_capacity)}
+    its(:desired_capacity) {
+      should eq(vars.cluster_desired_capacity.to_i)
+    }
 
     it 'uses all private subnets' do
       expect(subject.vpc_zone_identifier.split(','))

@@ -27,7 +27,7 @@ task :default => 'test:integration'
 
 RakeTerraform.define_installation_tasks(
     path: File.join(Dir.pwd, 'vendor', 'terraform'),
-    version: '0.12.15')
+    version: '0.12.19')
 
 RakeSSH.define_key_tasks(
     namespace: :deploy_key,
