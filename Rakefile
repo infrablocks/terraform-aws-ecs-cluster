@@ -35,6 +35,12 @@ RakeSSH.define_key_tasks(
     comment: 'maintainers@infrablocks.io'
 )
 
+RakeSSH.define_key_tasks(
+    namespace: :cluster_key,
+    path: 'config/secrets/keys/cluster',
+    comment: 'maintainers@infrablocks.io'
+)
+
 RakeCircleCI.define_project_tasks(
     namespace: :circle_ci,
     project_slug: 'github/infrablocks/terraform-aws-ecs-cluster'
