@@ -3,12 +3,10 @@ resource "aws_security_group" "cluster" {
   description = "Container access for component: ${var.component}, deployment: ${var.deployment_identifier}, cluster: ${var.cluster_name}"
   vpc_id = var.vpc_id
 
-  tags = {
+  tags = merge(local.tags, {
     Name = "${var.component}-${var.deployment_identifier}-${var.cluster_name}"
-    Component = var.component
-    DeploymentIdentifier = var.deployment_identifier
     ClusterName = var.cluster_name
-  }
+  })
 }
 
 resource "aws_security_group_rule" "cluster_default_ingress" {

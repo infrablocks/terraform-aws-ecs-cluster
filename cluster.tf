@@ -78,22 +78,20 @@ resource "aws_autoscaling_group" "cluster" {
   }
 
   tag {
-    key = "Component"
-    value = var.component
-    propagate_at_launch = true
-  }
-
-  tag {
-    key = "DeploymentIdentifier"
-    value = var.deployment_identifier
-    propagate_at_launch = true
-  }
-
-  tag {
     key = "ClusterName"
     value = var.cluster_name
     propagate_at_launch = true
   }
+
+  dynamic "tag" {
+    for_each = local.tags
+    content {
+      key = tag.key
+      value = tag.value
+      propagate_at_launch = true
+    }
+  }
+
 }
 
 resource "aws_ecs_cluster" "cluster" {
@@ -101,7 +99,5 @@ resource "aws_ecs_cluster" "cluster" {
 
   depends_on = [null_resource.iam_wait]
 
-  tags = {
-    DeploymentIdentifier = var.deployment_identifier
-  }
+  tags = local.tags
 }
