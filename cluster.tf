@@ -58,6 +58,10 @@ resource "aws_launch_configuration" "cluster" {
     volume_size = var.cluster_instance_root_block_device_size
     volume_type = var.cluster_instance_root_block_device_type
   }
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_autoscaling_group" "cluster" {
@@ -93,6 +97,10 @@ resource "aws_autoscaling_group" "cluster" {
     key = "ClusterName"
     value = var.cluster_name
     propagate_at_launch = true
+  }
+
+  lifecycle {
+    create_before_destroy = true
   }
 }
 
