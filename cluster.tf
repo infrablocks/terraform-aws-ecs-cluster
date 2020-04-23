@@ -105,7 +105,7 @@ resource "aws_autoscaling_group" "cluster" {
 }
 
 resource "aws_ecs_cluster" "cluster" {
-  name = "${var.component}-${var.deployment_identifier}-${var.cluster_name}"
+  name = "${var.cluster_name}"
 
   depends_on = [null_resource.iam_wait]
 
