@@ -1,6 +1,6 @@
 module "base_network" {
   source  = "infrablocks/base-networking/aws"
-  version = "2.3.0"
+  version = "3.0.0"
 
   vpc_cidr = var.vpc_cidr
   region = var.region
