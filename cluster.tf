@@ -65,7 +65,7 @@ resource "aws_launch_configuration" "cluster" {
 }
 
 resource "aws_autoscaling_group" "cluster" {
-  name_prefix = "asg-${aws_launch_configuration.cluster.name}-"
+  name_prefix = "asg-${var.component}-${var.deployment_identifier}-${var.cluster_name}-"
 
   vpc_zone_identifier = var.subnet_ids
 
