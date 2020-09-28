@@ -137,3 +137,9 @@ variable "security_groups" {
   type = list(string)
   default = []
 }
+
+variable "container_insights" {
+  description = "Whether or not Container Insights should be enabled (\"enabled\" or \"disabled\")."
+  type = string
+  default = "enabled"
+}

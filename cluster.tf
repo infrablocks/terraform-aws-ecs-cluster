@@ -14,6 +14,13 @@ resource "null_resource" "iam_wait" {
   }
 }
 
+# Breaks a dependency loop where the instances used by the Capacity
+# Provider need to know the name of the ECS Cluster, but the ECS
+# Cluster needs to know the name of the Capacity Provider.
+locals {
+  cluster_full_name = "${var.component}-${var.deployment_identifier}-${var.cluster_name}"
+}
+
 data "aws_ami" "amazon_linux_2" {
   most_recent = true
   owners = ["amazon"]
@@ -32,7 +39,7 @@ data "template_file" "cluster_user_data" {
   template = coalesce(var.cluster_instance_user_data_template, file("${path.module}/user-data/cluster.tpl"))
 
   vars = {
-    cluster_name = aws_ecs_cluster.cluster.name
+    cluster_name = local.cluster_full_name
   }
 }
 
@@ -74,6 +81,7 @@ resource "aws_autoscaling_group" "cluster" {
   min_size = var.cluster_minimum_size
   max_size = var.cluster_maximum_size
   desired_capacity = var.cluster_desired_capacity
+  protect_from_scale_in = true
 
   tag {
     key = "Name"
@@ -99,13 +107,43 @@ resource "aws_autoscaling_group" "cluster" {
     propagate_at_launch = true
   }
 
+  tag {
+    key = "AmazonECSManaged"
+    value = ""
+    propagate_at_launch = true
+  }
+
   lifecycle {
     create_before_destroy = true
+    ignore_changes        = [ desired_capacity ]
+  }
+}
+
+resource "aws_ecs_capacity_provider" "cluster" {
+  name = "cp-${var.component}-${var.deployment_identifier}-${var.cluster_name}"
+
+  auto_scaling_group_provider {
+    auto_scaling_group_arn         = aws_autoscaling_group.cluster.arn
+    managed_termination_protection = "ENABLED"
+
+    managed_scaling {
+      maximum_scaling_step_size = 1000
+      minimum_scaling_step_size = 1
+      status                    = "ENABLED"
+      target_capacity           = 100 # Percent
+    }
   }
 }
 
 resource "aws_ecs_cluster" "cluster" {
-  name = "${var.component}-${var.deployment_identifier}-${var.cluster_name}"
+  name = local.cluster_full_name
+
+  capacity_providers = [ aws_ecs_capacity_provider.cluster.name ]
+
+  setting {
+    name  = "containerInsights"
+    value = "enabled"
+  }
 
   depends_on = [null_resource.iam_wait]
 

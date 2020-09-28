@@ -72,3 +72,8 @@ output "log_group" {
   description = "The name of the default log group for the cluster."
   value = aws_cloudwatch_log_group.cluster.name
 }
+
+output "capacity_provider_name" {
+  description = "The name of the cluster's capacity provider"
+  value       = aws_ecs_capacity_provider.cluster.name
+}
