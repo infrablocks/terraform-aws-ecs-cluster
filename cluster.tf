@@ -25,7 +25,7 @@ data "aws_ami" "amazon_linux_2" {
 }
 
 data "template_file" "ami_id" {
-  template = coalesce(lookup(var.cluster_instance_amis, var.region), data.aws_ami.amazon_linux_2.image_id)
+  template = coalesce(lookup(var.cluster_instance_amis, var.region), var.custom_ami_id == "" ? data.aws_ami.amazon_linux_2.image_id : var.custom_ami_id)
 }
 
 data "template_file" "cluster_user_data" {

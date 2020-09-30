@@ -31,6 +31,11 @@ variable "cluster_instance_type" {
   type = string
   default = "t2.medium"
 }
+variable "custom_ami_id" {
+  description = "Custom ami id."
+  type = string
+  default = ""
+}
 variable "cluster_instance_ssh_public_key_path" {
   description = "The path to the public key to use for the container instances."
   type = string
