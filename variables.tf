@@ -146,6 +146,7 @@ variable "security_groups" {
 }
 
 variable "target_group_arns" {
+  description = "A list of Target Group ARNs to associate with the ASG."
   type = list(string)
   default = []
 }
