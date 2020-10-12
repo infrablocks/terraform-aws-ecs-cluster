@@ -102,6 +102,8 @@ resource "aws_autoscaling_group" "cluster" {
   lifecycle {
     create_before_destroy = true
   }
+
+  target_group_arns = var.target_group_arns
 }
 
 resource "aws_ecs_cluster" "cluster" {
