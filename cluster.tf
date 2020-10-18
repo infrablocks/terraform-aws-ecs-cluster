@@ -58,10 +58,14 @@ resource "aws_launch_configuration" "cluster" {
     volume_size = var.cluster_instance_root_block_device_size
     volume_type = var.cluster_instance_root_block_device_type
   }
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_autoscaling_group" "cluster" {
-  name_prefix = "asg-${aws_launch_configuration.cluster.name}-"
+  name_prefix = "asg-${var.component}-${var.deployment_identifier}-${var.cluster_name}-"
 
   vpc_zone_identifier = var.subnet_ids
 
@@ -92,6 +96,9 @@ resource "aws_autoscaling_group" "cluster" {
     }
   }
 
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_ecs_cluster" "cluster" {

@@ -16,9 +16,9 @@ resource "aws_security_group_rule" "cluster_default_ingress" {
 
   security_group_id = aws_security_group.cluster.id
 
-  protocol = "tcp"
-  from_port = 1
-  to_port = 65535
+  protocol = "-1"
+  from_port = 0
+  to_port = 0
 
   cidr_blocks = var.allowed_cidrs
 }

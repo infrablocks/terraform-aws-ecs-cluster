@@ -19,7 +19,6 @@ output "launch_configuration_name" {
 }
 
 output "security_group_id" {
-  description = "The ID of the security group associated with the ECS container instances."
   value = module.ecs_cluster.security_group_id
 }
 

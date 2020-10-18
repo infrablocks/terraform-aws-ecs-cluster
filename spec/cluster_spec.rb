@@ -119,14 +119,15 @@ describe 'ECS Cluster' do
     end
 
     context 'when default ingress and egress are included' do
-      it 'allows inbound TCP connectivity on all ports from any address within the VPC' do
+      it('allows inbound TCP and UDP connectivity on all ports from any ' + 
+          'address within the VPC') do
         expect(subject.inbound_rule_count).to(eq(1))
 
         ingress_rule = subject.ip_permissions.first
 
-        expect(ingress_rule.from_port).to(eq(1))
-        expect(ingress_rule.to_port).to(eq(65535))
-        expect(ingress_rule.ip_protocol).to(eq('tcp'))
+        expect(ingress_rule.from_port).to(be_nil)
+        expect(ingress_rule.to_port).to(be_nil)
+        expect(ingress_rule.ip_protocol).to(eq('-1'))
         expect(ingress_rule.ip_ranges.map(&:cidr_ip)).to(eq(vars.allowed_cidrs))
       end
 
