@@ -8,6 +8,8 @@ vars:
   component: "%{hiera('component')}"
   deployment_identifier: "%{hiera('deployment_identifier')}"
 
+  tags: "%{hiera('tags')}"
+
   cluster_name: "%{hiera('cluster_name')}"
   cluster_instance_ssh_public_key_path: "%{hiera('cluster_instance_ssh_public_key_path')}"
   cluster_instance_type: "%{hiera('cluster_instance_type')}"

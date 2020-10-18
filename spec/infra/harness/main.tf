@@ -16,6 +16,8 @@ module "ecs_cluster" {
   component = var.component
   deployment_identifier = var.deployment_identifier
 
+  tags = var.tags
+
   cluster_name = var.cluster_name
   cluster_instance_ssh_public_key_path = var.cluster_instance_ssh_public_key_path
   cluster_instance_type = var.cluster_instance_type

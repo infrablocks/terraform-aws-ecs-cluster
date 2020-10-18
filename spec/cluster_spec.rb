@@ -112,6 +112,7 @@ describe 'ECS Cluster' do
     it {should exist}
     it {should have_tag('Component').value(vars.component)}
     it {should have_tag('DeploymentIdentifier').value(vars.deployment_identifier)}
+    it {should have_tag('ImportantTag').value('important-value')}
     its(:vpc_id) {should eq(output_for(:prerequisites, 'vpc_id'))}
 
     it 'outputs the security group ID' do
@@ -180,6 +181,7 @@ describe 'ECS Cluster' do
     it {should have_tag('Component').value(vars.component)}
     it {should have_tag('DeploymentIdentifier').value(vars.deployment_identifier)}
     it {should have_tag('ClusterName').value(vars.cluster_name)}
+    it {should have_tag('ImportantTag').value('important-value')}
   end
 
   context 'cluster' do

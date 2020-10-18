@@ -6,6 +6,9 @@ availability_zones:
 
 component: 'test'
 
+tags:
+  ImportantTag: "important-value"
+
 work_directory: 'build'
 configuration_directory: "%{hiera('work_directory')}/%{hiera('source_directory')}"
 
