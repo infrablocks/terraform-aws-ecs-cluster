@@ -144,3 +144,9 @@ variable "security_groups" {
   type = list(string)
   default = []
 }
+
+variable "tags" {
+  description = "Map of tags to be applied to all resources in cluster"
+  type = map(string)
+  default = {}
+}
