@@ -150,3 +150,9 @@ variable "tags" {
   type = map(string)
   default = {}
 }
+
+variable "enable_container_insights" {
+  description = "Whether or not to enable container insights on the ECS cluster (\"yes\" or \"no\")."
+  type = string
+  default = "no"
+}

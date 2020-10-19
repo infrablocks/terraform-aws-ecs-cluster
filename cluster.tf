@@ -107,4 +107,9 @@ resource "aws_ecs_cluster" "cluster" {
   depends_on = [null_resource.iam_wait]
 
   tags = local.tags
+
+  setting {
+    name  = "containerInsights"
+    value = var.enable_container_insights == "yes" ? "enabled" : "disabled"
+  }
 }

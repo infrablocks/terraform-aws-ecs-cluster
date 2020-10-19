@@ -33,3 +33,5 @@ variable "security_groups" {
   type = list(string)
   default = []
 }
+
+variable "enable_container_insights" {}

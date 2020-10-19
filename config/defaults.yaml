@@ -38,3 +38,5 @@ allowed_cidrs:
   - '10.1.0.0/16'
 egress_cidrs:
   - '10.1.0.0/16'
+
+enable_container_insights: "no"

@@ -27,3 +27,5 @@ vars:
 
   allowed_cidrs: "%{hiera('allowed_cidrs')}"
   egress_cidrs: "%{hiera('egress_cidrs')}"
+
+  enable_container_insights: "%{hiera('enable_container_insights')}"

@@ -35,4 +35,6 @@ module "ecs_cluster" {
 
   allowed_cidrs = var.allowed_cidrs
   egress_cidrs = var.egress_cidrs
+
+  enable_container_insights = var.enable_container_insights
 }
