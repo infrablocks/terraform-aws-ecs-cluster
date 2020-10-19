@@ -16,10 +16,10 @@ resource "null_resource" "iam_wait" {
 
 data "aws_ami" "amazon_linux_2" {
   most_recent = true
-  owners = ["amazon"]
+  owners      = ["amazon"]
 
   filter {
-    name = "name"
+    name   = "name"
     values = ["amzn2-ami-ecs-hvm-*-x86_64-ebs"]
   }
 }
@@ -37,10 +37,10 @@ data "template_file" "cluster_user_data" {
 }
 
 resource "aws_launch_configuration" "cluster" {
-  name_prefix = "cluster-${var.component}-${var.deployment_identifier}-${var.cluster_name}-"
-  image_id = data.template_file.ami_id.rendered
+  name_prefix   = "cluster-${var.component}-${var.deployment_identifier}-${var.cluster_name}-"
+  image_id      = data.template_file.ami_id.rendered
   instance_type = var.cluster_instance_type
-  key_name = var.cluster_instance_ssh_public_key_path == "" ? "" : element(concat(aws_key_pair.cluster.*.key_name, list("")), 0)
+  key_name      = var.cluster_instance_ssh_public_key_path == "" ? "" : element(concat(aws_key_pair.cluster.*.key_name, list("")), 0)
 
   iam_instance_profile = aws_iam_instance_profile.cluster.name
 
@@ -71,27 +71,27 @@ resource "aws_autoscaling_group" "cluster" {
 
   launch_configuration = aws_launch_configuration.cluster.name
 
-  min_size = var.cluster_minimum_size
-  max_size = var.cluster_maximum_size
+  min_size         = var.cluster_minimum_size
+  max_size         = var.cluster_maximum_size
   desired_capacity = var.cluster_desired_capacity
 
   tag {
-    key = "Name"
-    value = "cluster-worker-${var.component}-${var.deployment_identifier}-${var.cluster_name}"
+    key                 = "Name"
+    value               = "cluster-worker-${var.component}-${var.deployment_identifier}-${var.cluster_name}"
     propagate_at_launch = true
   }
 
   tag {
-    key = "ClusterName"
-    value = var.cluster_name
+    key                 = "ClusterName"
+    value               = var.cluster_name
     propagate_at_launch = true
   }
 
   dynamic "tag" {
     for_each = local.tags
     content {
-      key = tag.key
-      value = tag.value
+      key                 = tag.key
+      value               = tag.value
       propagate_at_launch = true
     }
   }

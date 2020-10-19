@@ -1,6 +1,6 @@
 locals {
   base_tags = {
-    Component = var.component
+    Component            = var.component
     DeploymentIdentifier = var.deployment_identifier
   }
 

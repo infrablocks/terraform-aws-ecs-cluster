@@ -30,7 +30,7 @@ variable "egress_cidrs" {
 }
 
 variable "security_groups" {
-  type = list(string)
+  type    = list(string)
   default = []
 }
 
