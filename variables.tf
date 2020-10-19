@@ -156,3 +156,9 @@ variable "enable_container_insights" {
   type        = string
   default     = "no"
 }
+
+variable "protect_cluster_instances_from_scale_in" {
+  description = "Whether or not to protect cluster instances in the autoscaling group from scale in (\"yes\" or \"no\")."
+  type        = string
+  default     = "no"
+}

@@ -29,3 +29,5 @@ vars:
   egress_cidrs: "%{hiera('egress_cidrs')}"
 
   enable_container_insights: "%{hiera('enable_container_insights')}"
+
+  protect_cluster_instances_from_scale_in: "%{hiera('protect_cluster_instances_from_scale_in')}"

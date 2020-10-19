@@ -35,3 +35,5 @@ variable "security_groups" {
 }
 
 variable "enable_container_insights" {}
+
+variable "protect_cluster_instances_from_scale_in" {}
