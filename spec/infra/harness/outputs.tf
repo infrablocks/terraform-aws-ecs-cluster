@@ -14,6 +14,10 @@ output "autoscaling_group_name" {
   value = module.ecs_cluster.autoscaling_group_name
 }
 
+output "autoscaling_group_arn" {
+  value = module.ecs_cluster.autoscaling_group_arn
+}
+
 output "launch_configuration_name" {
   value = module.ecs_cluster.launch_configuration_name
 }

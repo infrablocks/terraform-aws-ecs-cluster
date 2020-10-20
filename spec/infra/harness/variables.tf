@@ -37,3 +37,10 @@ variable "security_groups" {
 variable "enable_container_insights" {}
 
 variable "protect_cluster_instances_from_scale_in" {}
+
+variable "include_asg_capacity_provider" {}
+variable "asg_capacity_provider_manage_termination_protection" {}
+variable "asg_capacity_provider_manage_scaling" {}
+variable "asg_capacity_provider_minimum_scaling_step_size" {}
+variable "asg_capacity_provider_maximum_scaling_step_size" {}
+variable "asg_capacity_provider_target_capacity" {}

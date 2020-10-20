@@ -29,4 +29,11 @@ shared_context :terraform do
         :harness,
         TerraformModule.configuration.for(:harness, overrides).vars)
   end
+
+  def destroy(overrides = nil)
+    TerraformModule.destroy_for(
+        :harness,
+        TerraformModule.configuration.for(:harness, overrides).vars,
+        force: true)
+  end
 end

@@ -118,6 +118,12 @@ variable "associate_public_ip_addresses" {
   default     = "no"
 }
 
+variable "security_groups" {
+  description = "The list of security group IDs to associate with the cluster."
+  type        = list(string)
+  default     = []
+}
+
 variable "include_default_ingress_rule" {
   description = "Whether or not to include the default ingress rule on the ECS container instances security group (\"yes\" or \"no\")."
   type        = string
@@ -139,12 +145,6 @@ variable "egress_cidrs" {
   default     = ["0.0.0.0/0"]
 }
 
-variable "security_groups" {
-  description = "The list of security group IDs to associate with the cluster."
-  type        = list(string)
-  default     = []
-}
-
 variable "tags" {
   description = "Map of tags to be applied to all resources in cluster"
   type        = map(string)
@@ -161,4 +161,35 @@ variable "protect_cluster_instances_from_scale_in" {
   description = "Whether or not to protect cluster instances in the autoscaling group from scale in (\"yes\" or \"no\")."
   type        = string
   default     = "no"
+}
+
+variable "include_asg_capacity_provider" {
+  description = "Whether or not to add the created ASG as a capacity provider for the ECS cluster (\"yes\" or \"no\")."
+  type        = string
+  default     = "no"
+}
+variable "asg_capacity_provider_manage_termination_protection" {
+  description = "Whether or not to allow ECS to manage termination protection for the ASG capacity provider (\"yes\" or \"no\")."
+  type        = string
+  default     = "yes"
+}
+variable "asg_capacity_provider_manage_scaling" {
+  description = "Whether or not to allow ECS to manage scaling for the ASG capacity provider (\"yes\" or \"no\")."
+  type        = string
+  default     = "yes"
+}
+variable "asg_capacity_provider_minimum_scaling_step_size" {
+  description = "The minimum scaling step size for ECS managed scaling of the ASG capacity provider."
+  type        = number
+  default     = 1
+}
+variable "asg_capacity_provider_maximum_scaling_step_size" {
+  description = "The maximum scaling step size for ECS managed scaling of the ASG capacity provider."
+  type        = number
+  default     = 1000
+}
+variable "asg_capacity_provider_target_capacity" {
+  description = "The target capacity, as a percentage from 1 to 100, for the ASG capacity provider."
+  type        = number
+  default     = 100
 }

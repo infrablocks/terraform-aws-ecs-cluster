@@ -39,4 +39,11 @@ module "ecs_cluster" {
   enable_container_insights = var.enable_container_insights
 
   protect_cluster_instances_from_scale_in = var.protect_cluster_instances_from_scale_in
+
+  include_asg_capacity_provider                       = var.include_asg_capacity_provider
+  asg_capacity_provider_manage_termination_protection = var.asg_capacity_provider_manage_termination_protection
+  asg_capacity_provider_manage_scaling                = var.asg_capacity_provider_manage_scaling
+  asg_capacity_provider_minimum_scaling_step_size     = var.asg_capacity_provider_minimum_scaling_step_size
+  asg_capacity_provider_maximum_scaling_step_size     = var.asg_capacity_provider_maximum_scaling_step_size
+  asg_capacity_provider_target_capacity               = var.asg_capacity_provider_target_capacity
 }

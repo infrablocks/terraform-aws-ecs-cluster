@@ -42,3 +42,10 @@ egress_cidrs:
 enable_container_insights: "no"
 
 protect_cluster_instances_from_scale_in: "no"
+
+include_asg_capacity_provider: "no"
+asg_capacity_provider_manage_termination_protection: "no"
+asg_capacity_provider_manage_scaling: "no"
+asg_capacity_provider_minimum_scaling_step_size: 1
+asg_capacity_provider_maximum_scaling_step_size: 1000
+asg_capacity_provider_target_capacity: 100

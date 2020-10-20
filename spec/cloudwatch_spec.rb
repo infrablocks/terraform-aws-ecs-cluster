@@ -11,6 +11,10 @@ describe 'CloudWatch' do
         .first
   }
 
+  before(:all) do
+    reprovision
+  end
+
   context 'logging' do
     it 'creates log group' do
       expect(log_group).to_not be_nil
@@ -19,7 +23,8 @@ describe 'CloudWatch' do
 
   context 'outputs' do
     it 'outputs the log group name' do
-      expect(output_for(:harness, 'log_group')).to(eq(log_group.log_group_name))
+      expect(output_for(:harness, 'log_group'))
+          .to(eq(log_group.log_group_name))
     end
   end
 end

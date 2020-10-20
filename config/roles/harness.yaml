@@ -31,3 +31,11 @@ vars:
   enable_container_insights: "%{hiera('enable_container_insights')}"
 
   protect_cluster_instances_from_scale_in: "%{hiera('protect_cluster_instances_from_scale_in')}"
+
+  include_asg_capacity_provider: "%{hiera('include_asg_capacity_provider')}"
+  asg_capacity_provider_manage_termination_protection: "%{hiera('asg_capacity_provider_manage_termination_protection')}"
+  asg_capacity_provider_manage_scaling: "%{hiera('asg_capacity_provider_manage_scaling')}"
+  asg_capacity_provider_minimum_scaling_step_size: "%{hiera('asg_capacity_provider_minimum_scaling_step_size')}"
+  asg_capacity_provider_maximum_scaling_step_size: "%{hiera('asg_capacity_provider_maximum_scaling_step_size')}"
+  asg_capacity_provider_target_capacity: "%{hiera('asg_capacity_provider_target_capacity')}"
+

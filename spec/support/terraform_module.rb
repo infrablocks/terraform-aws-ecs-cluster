@@ -40,12 +40,12 @@ module TerraformModule
       end
     end
 
-    def destroy_for(role, overrides = nil)
-      destroy(configuration.for(role, overrides))
+    def destroy_for(role, overrides = nil, opts = {})
+      destroy(configuration.for(role, overrides), opts)
     end
 
-    def destroy(configuration)
-      unless ENV['DEPLOYMENT_IDENTIFIER']
+    def destroy(configuration, opts = {})
+      if opts[:force] || !ENV['DEPLOYMENT_IDENTIFIER']
         with_clean_directory(configuration) do
           puts
           puts "Destroying with deployment identifier: " +
