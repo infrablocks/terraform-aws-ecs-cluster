@@ -44,7 +44,7 @@ configuration:
 ```hcl-terraform
 module "ecs_cluster" {
   source = "infrablocks/ecs-cluster/aws"
-  version = "0.2.5"
+  version = "3.4.0"
   
   region = "eu-west-2"
   vpc_id = "vpc-fb7dc365"
@@ -109,7 +109,7 @@ Notes:
   to AMI ID), only the root block device can be customised, using the 
   `cluster_instance_root_block_device_size` and 
   `cluster_instance_root_block_device_type` variables.
-* The user data template with be passed the cluster name as `cluster_name`. If 
+* The user data template will get the cluster name as `cluster_name`. If 
   none is supplied, a default will be used.
 
 ### Outputs
