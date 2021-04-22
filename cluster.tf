@@ -63,6 +63,7 @@ resource "aws_launch_configuration" "cluster" {
   ebs_block_device {
     device_name = var.cluster_instance_docker_block_device_name
     volume_size = var.cluster_instance_docker_block_device_size
+    encrypted = true
   }
 
   lifecycle {
