@@ -58,7 +58,6 @@ namespace :keys do
 
   namespace :cluster do
     RakeSSH.define_key_tasks(
-      namespace: :cluster_key,
       path: 'config/secrets/cluster',
       comment: 'maintainers@infrablocks.io'
     )
