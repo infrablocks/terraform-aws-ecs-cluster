@@ -24,13 +24,13 @@ resource "aws_launch_configuration" "cluster" {
   name_prefix   = "cluster-${var.component}-${var.deployment_identifier}-${var.cluster_name}-"
   image_id      = data.template_file.ami_id.rendered
   instance_type = var.cluster_instance_type
-  key_name      = var.cluster_instance_ssh_public_key_path == "" ? "" : element(concat(aws_key_pair.cluster.*.key_name, list("")), 0)
+  key_name      = var.cluster_instance_ssh_public_key_path == "" ? "" : element(concat(aws_key_pair.cluster.*.key_name, [""]), 0)
 
   iam_instance_profile = aws_iam_instance_profile.cluster.name
 
   user_data = data.template_file.cluster_user_data.rendered
 
-  security_groups = concat(list(aws_security_group.cluster.id), var.security_groups)
+  security_groups = concat([aws_security_group.cluster.id], var.security_groups)
 
   associate_public_ip_address = var.associate_public_ip_addresses == "yes" ? true : false
 

@@ -7,7 +7,8 @@ data "terraform_remote_state" "prerequisites" {
 }
 
 module "ecs_cluster" {
-  source = "../../../../"
+  # This makes absolutely no sense. I think there's a bug in terraform.
+  source = "./../../../../../../../"
 
   region     = var.region
   vpc_id     = data.terraform_remote_state.prerequisites.outputs.vpc_id

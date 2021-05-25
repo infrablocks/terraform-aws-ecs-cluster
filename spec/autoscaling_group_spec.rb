@@ -22,7 +22,7 @@ describe 'Autoscaling Group' do
   it 'uses all private subnets' do
     expect(subject.vpc_zone_identifier.split(','))
         .to(contain_exactly(
-            *output_for(:prerequisites, 'private_subnet_ids', parse: true)))
+            *output_for(:prerequisites, 'private_subnet_ids')))
   end
 
   it do

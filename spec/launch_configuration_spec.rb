@@ -41,7 +41,7 @@ describe 'Launch Configuration' do
   context 'when custom security groups are provided' do
     before(:all) do
       security_group_ids =
-          output_for(:prerequisites, 'security_group_ids', parse: true)
+          output_for(:prerequisites, 'security_group_ids')
       reprovision(
           security_groups:
               '["' + security_group_ids.join('","') + '"]'
