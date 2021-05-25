@@ -19,7 +19,7 @@ private_zone_id: 'Z2CDAFD23Q10HO'
 custom_ami_id: "ami-3fb6bc5b"
 
 cluster_name: 'test-cluster'
-cluster_instance_ssh_public_key_path: "%{hiera('project_directory')}/config/secrets/keys/cluster/ssh.public"
+cluster_instance_ssh_public_key_path: "%{hiera('project_directory')}/config/secrets/cluster/ssh.public"
 cluster_instance_type: 't2.medium'
 cluster_instance_amis:
   eu-west-2: "''"
