@@ -1,3 +1,9 @@
+## 4.0.0 (May 27th, 2021)
+
+BACKWARDS INCOMPATIBILITIES / NOTES:
+
+* This module is now compatible with Terraform 0.14 and higher.
+
 ## 0.2.6 (December 31st, 2017)
 
 IMPROVEMENTS:

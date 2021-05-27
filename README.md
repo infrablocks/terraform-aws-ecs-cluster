@@ -70,6 +70,9 @@ module will create everything you need. See the
 [docs](https://github.com/tobyclemson/terraform-aws-base-networking/blob/master/README.md)
 for usage instructions.
 
+See the 
+[Terraform registry entry](https://registry.terraform.io/modules/infrablocks/ecs-cluster/aws/latest) 
+for more details.
 
 ### Inputs
 
@@ -131,6 +134,11 @@ Notes:
 | service_policy_arn        | The ARN of the ECS service policy                                                |
 | service_policy_id         | The ID of the ECS service policy                                                 |
 | log_group                 | The name of the default log group for the cluster                                |
+
+### Compatibility
+
+This module is compatible with Terraform versions greater than or equal to 
+Terraform 0.14.
 
 ### Required Permissions
 
@@ -306,7 +314,7 @@ Contributing
 ------------
 
 Bug reports and pull requests are welcome on GitHub at 
-https://github.com/tobyclemson/terraform-aws-ecs-cluster. This project is 
+https://github.com/infrablocks/terraform-aws-ecs-cluster. This project is 
 intended to be a safe, welcoming space for collaboration, and contributors are 
 expected to adhere to the 
 [Contributor Covenant](http://contributor-covenant.org) code of conduct.
