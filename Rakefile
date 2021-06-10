@@ -99,6 +99,7 @@ RakeCircleCI.define_project_tasks(
         File.read('config/secrets/ci/encryption.passphrase')
             .chomp
   }
+  t.checkout_keys = []
   t.ssh_keys = [
     {
       hostname: 'github.com',
@@ -141,7 +142,7 @@ namespace :test do
     mkdir_p(plugin_cache_directory)
 
     ENV['TF_PLUGIN_CACHE_DIR'] = plugin_cache_directory
-    ENV['AWS_REGION'] = 'eu-west-2'
+    ENV['AWS_REGION'] = configuration.region
   end
 end
 
