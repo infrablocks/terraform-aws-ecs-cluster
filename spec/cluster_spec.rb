@@ -3,7 +3,13 @@ require 'spec_helper'
 describe 'ECS Cluster' do
   include_context :terraform
 
-  subject { ecs_cluster("#{vars.component}-#{vars.deployment_identifier}-#{vars.cluster_name}") }
+  ecs_client = Aws::ECS::Client.new
+  subject {
+    ecs_client.describe_clusters({
+      clusters: ["#{vars.component}-#{vars.deployment_identifier}-#{vars.cluster_name}"],
+      include: ['SETTINGS']
+    }).clusters[0]
+  }
 
   it { should exist }
 
