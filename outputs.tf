@@ -33,6 +33,11 @@ output "security_group_id" {
   value       = aws_security_group.cluster.id
 }
 
+output "capacity_provider_name" {
+  description = "The name of the capacity provider."
+  value       = aws_ecs_capacity_provider.autoscaling_group.name
+}
+
 output "instance_role_arn" {
   description = "The ARN of the container instance role."
   value       = aws_iam_role.cluster_instance_role.arn

@@ -74,7 +74,7 @@ resource "aws_autoscaling_group" "cluster" {
   }
 
   dynamic "tag" {
-    for_each = var.include_asg_capacity_provider == "yes" ? merge({AmazonECSManaged: ""}, local.tags) : local.tags
+    for_each = var.include_asg_capacity_provider == "yes" ? merge({ AmazonECSManaged : "" }, local.tags) : local.tags
     content {
       key                 = tag.key
       value               = tag.value
@@ -84,5 +84,6 @@ resource "aws_autoscaling_group" "cluster" {
 
   lifecycle {
     create_before_destroy = true
+    ignore_changes        = ["desired_capacity"]
   }
 }
