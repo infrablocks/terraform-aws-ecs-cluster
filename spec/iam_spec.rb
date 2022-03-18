@@ -35,7 +35,7 @@ describe 'IAM policies, profiles and roles' do
     }
     it 'allows assuming a role of ec2' do
       policy_document =
-          JSON.parse(URI.decode(subject.assume_role_policy_document))
+          JSON.parse(CGI.unescape(subject.assume_role_policy_document))
       expect(policy_document["Statement"].count).to(eq(1))
 
       policy_document_statement = policy_document["Statement"].first
@@ -62,7 +62,7 @@ describe 'IAM policies, profiles and roles' do
           version_id: subject.default_version_id,
       })
 
-      JSON.parse(URI.decode(
+      JSON.parse(CGI.unescape(
           policy_version_response.policy_version.document))
     end
 
@@ -147,7 +147,7 @@ describe 'IAM policies, profiles and roles' do
     }
     it 'allows assuming a role of ecs' do
       policy_document =
-          JSON.parse(URI.decode(subject.assume_role_policy_document))
+          JSON.parse(CGI.unescape(subject.assume_role_policy_document))
       expect(policy_document["Statement"].count).to(eq(1))
 
       policy_document_statement = policy_document["Statement"].first
@@ -174,7 +174,7 @@ describe 'IAM policies, profiles and roles' do
           version_id: subject.default_version_id,
       })
 
-      JSON.parse(URI.decode(
+      JSON.parse(CGI.unescape(
           policy_version_response.policy_version.document))
     end
 

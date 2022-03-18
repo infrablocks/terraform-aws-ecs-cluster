@@ -11,7 +11,9 @@ describe 'ECS Cluster' do
     }).clusters[0]
   }
 
-  it { should exist }
+  it "exists" do
+    expect(subject).not_to(be_nil)
+  end
 
   context 'when container insights enabled' do
     before(:all) do
