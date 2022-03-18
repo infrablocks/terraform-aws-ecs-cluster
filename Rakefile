@@ -30,7 +30,7 @@ task default: 'test:integration'
 
 RakeTerraform.define_installation_tasks(
   path: File.join(Dir.pwd, 'vendor', 'terraform'),
-  version: '0.15.3')
+  version: '1.0.11')
 
 namespace :encryption do
   namespace :directory do
@@ -93,11 +93,14 @@ RakeCircleCI.define_project_tasks(
   circle_ci_config =
     YAML.load_file('config/secrets/circle_ci/config.yaml')
 
-  t.api_token = circle_ci_config["circle_ci_api_token"]
+  t.api_token = circle_ci_config['circle_ci_api_token']
   t.environment_variables = {
     ENCRYPTION_PASSPHRASE:
-        File.read('config/secrets/ci/encryption.passphrase')
-            .chomp
+      File.read('config/secrets/ci/encryption.passphrase')
+          .chomp,
+    CIRCLECI_API_KEY:
+      YAML.load_file(
+        'config/secrets/circle_ci/config.yaml')['circle_ci_api_token']
   }
   t.checkout_keys = []
   t.ssh_keys = [
