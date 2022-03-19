@@ -1313,7 +1313,7 @@ GEM
       excon (~> 0.72)
       rake_factory (~> 0.23)
       sshkey (~> 2.0)
-    rake_dependencies (2.13.0)
+    rake_dependencies (3.1.0)
       hamster (~> 3.0)
       minitar (~> 0.9)
       rake_factory (~> 0.23)
@@ -1333,9 +1333,9 @@ GEM
       colored2 (~> 3.1)
       rake_factory (~> 0.23)
       sshkey (~> 2.0)
-    rake_terraform (1.21.0)
+    rake_terraform (1.22.0)
       colored2 (~> 3.1)
-      rake_dependencies (~> 2.11)
+      rake_dependencies (~> 3.1)
       rake_factory (~> 0.23)
       ruby-terraform (~> 1.4)
     rchardet (1.8.0)
@@ -1396,7 +1396,6 @@ DEPENDENCIES
   nokogiri
   rake
   rake_circle_ci
-  rake_dependencies
   rake_github
   rake_gpg
   rake_ssh
