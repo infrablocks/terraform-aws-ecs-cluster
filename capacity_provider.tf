@@ -15,11 +15,12 @@ resource "aws_ecs_capacity_provider" "autoscaling_group" {
       maximum_scaling_step_size = var.asg_capacity_provider_maximum_scaling_step_size
     }
   }
+}
 
-  # This is likely to cause issues with any modifications to the capacity
-  # provider that require it to be recreated, however, appears to be necessary
-  # to allow the capacity provider to be destroyed correctly.
-  lifecycle {
-    create_before_destroy = true
-  }
+resource "aws_ecs_cluster_capacity_providers" "cluster_capacity_providers" {
+  count = var.include_asg_capacity_provider == "yes" ? 1 : 0
+
+  cluster_name = aws_ecs_cluster.cluster.name
+
+  capacity_providers = var.include_asg_capacity_provider == "yes" ? [aws_ecs_capacity_provider.autoscaling_group[0].name] : []
 }
