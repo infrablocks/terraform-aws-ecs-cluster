@@ -5,13 +5,13 @@ resource "aws_iam_role" "cluster_instance_role" {
   tags = local.tags
 }
 
-data "template_file" "cluster_instance_policy" {
-  template = file("${path.module}/policies/cluster-instance-policy.json")
+locals {
+  template_cluster_instance_policy = file("${path.module}/policies/cluster-instance-policy.json")
 }
 
 resource "aws_iam_policy" "cluster_instance_policy" {
   description = "cluster-instance-policy-${var.component}-${var.deployment_identifier}-${var.cluster_name}"
-  policy      = coalesce(var.cluster_instance_iam_policy_contents, data.template_file.cluster_instance_policy.rendered)
+  policy      = coalesce(var.cluster_instance_iam_policy_contents, local.template_cluster_instance_policy)
 }
 
 resource "aws_iam_policy_attachment" "cluster_instance_policy_attachment" {
