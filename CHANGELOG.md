@@ -1,3 +1,19 @@
+## 4.2.0 (June 20th 2022)
+
+IMPROVEMENTS:
+
+* The `aws` and `null` provider constraints have been loosened to allow this
+  module to be used with the latest versions of each.
+* The no longer supported `template` provider has been replaced with native
+  terraform configuration language equivalents.
+
+## 4.1.0 (March 19th 2022)
+
+IMPROVEMENTS:
+
+* The `aws_ecs_cluster_capacity_providers` resource is now used to associate
+  capacity providers with the created ECS cluster.
+
 ## 4.0.0 (May 27th, 2021)
 
 BACKWARDS INCOMPATIBILITIES / NOTES:
