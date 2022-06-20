@@ -114,7 +114,7 @@ variable "cluster_desired_capacity" {
 
 variable "associate_public_ip_addresses" {
   description = "Whether or not to associate public IP addresses with ECS container instances (\"yes\" or \"no\")."
-  type        = bool
+  type        = string
   default     = "no"
 }
 
