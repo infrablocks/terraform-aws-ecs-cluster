@@ -14,7 +14,7 @@ configuration_directory: "%{hiera('work_directory')}/%{hiera('source_directory')
 
 vpc_cidr: "10.1.0.0/16"
 
-private_zone_id: 'Z2CDAFD23Q10HO'
+private_zone_vpc_id: 'vpc-a938ffc0'
 
 custom_ami_id: "ami-3fb6bc5b"
 
