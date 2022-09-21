@@ -1,3 +1,15 @@
+locals {
+  ami_id = coalesce(
+    lookup(var.cluster_instance_amis, var.region),
+    data.aws_ami.amazon_linux_2.image_id)
+  cluster_user_data_template = coalesce(
+    var.cluster_instance_user_data_template,
+    file("${path.module}/user-data/cluster.tpl"))
+  cluster_user_data = replace(
+    local.cluster_user_data_template,
+    "$${cluster_name}", local.cluster_full_name)
+}
+
 data "aws_ami" "amazon_linux_2" {
   most_recent = true
   owners      = ["amazon"]
@@ -8,27 +20,15 @@ data "aws_ami" "amazon_linux_2" {
   }
 }
 
-data "template_file" "ami_id" {
-  template = coalesce(lookup(var.cluster_instance_amis, var.region), data.aws_ami.amazon_linux_2.image_id)
-}
-
-data "template_file" "cluster_user_data" {
-  template = coalesce(var.cluster_instance_user_data_template, file("${path.module}/user-data/cluster.tpl"))
-
-  vars = {
-    cluster_name = local.cluster_full_name
-  }
-}
-
 resource "aws_launch_configuration" "cluster" {
   name_prefix   = "cluster-${var.component}-${var.deployment_identifier}-${var.cluster_name}-"
-  image_id      = data.template_file.ami_id.rendered
+  image_id      = local.ami_id
   instance_type = var.cluster_instance_type
   key_name      = var.cluster_instance_ssh_public_key_path == "" ? "" : element(concat(aws_key_pair.cluster.*.key_name, [""]), 0)
 
   iam_instance_profile = aws_iam_instance_profile.cluster.name
 
-  user_data = data.template_file.cluster_user_data.rendered
+  user_data = local.cluster_user_data
 
   security_groups = concat([aws_security_group.cluster.id], var.security_groups)
 

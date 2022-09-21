@@ -10,4 +10,4 @@ vars:
   component: "%{hiera('component')}"
   deployment_identifier: "%{hiera('deployment_identifier')}"
 
-  private_zone_id: "%{hiera('private_zone_id')}"
+  private_zone_vpc_id: "%{hiera('private_zone_vpc_id')}"
