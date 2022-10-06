@@ -1,5 +1,5 @@
 locals {
-  cluster_full_name = "${var.component}-${var.deployment_identifier}-${var.cluster_name}"
+  cluster_full_name = var.use_fullname ? var.cluster_name : "${var.component}-${var.deployment_identifier}-${var.cluster_name}"
 }
 
 resource "aws_ecs_cluster" "cluster" {

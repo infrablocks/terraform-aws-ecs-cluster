@@ -193,3 +193,9 @@ variable "asg_capacity_provider_target_capacity" {
   type        = number
   default     = 100
 }
+
+variable "use_fullname" {
+  description = "Set 'true' to use just cluster_name, else component-deployment_identifier-cluster_name."
+  type        = bool
+  default     = false
+}
