@@ -5,6 +5,7 @@ availability_zones:
   - "eu-west-2b"
 
 component: 'test'
+deployment_identifier: "%{hiera('seed')}"
 
 tags:
   ImportantTag: "important-value"
