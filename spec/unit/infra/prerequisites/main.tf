@@ -1,33 +1,23 @@
-data "aws_iam_policy_document" "assume_role_policy" {
-  statement {
-    principals {
-      identifiers = [
-        data.aws_caller_identity.current.arn
-      ]
-      type = "AWS"
-    }
+module "base_network" {
+  source  = "infrablocks/base-networking/aws"
+  version = "4.0.0"
 
-    actions = [
-      "sts:AssumeRole"
-    ]
+  vpc_cidr           = var.vpc_cidr
+  region             = var.region
+  availability_zones = var.availability_zones
 
-    effect = "Allow"
-  }
+  component             = var.component
+  deployment_identifier = var.deployment_identifier
+
+  private_zone_id = module.dns-zones.private_zone_id
 }
 
-data "aws_caller_identity" "current" {}
+module "dns-zones" {
+  source = "infrablocks/dns-zones/aws"
+  version = "1.0.0"
 
-resource "aws_iam_role" "test_role_1" {
-  name = "test-role-1-${var.deployment_identifier}"
-  assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
-}
-
-resource "aws_iam_role" "test_role_2" {
-  name = "test-role-2-${var.deployment_identifier}"
-  assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
-}
-
-resource "aws_iam_role" "test_role_3" {
-  name = "test-role-3-${var.deployment_identifier}"
-  assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
+  domain_name = "infrablocks-ecs-cluster-example.com"
+  private_domain_name = "infrablocks-ecs-cluster-example.net"
+  private_zone_vpc_id = var.private_zone_vpc_id
+  private_zone_vpc_region = var.region
 }

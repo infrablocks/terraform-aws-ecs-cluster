@@ -1,11 +1,15 @@
-output "test_role_1_arn" {
-  value = aws_iam_role.test_role_1.arn
+output "vpc_id" {
+  value = module.base_network.vpc_id
 }
 
-output "test_role_2_arn" {
-  value = aws_iam_role.test_role_2.arn
+output "vpc_cidr" {
+  value = module.base_network.vpc_cidr
 }
 
-output "test_role_3_arn" {
-  value = aws_iam_role.test_role_3.arn
+output "private_subnet_ids" {
+  value = module.base_network.private_subnet_ids
+}
+
+output "security_group_ids" {
+  value = aws_security_group.custom_security_group.*.id
 }

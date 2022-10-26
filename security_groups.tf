@@ -1,11 +1,11 @@
 resource "aws_security_group" "cluster" {
-  name        = "${var.component}-${var.deployment_identifier}-${var.cluster_name}"
-  description = "Container access for component: ${var.component}, deployment: ${var.deployment_identifier}, cluster: ${var.cluster_name}"
+  name        = "${var.component}-${var.deployment_identifier}-${local.cluster_name}"
+  description = "Container access for component: ${var.component}, deployment: ${var.deployment_identifier}, cluster: ${local.cluster_name}"
   vpc_id      = var.vpc_id
 
   tags = merge(local.tags, {
-    Name        = "${var.component}-${var.deployment_identifier}-${var.cluster_name}"
-    ClusterName = var.cluster_name
+    Name        = "${var.component}-${var.deployment_identifier}-${local.cluster_name}"
+    ClusterName = local.cluster_name
   })
 }
 

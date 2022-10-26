@@ -49,7 +49,7 @@ RSpec.configure do |config|
   config.after(:suite) do
     destroy(
       role: :prerequisites,
-      only_if: -> { ENV['SEED'].nil? }
+      only_if: -> { !ENV['FORCE_DESTROY'].nil? || ENV['SEED'].nil? }
     )
   end
 end

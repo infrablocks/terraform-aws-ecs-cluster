@@ -1,7 +1,7 @@
 resource "aws_ecs_capacity_provider" "autoscaling_group" {
   count = var.include_asg_capacity_provider == "yes" ? 1 : 0
 
-  name = "cp-${var.component}-${var.deployment_identifier}-${var.cluster_name}"
+  name = "cp-${var.component}-${var.deployment_identifier}-${local.cluster_name}"
 
   auto_scaling_group_provider {
     auto_scaling_group_arn = aws_autoscaling_group.cluster.arn
