@@ -4,5 +4,5 @@ locals {
     DeploymentIdentifier = var.deployment_identifier
   }
 
-  tags = merge(var.tags, local.base_tags)
+  tags = merge(local.received_tags, local.base_tags)
 }

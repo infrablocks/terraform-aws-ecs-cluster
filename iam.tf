@@ -1,6 +1,6 @@
 locals {
   cluster_instance_policy_contents = coalesce(
-    var.cluster_instance_iam_policy_contents,
+    local.cluster_instance_iam_policy_contents,
     file("${path.module}/policies/cluster-instance-policy.json"))
 }
 
@@ -37,7 +37,7 @@ resource "aws_iam_role" "cluster_service_role" {
 
 resource "aws_iam_policy" "cluster_service_policy" {
   description = "cluster-service-policy-${var.component}-${var.deployment_identifier}-${local.cluster_name}"
-  policy      = coalesce(var.cluster_service_iam_policy_contents, file("${path.module}/policies/cluster-service-policy.json"))
+  policy      = coalesce(local.cluster_service_iam_policy_contents, file("${path.module}/policies/cluster-service-policy.json"))
 }
 
 resource "aws_iam_policy_attachment" "cluster_service_policy_attachment" {

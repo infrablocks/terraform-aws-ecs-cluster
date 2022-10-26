@@ -10,7 +10,7 @@ resource "aws_security_group" "cluster" {
 }
 
 resource "aws_security_group_rule" "cluster_default_ingress" {
-  count = var.include_default_ingress_rule == "yes" ? 1 : 0
+  count = local.include_default_ingress_rule == "yes" ? 1 : 0
 
   type = "ingress"
 
@@ -20,11 +20,11 @@ resource "aws_security_group_rule" "cluster_default_ingress" {
   from_port = 0
   to_port   = 0
 
-  cidr_blocks = var.allowed_cidrs
+  cidr_blocks = local.allowed_cidrs
 }
 
 resource "aws_security_group_rule" "cluster_default_egress" {
-  count = var.include_default_egress_rule == "yes" ? 1 : 0
+  count = local.include_default_egress_rule == "yes" ? 1 : 0
 
   type = "egress"
 
@@ -34,5 +34,5 @@ resource "aws_security_group_rule" "cluster_default_egress" {
   from_port = 0
   to_port   = 0
 
-  cidr_blocks = var.egress_cidrs
+  cidr_blocks = local.egress_cidrs
 }

@@ -9,7 +9,7 @@ resource "aws_ecs_cluster" "cluster" {
 
   setting {
     name  = "containerInsights"
-    value = var.enable_container_insights == "yes" ? "enabled" : "disabled"
+    value = local.enable_container_insights == "yes" ? "enabled" : "disabled"
   }
 
   depends_on = [
