@@ -17,11 +17,7 @@ describe 'IAM policies, profiles and roles' do
         .instance_profile
     end
 
-    it 'has path /' do
-      expect(instance_profile.path).to(eq('/'))
-    end
-
-    it 'has the cluster instance role' do
+    it 'has the cluster instance role' do # integration
       expect(instance_profile.roles.first.role_name)
         .to(eq(iam_role(output_for(:harness, 'instance_role_id')).name))
     end
@@ -31,15 +27,6 @@ describe 'IAM policies, profiles and roles' do
   describe 'cluster instance role' do
     subject(:role) do
       iam_role(output_for(:harness, 'instance_role_id'))
-    end
-
-    it { is_expected.to exist }
-
-    its(:description) do
-      is_expected.to eq(
-        "cluster-instance-role-#{vars.component}-" \
-        "#{vars.deployment_identifier}-#{vars.cluster_name}"
-      )
     end
 
     it 'allows assuming a role of ec2' do
