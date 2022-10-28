@@ -18,14 +18,8 @@ describe 'CloudWatch' do
     reprovision
   end
 
-  describe 'logging' do
-    it 'creates log group' do
-      expect(log_group).not_to be_nil
-    end
-  end
-
   describe 'outputs' do
-    it 'outputs the log group name' do
+    it 'outputs the log group name' do # integration?
       expect(output_for(:harness, 'log_group'))
         .to(eq(log_group.log_group_name))
     end
