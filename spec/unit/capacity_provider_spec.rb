@@ -130,35 +130,53 @@ describe 'ASG Capacity Provider' do
                 ))
       end
 
-      # it 'uses the provided minimum scaling step size' do
-      #   capacity_provider = capacity_providers.first
-      #
-      #   expect(capacity_provider
-      #       .auto_scaling_group_provider
-      #       .managed_scaling
-      #       .minimum_scaling_step_size)
-      #     .to(eq(3))
-      # end
-      #
-      # it 'uses the provided maximum scaling step size' do
-      #   capacity_provider = capacity_providers.first
-      #
-      #   expect(capacity_provider
-      #       .auto_scaling_group_provider
-      #       .managed_scaling
-      #       .maximum_scaling_step_size)
-      #     .to(eq(300))
-      # end
-      #
-      # it 'uses the provided target capacity' do
-      #   capacity_provider = capacity_providers.first
-      #
-      #   expect(capacity_provider
-      #       .auto_scaling_group_provider
-      #       .managed_scaling
-      #       .target_capacity)
-      #     .to(eq(90))
-      # end
+      it 'uses the provided minimum scaling step size' do
+        expect(@plan)
+          .to(include_resource_creation(type: 'aws_ecs_capacity_provider')
+                .with_attribute_value(
+                  :auto_scaling_group_provider,
+                  including(including(
+                              managed_scaling:
+                                including(
+                                  including(
+                                    minimum_scaling_step_size: 3
+                                  )
+                                )
+                            ))
+                ))
+      end
+
+      it 'uses the provided maximum scaling step size' do
+        expect(@plan)
+          .to(include_resource_creation(type: 'aws_ecs_capacity_provider')
+                .with_attribute_value(
+                  :auto_scaling_group_provider,
+                  including(including(
+                              managed_scaling:
+                                including(
+                                  including(
+                                    maximum_scaling_step_size: 300
+                                  )
+                                )
+                            ))
+                ))
+      end
+
+      it 'uses the provided target capacity' do
+        expect(@plan)
+          .to(include_resource_creation(type: 'aws_ecs_capacity_provider')
+                .with_attribute_value(
+                  :auto_scaling_group_provider,
+                  including(including(
+                              managed_scaling:
+                                including(
+                                  including(
+                                    target_capacity: 90
+                                  )
+                                )
+                            ))
+                ))
+      end
     end
 
     # context 'without managed scaling' do
