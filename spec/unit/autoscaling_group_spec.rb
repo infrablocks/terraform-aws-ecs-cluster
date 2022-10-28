@@ -111,7 +111,7 @@ describe 'autoscaling group' do
     end
   end
 
-  describe 'when cluster sizes provided' do
+  context 'when cluster sizes provided' do
     before(:context) do
       @plan = plan(role: :root) do |vars|
         vars.cluster_minimum_size = 2
@@ -136,6 +136,34 @@ describe 'autoscaling group' do
       expect(@plan)
         .to(include_resource_creation(type: 'aws_autoscaling_group')
               .with_attribute_value(:desired_capacity, 3))
+    end
+  end
+
+  context 'when scale in protection enabled' do
+    before(:context) do
+      @plan = plan(role: :root) do |vars|
+        vars.protect_cluster_instances_from_scale_in = 'yes'
+      end
+    end
+
+    it 'has protect_from_scale_in set to true' do
+      expect(@plan)
+        .to(include_resource_creation(type: 'aws_autoscaling_group')
+              .with_attribute_value(:protect_from_scale_in, true))
+    end
+  end
+
+  context 'when scale in protection disabled' do
+    before(:context) do
+      @plan = plan(role: :root) do |vars|
+        vars.protect_cluster_instances_from_scale_in = 'no'
+      end
+    end
+
+    it 'has protect_from_scale_in set to false' do
+      expect(@plan)
+        .to(include_resource_creation(type: 'aws_autoscaling_group')
+              .with_attribute_value(:protect_from_scale_in, false))
     end
   end
 end
