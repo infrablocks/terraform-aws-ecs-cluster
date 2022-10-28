@@ -6,3 +6,5 @@ vars:
 
   component: "%{hiera('component')}"
   deployment_identifier: "%{hiera('deployment_identifier')}"
+
+  tags: "%{hiera('tags')}"

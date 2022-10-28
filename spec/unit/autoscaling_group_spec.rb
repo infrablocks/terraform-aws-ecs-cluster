@@ -42,35 +42,72 @@ describe 'autoscaling group' do
               ))
     end
 
-    it 'has tags' do
-      expect(@plan)
-        .to(include_resource_creation(type: 'aws_autoscaling_group')
-              .with_attribute_value(
-                :tag,
-                containing_exactly(
-                  {
-                    key: 'Name',
-                    propagate_at_launch: true,
-                    value: "cluster-worker-#{component}-" \
-                           "#{deployment_identifier}-default"
-                  },
-                  {
-                    key: 'ClusterName',
-                    propagate_at_launch: true,
-                    value: 'default'
-                  },
-                  {
-                    key: 'Component',
-                    propagate_at_launch: true,
-                    value: component
-                  },
-                  {
-                    key: 'DeploymentIdentifier',
-                    propagate_at_launch: true,
-                    value: deployment_identifier
-                  }
-                )
-              ))
+    describe 'tags' do
+      it 'has Name' do
+        expect(@plan)
+          .to(include_resource_creation(type: 'aws_autoscaling_group')
+                .with_attribute_value(
+                  :tag,
+                  including({
+                              key: 'Name',
+                              propagate_at_launch: true,
+                              value: "cluster-worker-#{component}-" \
+                                     "#{deployment_identifier}-default"
+                            })
+                ))
+      end
+
+      it 'has ClusterName' do
+        expect(@plan)
+          .to(include_resource_creation(type: 'aws_autoscaling_group')
+                .with_attribute_value(
+                  :tag,
+                  including({
+                              key: 'ClusterName',
+                              propagate_at_launch: true,
+                              value: 'default'
+                            })
+                ))
+      end
+
+      it 'has Component' do
+        expect(@plan)
+          .to(include_resource_creation(type: 'aws_autoscaling_group')
+                .with_attribute_value(
+                  :tag,
+                  including({
+                              key: 'Component',
+                              propagate_at_launch: true,
+                              value: component
+                            })
+                ))
+      end
+
+      it 'has DeploymentIdentifier' do
+        expect(@plan)
+          .to(include_resource_creation(type: 'aws_autoscaling_group')
+                .with_attribute_value(
+                  :tag,
+                  including({
+                              key: 'DeploymentIdentifier',
+                              propagate_at_launch: true,
+                              value: deployment_identifier
+                            })
+                ))
+      end
+
+      it 'has ImportantTag' do
+        expect(@plan)
+          .to(include_resource_creation(type: 'aws_autoscaling_group')
+                .with_attribute_value(
+                  :tag,
+                  including({
+                              key: 'ImportantTag',
+                              propagate_at_launch: true,
+                              value: 'important-value'
+                            })
+                ))
+      end
     end
   end
 
