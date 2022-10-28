@@ -62,10 +62,12 @@ describe 'ASG Capacity Provider' do
         expect(@plan)
           .to(include_resource_creation(type: 'aws_ecs_capacity_provider')
                 .with_attribute_value(
-                  :auto_scaling_group_provider,
-                  including(
-                    including(managed_termination_protection: 'ENABLED')
-                  )
+                  [
+                    :auto_scaling_group_provider,
+                    0,
+                    :managed_termination_protection
+                  ],
+                  'ENABLED'
                 ))
       end
     end
@@ -82,10 +84,12 @@ describe 'ASG Capacity Provider' do
         expect(@plan)
           .to(include_resource_creation(type: 'aws_ecs_capacity_provider')
                 .with_attribute_value(
-                  :auto_scaling_group_provider,
-                  including(
-                    including(managed_termination_protection: 'DISABLED')
-                  )
+                  [
+                    :auto_scaling_group_provider,
+                    0,
+                    :managed_termination_protection
+                  ],
+                  'DISABLED'
                 ))
       end
     end
@@ -105,11 +109,14 @@ describe 'ASG Capacity Provider' do
         expect(@plan)
           .to(include_resource_creation(type: 'aws_ecs_capacity_provider')
                 .with_attribute_value(
-                  :auto_scaling_group_provider,
-                  including(including(
-                              managed_scaling:
-                                including(including(status: 'ENABLED'))
-                            ))
+                  [
+                    :auto_scaling_group_provider,
+                    0,
+                    :managed_scaling,
+                    0,
+                    :status
+                  ],
+                  'ENABLED'
                 ))
       end
 
@@ -117,15 +124,14 @@ describe 'ASG Capacity Provider' do
         expect(@plan)
           .to(include_resource_creation(type: 'aws_ecs_capacity_provider')
                 .with_attribute_value(
-                  :auto_scaling_group_provider,
-                  including(including(
-                              managed_scaling:
-                                including(
-                                  including(
-                                    minimum_scaling_step_size: 3
-                                  )
-                                )
-                            ))
+                  [
+                    :auto_scaling_group_provider,
+                    0,
+                    :managed_scaling,
+                    0,
+                    :minimum_scaling_step_size
+                  ],
+                  3
                 ))
       end
 
@@ -133,15 +139,14 @@ describe 'ASG Capacity Provider' do
         expect(@plan)
           .to(include_resource_creation(type: 'aws_ecs_capacity_provider')
                 .with_attribute_value(
-                  :auto_scaling_group_provider,
-                  including(including(
-                              managed_scaling:
-                                including(
-                                  including(
-                                    maximum_scaling_step_size: 300
-                                  )
-                                )
-                            ))
+                  [
+                    :auto_scaling_group_provider,
+                    0,
+                    :managed_scaling,
+                    0,
+                    :maximum_scaling_step_size
+                  ],
+                  300
                 ))
       end
 
@@ -149,15 +154,14 @@ describe 'ASG Capacity Provider' do
         expect(@plan)
           .to(include_resource_creation(type: 'aws_ecs_capacity_provider')
                 .with_attribute_value(
-                  :auto_scaling_group_provider,
-                  including(including(
-                              managed_scaling:
-                                including(
-                                  including(
-                                    target_capacity: 90
-                                  )
-                                )
-                            ))
+                  [
+                    :auto_scaling_group_provider,
+                    0,
+                    :managed_scaling,
+                    0,
+                    :target_capacity
+                  ],
+                  90
                 ))
       end
     end
@@ -174,11 +178,14 @@ describe 'ASG Capacity Provider' do
         expect(@plan)
           .to(include_resource_creation(type: 'aws_ecs_capacity_provider')
                 .with_attribute_value(
-                  :auto_scaling_group_provider,
-                  including(including(
-                              managed_scaling:
-                                including(including(status: 'DISABLED'))
-                            ))
+                  [
+                    :auto_scaling_group_provider,
+                    0,
+                    :managed_scaling,
+                    0,
+                    :status
+                  ],
+                  'DISABLED'
                 ))
       end
     end
