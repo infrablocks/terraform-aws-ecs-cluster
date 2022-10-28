@@ -3,31 +3,12 @@
 require 'spec_helper'
 
 describe 'ASG Capacity Provider' do
-  # subject { ecs_cluster("#{component}-#{dep_id}-#{cluster_name}") }
-
-  # let(:component) { vars.component }
-  # let(:asg) do
-  #   autoscaling_group(output_for(:harness, 'autoscaling_group_name'))
-  # end
-  # let(:capacity_providers) do
-  #   subject
-  #     .capacity_providers
-  #     .map do |cp|
-  #     ecs_client
-  #       .describe_capacity_providers(capacity_providers: [cp])
-  #       .capacity_providers[0]
-  #   end
-  # end
   let(:component) do
     var(role: :root, name: 'component')
   end
-  let(:dep_id) {
+  let(:dep_id) do
     var(role: :root, name: 'deployment_identifier')
-  }
-  let(:cluster_name) do
-    var(role: :root, name: 'cluster_name')
   end
-  # let(:cluster_name) { vars.cluster_name }
 
   before(:context) do
     @plan = plan(role: :root)
@@ -49,7 +30,9 @@ describe 'ASG Capacity Provider' do
 
         expect(@plan)
           .to(include_resource_creation(type: 'aws_ecs_capacity_provider')
-                .with_attribute_value(:name, "cp-#{component}-#{dep_id}-default"))
+                .with_attribute_value(
+                  :name, "cp-#{component}-#{dep_id}-default"
+                ))
       end
       # rubocop:enable RSpec/MultipleExpectations
 
@@ -179,31 +162,26 @@ describe 'ASG Capacity Provider' do
       end
     end
 
-    # context 'without managed scaling' do
-    #   before(:all) do
-    #     reprovision(
-    #       include_asg_capacity_provider: 'yes',
-    #       asg_capacity_provider_manage_scaling: 'no'
-    #     )
-    #   end
-    #
-    #   after(:all) do
-    #     destroy(
-    #       include_asg_capacity_provider: 'yes',
-    #       asg_capacity_provider_manage_scaling: 'no'
-    #     )
-    #   end
-    #
-    #   it 'disables managed scaling' do
-    #     capacity_provider = capacity_providers.first
-    #
-    #     expect(capacity_provider
-    #         .auto_scaling_group_provider
-    #         .managed_scaling
-    #         .status)
-    #       .to(eq('DISABLED'))
-    #   end
-    # end
+    context 'without managed scaling' do
+      before(:context) do
+        @plan = plan(role: :root) do |vars|
+          vars.include_asg_capacity_provider = 'yes'
+          vars.asg_capacity_provider_manage_scaling = 'no'
+        end
+      end
+
+      it 'disables managed scaling' do
+        expect(@plan)
+          .to(include_resource_creation(type: 'aws_ecs_capacity_provider')
+                .with_attribute_value(
+                  :auto_scaling_group_provider,
+                  including(including(
+                              managed_scaling:
+                                including(including(status: 'DISABLED'))
+                            ))
+                ))
+      end
+    end
   end
 
   context 'when capacity provider not included' do
@@ -218,12 +196,17 @@ describe 'ASG Capacity Provider' do
         .not_to(include_resource_creation(type: 'aws_ecs_capacity_provider'))
     end
 
-    # it 'does not include the AmazonECSManaged tag on the ASG' do
-    #   expect(asg
-    #            .tags
-    #            .filter { |tag| tag.key == 'AmazonECSManaged' }
-    #            .length)
-    #     .to(eq(0))
-    # end
+    it 'does not include the AmazonECSManaged tag on the ASG' do
+      expect(@plan)
+        .not_to(include_resource_creation(type: 'aws_autoscaling_group')
+              .with_attribute_value(
+                :tag,
+                including({
+                            key: 'AmazonECSManaged',
+                            propagate_at_launch: true,
+                            value: ''
+                          })
+              ))
+    end
   end
 end
