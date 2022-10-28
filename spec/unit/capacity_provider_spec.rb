@@ -107,67 +107,59 @@ describe 'ASG Capacity Provider' do
       end
     end
 
-    # context 'with managed scaling' do
-    #   before(:all) do
-    #     reprovision(
-    #       include_asg_capacity_provider: 'yes',
-    #       asg_capacity_provider_manage_scaling: 'yes',
-    #       asg_capacity_provider_minimum_scaling_step_size: 3,
-    #       asg_capacity_provider_maximum_scaling_step_size: 300,
-    #       asg_capacity_provider_target_capacity: 90
-    #     )
-    #   end
-    #
-    #   after(:all) do
-    #     destroy(
-    #       include_asg_capacity_provider: 'yes',
-    #       asg_capacity_provider_manage_scaling: 'yes',
-    #       asg_capacity_provider_minimum_scaling_step_size: 3,
-    #       asg_capacity_provider_maximum_scaling_step_size: 300,
-    #       asg_capacity_provider_target_capacity: 90
-    #     )
-    #   end
-    #
-    #   it 'enables managed scaling' do
-    #     capacity_provider = capacity_providers.first
-    #
-    #     expect(capacity_provider
-    #         .auto_scaling_group_provider
-    #         .managed_scaling
-    #         .status)
-    #       .to(eq('ENABLED'))
-    #   end
-    #
-    #   it 'uses the provided minimum scaling step size' do
-    #     capacity_provider = capacity_providers.first
-    #
-    #     expect(capacity_provider
-    #         .auto_scaling_group_provider
-    #         .managed_scaling
-    #         .minimum_scaling_step_size)
-    #       .to(eq(3))
-    #   end
-    #
-    #   it 'uses the provided maximum scaling step size' do
-    #     capacity_provider = capacity_providers.first
-    #
-    #     expect(capacity_provider
-    #         .auto_scaling_group_provider
-    #         .managed_scaling
-    #         .maximum_scaling_step_size)
-    #       .to(eq(300))
-    #   end
-    #
-    #   it 'uses the provided target capacity' do
-    #     capacity_provider = capacity_providers.first
-    #
-    #     expect(capacity_provider
-    #         .auto_scaling_group_provider
-    #         .managed_scaling
-    #         .target_capacity)
-    #       .to(eq(90))
-    #   end
-    # end
+    context 'with managed scaling' do
+      before(:context) do
+        @plan = plan(role: :root) do |vars|
+          vars.include_asg_capacity_provider = 'yes'
+          vars.asg_capacity_provider_manage_scaling = 'yes'
+          vars.asg_capacity_provider_minimum_scaling_step_size = 3
+          vars.asg_capacity_provider_maximum_scaling_step_size = 300
+          vars.asg_capacity_provider_target_capacity = 90
+        end
+      end
+
+      it 'enables managed scaling' do
+        expect(@plan)
+          .to(include_resource_creation(type: 'aws_ecs_capacity_provider')
+                .with_attribute_value(
+                  :auto_scaling_group_provider,
+                  including(including(
+                              managed_scaling:
+                                including(including(status: 'ENABLED'))
+                            ))
+                ))
+      end
+
+      # it 'uses the provided minimum scaling step size' do
+      #   capacity_provider = capacity_providers.first
+      #
+      #   expect(capacity_provider
+      #       .auto_scaling_group_provider
+      #       .managed_scaling
+      #       .minimum_scaling_step_size)
+      #     .to(eq(3))
+      # end
+      #
+      # it 'uses the provided maximum scaling step size' do
+      #   capacity_provider = capacity_providers.first
+      #
+      #   expect(capacity_provider
+      #       .auto_scaling_group_provider
+      #       .managed_scaling
+      #       .maximum_scaling_step_size)
+      #     .to(eq(300))
+      # end
+      #
+      # it 'uses the provided target capacity' do
+      #   capacity_provider = capacity_providers.first
+      #
+      #   expect(capacity_provider
+      #       .auto_scaling_group_provider
+      #       .managed_scaling
+      #       .target_capacity)
+      #     .to(eq(90))
+      # end
+    end
 
     # context 'without managed scaling' do
     #   before(:all) do
