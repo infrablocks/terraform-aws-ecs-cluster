@@ -62,7 +62,7 @@ describe 'ASG Capacity Provider' do
 
         expect(capacity_provider.name)
           .to(eq("cp-#{component}-#{dep_id}-#{cluster_name}"))
-        expect(capacity_provider
+        expect(capacity_provider # integration
             .auto_scaling_group_provider
             .auto_scaling_group_arn)
           .to(eq(output_for(:harness, 'autoscaling_group_arn')))
