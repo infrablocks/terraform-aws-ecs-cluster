@@ -87,30 +87,25 @@ describe 'ASG Capacity Provider' do
       end
     end
 
-    # context 'without managed termination protection' do
-    #   before(:all) do
-    #     reprovision(
-    #       include_asg_capacity_provider: 'yes',
-    #       asg_capacity_provider_manage_termination_protection: 'no'
-    #     )
-    #   end
-    #
-    #   after(:all) do
-    #     destroy(
-    #       include_asg_capacity_provider: 'yes',
-    #       asg_capacity_provider_manage_termination_protection: 'no'
-    #     )
-    #   end
-    #
-    #   it 'disables managed termination protection' do
-    #     capacity_provider = capacity_providers.first
-    #
-    #     expect(capacity_provider
-    #         .auto_scaling_group_provider
-    #         .managed_termination_protection)
-    #       .to(eq('DISABLED'))
-    #   end
-    # end
+    context 'without managed termination protection' do
+      before(:context) do
+        @plan = plan(role: :root) do |vars|
+          vars.include_asg_capacity_provider = 'yes'
+          vars.asg_capacity_provider_manage_termination_protection = 'no'
+        end
+      end
+
+      it 'disables managed termination protection' do
+        expect(@plan)
+          .to(include_resource_creation(type: 'aws_ecs_capacity_provider')
+                .with_attribute_value(
+                  :auto_scaling_group_provider,
+                  including(
+                    including(managed_termination_protection: 'DISABLED')
+                  )
+                ))
+      end
+    end
 
     # context 'with managed scaling' do
     #   before(:all) do
