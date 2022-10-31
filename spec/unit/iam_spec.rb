@@ -52,19 +52,22 @@ describe 'IAM policies, profiles and roles' do
               ))
     end
 
-    # it 'allows assuming a role of ec2' do
-    #   policy_document =
-    #     JSON.parse(CGI.unescape(role.assume_role_policy_document))
-    #   expect(policy_document['Statement'].count).to(eq(1))
-    #
-    #   policy_document_statement = policy_document['Statement'].first
-    #
-    #   expect(policy_document_statement['Effect']).to(eq('Allow'))
-    #   expect(policy_document_statement['Action']).to(eq('sts:AssumeRole'))
-    #   expect(policy_document_statement['Principal']['Service'])
-    #     .to(eq('ec2.amazonaws.com'))
-    # end
-    #
+    it 'allows assuming a role of ec2' do
+      expect(@plan)
+        .to(include_resource_creation(
+          type: 'aws_iam_role',
+          name: 'cluster_instance_role'
+        )
+              .with_attribute_value(
+                :assume_role_policy,
+                a_policy_with_statement(
+                  Effect: 'Allow',
+                  Action: 'sts:AssumeRole',
+                  Principal: { Service: ['ec2.amazonaws.com'] }
+                )
+              ))
+    end
+
     # it {
     #   expect(role).to have_iam_policy(output_for(:harness,
     #                                              'instance_policy_id'))

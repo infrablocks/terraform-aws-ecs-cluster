@@ -8,7 +8,7 @@ RSpec::Matchers
     :a_policy_with_statement
   ) do |expected_statement, options = {}|
   def normalise(statement)
-    %i[Resource NotResource Action NotAction]
+    %i[Resource NotResource Action NotAction Principal]
       .each_with_object(statement) do |section, s|
       s[section] = s[section].to_set if s[section].is_a?(Array)
     end
