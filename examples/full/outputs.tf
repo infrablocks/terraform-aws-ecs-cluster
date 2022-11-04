@@ -1,19 +1,71 @@
-output "admin_user_arn" {
-  value = module.admin.admin_user_arn
+output "cluster_id" {
+  value       = module.ecs_cluster.cluster_id
 }
 
-output "admin_user_name" {
-  value = module.admin.admin_user_name
+output "cluster_name" {
+  value       = module.ecs_cluster.cluster_name
 }
 
-output "admin_user_password" {
-  value = module.admin.admin_user_password
+output "cluster_arn" {
+  value       = module.ecs_cluster.cluster_arn
 }
 
-output "admin_user_access_key_id" {
-  value = module.admin.admin_user_access_key_id
+output "autoscaling_group_name" {
+  value       = module.ecs_cluster.autoscaling_group_name
 }
 
-output "admin_user_secret_access_key" {
-  value = module.admin.admin_user_secret_access_key
+output "autoscaling_group_arn" {
+  value       = module.ecs_cluster.autoscaling_group_arn
+}
+
+output "launch_configuration_name" {
+  value       = module.ecs_cluster.launch_configuration_name
+}
+
+output "security_group_id" {
+  value       = module.ecs_cluster.security_group_id
+}
+
+output "custom_security_group_ids" {
+  value = aws_security_group.custom_security_group.*.id
+}
+
+output "instance_role_arn" {
+  value       = module.ecs_cluster.instance_role_arn
+}
+
+output "instance_role_id" {
+  value       = module.ecs_cluster.instance_role_id
+}
+
+output "instance_policy_arn" {
+  value       = module.ecs_cluster.instance_policy_arn
+}
+
+output "instance_policy_id" {
+  value       = module.ecs_cluster.instance_policy_id
+}
+
+output "service_role_arn" {
+  value       = module.ecs_cluster.service_role_arn
+}
+
+output "service_role_id" {
+  value       = module.ecs_cluster.service_role_id
+}
+
+output "service_policy_arn" {
+  value       = module.ecs_cluster.service_policy_arn
+}
+
+output "service_policy_id" {
+  value       = module.ecs_cluster.service_policy_id
+}
+
+output "log_group" {
+  value       = module.ecs_cluster.log_group
+}
+
+output "asg_capacity_provider_name" {
+  value       = module.ecs_cluster.asg_capacity_provider_name
 }

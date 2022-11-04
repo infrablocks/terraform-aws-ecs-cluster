@@ -42,8 +42,6 @@ describe 'ASG Capacity Provider' do
 
         capacity_provider = capacity_providers.first
 
-        expect(capacity_provider.name)
-          .to(eq("cp-#{component}-#{dep_id}-#{cluster_name}"))
         expect(capacity_provider # integration
             .auto_scaling_group_provider
             .auto_scaling_group_arn)

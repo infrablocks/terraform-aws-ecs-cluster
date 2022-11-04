@@ -7,5 +7,5 @@ vars:
   component: "%{hiera('component')}"
   deployment_identifier: "%{hiera('deployment_identifier')}"
 
-  policy_name: "test-policy-%{hiera('deployment_identifier')}"
-  policy_description: "Policy for test-policy-%{hiera('deployment_identifier')}"
+  vpc_cidr: "%{hiera('vpc_cidr')}"
+  availability_zones: "%{hiera('availability_zones')}"
