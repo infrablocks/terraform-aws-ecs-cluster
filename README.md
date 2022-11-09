@@ -37,8 +37,9 @@ configuration:
 
 ```hcl-terraform
 module "ecs_cluster" {
-  source = "github.com/infrablocks/terraform-aws-ecs-cluster"
-  
+  source = "infrablocks/ecs-cluster/aws"
+  version = "4.2.0"
+
   region = "eu-west-2"
   vpc_id = "vpc-fb7dc365"
   subnet_ids = [
