@@ -7,14 +7,14 @@ data "terraform_remote_state" "prerequisites" {
 }
 
 module "ecs_cluster" {
-  # This makes absolutely no sense. I think there's a bug in terraform.
-  source = "./../../../../../../../"
+  source = "../../../.."
 
   region     = var.region
   vpc_id     = data.terraform_remote_state.prerequisites.outputs.vpc_id
   subnet_ids = data.terraform_remote_state.prerequisites.outputs.private_subnet_ids
 
-  component             = var.component
+  component = var.component
+
   deployment_identifier = var.deployment_identifier
 
   tags = var.tags

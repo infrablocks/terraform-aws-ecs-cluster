@@ -1,5 +1,5 @@
 locals {
-  cluster_full_name = "${var.component}-${var.deployment_identifier}-${var.cluster_name}"
+  cluster_full_name = "${var.component}-${var.deployment_identifier}-${local.cluster_name}"
 }
 
 resource "aws_ecs_cluster" "cluster" {
@@ -9,7 +9,7 @@ resource "aws_ecs_cluster" "cluster" {
 
   setting {
     name  = "containerInsights"
-    value = var.enable_container_insights == "yes" ? "enabled" : "disabled"
+    value = local.enable_container_insights == "yes" ? "enabled" : "disabled"
   }
 
   depends_on = [
