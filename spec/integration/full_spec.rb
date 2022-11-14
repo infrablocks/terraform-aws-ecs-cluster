@@ -5,13 +5,7 @@ require 'spec_helper'
 # rubocop:disable RSpec/MultipleMemoizedHelpers
 describe 'full example' do
   before(:context) do
-    # security_group_ids =
-    #   output(role: :full, name: 'custom_security_group_ids')
-
-    apply(role: :full) do |vars|
-      # vars.security_groups = "[\"#{security_group_ids.join('","')}\"]"
-      vars.include_asg_capacity_provider = 'yes'
-    end
+    apply(role: :full)
   end
 
   after(:context) do
@@ -79,10 +73,12 @@ describe 'full example' do
     end
   end
 
-  describe 'ASG Capacity Provider' do # TODO: it can't find cap providers
+  describe 'ASG Capacity Provider' do
     context 'when capacity provider included' do
       let(:asg) do
-        autoscaling_group(output_for(:harness, 'autoscaling_group_name'))
+        autoscaling_group(
+          output_for(:harness, 'autoscaling_group_name')
+        )
       end
       let(:capacity_providers) do
         ecs_client = Aws::ECS::Client.new(region: 'eu-west-2')
@@ -114,7 +110,7 @@ describe 'full example' do
   describe 'CloudWatch' do
     let(:cloudwatch_log_group) do
       log_group_name =
-        "/#{component}/#{deployment_identifier}/ecs-cluster/services" # TODO
+        "/#{component}/#{deployment_identifier}/ecs-cluster/services"
 
       cloudwatch_logs_client =
         Aws::CloudWatchLogs::Client.new(region: 'eu-west-2')
@@ -204,31 +200,30 @@ describe 'full example' do
       launch_configuration(launch_configuration_name)
     end
 
-    it 'does not add a docker block device' do # TODO: does this test do anything?
+    it 'does not add a docker block device' do # TODO: does this do anything?
       expect(launch_config.block_device_mappings.size).to(eq(1))
     end
 
-    # context 'when custom security groups are provided' do
-    #   it {
-    #     expect(launch_config).to have_security_group(
-    #       "#{component}-#{deployment_identifier}-0"
-    #     )
-    #   }
-    #
-    #   it {
-    #     expect(launch_config).to have_security_group(
-    #       "#{component}-#{deployment_identifier}-1"
-    #     )
-    #   }
-    #
-    #   it 'has correct number of security groups' do
-    #     expect(launch_config.security_groups.size).to(eq(3))
-    #   end
-    # end
+    context 'when custom security groups are provided' do
+      it {
+        expect(launch_config).to have_security_group(
+          "#{component}-#{deployment_identifier}-0"
+        )
+      }
 
-    its(:key_name) do
-      puts launch_config
-      is_expected.to eq("cluster-#{cluster_name}")
+      it {
+        expect(launch_config).to have_security_group(
+          "#{component}-#{deployment_identifier}-1"
+        )
+      }
+
+      it 'has correct number of security groups' do
+        expect(launch_config.security_groups.size).to(eq(3))
+      end
+    end
+
+    its(:id) do
+      is_expected.to include(launch_configuration_name)
     end
 
     its(:user_data) do

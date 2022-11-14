@@ -17,4 +17,8 @@ module "ecs_cluster" {
 
   cluster_instance_root_block_device_size = 30
   cluster_instance_root_block_device_type = "standard"
+
+  security_groups = aws_security_group.custom_security_group[*].id
+
+  include_asg_capacity_provider = "yes"
 }
