@@ -18,8 +18,8 @@ output "autoscaling_group_arn" {
   value = module.ecs_cluster.autoscaling_group_arn
 }
 
-output "launch_configuration_name" {
-  value = module.ecs_cluster.launch_configuration_name
+output "launch_template_name" {
+  value = module.ecs_cluster.launch_template_name
 }
 
 output "security_group_id" {

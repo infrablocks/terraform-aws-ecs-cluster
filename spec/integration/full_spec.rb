@@ -30,8 +30,11 @@ describe 'full example' do
   let(:autoscaling_group_arn) do
     output(role: :full, name: 'autoscaling_group_arn')
   end
-  let(:launch_configuration_name) do
-    output(role: :full, name: 'launch_configuration_name')
+  let(:launch_template_name) do
+    output(role: :full, name: 'launch_template_name')
+  end
+  let(:launch_template_id) do
+    output(role: :full, name: 'launch_template_id')
   end
   let(:log_group) do
     output(role: :full, name: 'log_group')
@@ -68,8 +71,8 @@ describe 'full example' do
 
     it { is_expected.to exist }
 
-    its(:launch_configuration_name) do
-      is_expected.to eq(launch_configuration_name)
+    it 'has an associated launch template' do
+      expect(auto_scaling_group.launch_template.launch_template_name).to(eq(launch_template_name))
     end
   end
 
@@ -195,60 +198,27 @@ describe 'full example' do
     end
   end
 
-  describe 'Launch Configuration' do
-    subject(:launch_config) do
-      launch_configuration(launch_configuration_name)
+  describe 'Launch Template' do
+    subject(:launch_template) do
+      autoscaling_group(autoscaling_group_name).launch_template
     end
 
-    it 'does not add a docker block device' do # TODO: does this do anything?
-      expect(launch_config.block_device_mappings.size).to(eq(1))
+    it 'has id of launch_template_id output' do
+      expect(launch_template.launch_template_id).to(eq(launch_template_id))
     end
 
-    context 'when custom security groups are provided' do
-      it {
-        expect(launch_config).to have_security_group(
-          "#{component}-#{deployment_identifier}-0"
-        )
-      }
-
-      it {
-        expect(launch_config).to have_security_group(
-          "#{component}-#{deployment_identifier}-1"
-        )
-      }
-
-      it 'has correct number of security groups' do
-        expect(launch_config.security_groups.size).to(eq(3))
-      end
-    end
-
-    its(:id) do
-      is_expected.to include(launch_configuration_name)
-    end
-
-    its(:user_data) do
-      is_expected.to eq(Base64.strict_encode64(<<~DOC))
-        #!/bin/bash
-        echo "ECS_CLUSTER=#{cluster_name}" > /etc/ecs/ecs.config
-      DOC
-    end
-
-    it {
-      expect(launch_config).to have_security_group(cluster_name)
-    }
-
-    describe 'launch config name' do
+    describe 'launch template name' do
       it 'contains the component' do
-        expect(launch_configuration_name).to(match(/#{component}/))
+        expect(launch_template_name).to(match(/#{component}/))
       end
 
       it 'contains the deployment identifier' do
-        expect(launch_configuration_name)
+        expect(launch_template_name)
           .to(match(/#{deployment_identifier}/))
       end
 
       it 'contains the cluster name' do
-        expect(launch_configuration_name).to(match(/#{cluster_name}/))
+        expect(launch_template_name).to(match(/#{cluster_name}/))
       end
     end
   end

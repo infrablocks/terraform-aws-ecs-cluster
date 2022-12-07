@@ -23,9 +23,14 @@ output "autoscaling_group_arn" {
   value       = aws_autoscaling_group.cluster.arn
 }
 
-output "launch_configuration_name" {
-  description = "The name of the launch configuration for the ECS container instances."
-  value       = aws_launch_configuration.cluster.name
+output "launch_template_name" {
+  description = "The name of the launch template for the ECS container instances."
+  value       = aws_launch_template.cluster.name
+}
+
+output "launch_template_id" {
+  description = "The id of the launch template for the ECS container instances."
+  value       = aws_launch_template.cluster.id
 }
 
 output "security_group_id" {
