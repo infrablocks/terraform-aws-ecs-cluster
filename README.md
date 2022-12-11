@@ -32,7 +32,7 @@ The ECS cluster consists of:
 Usage
 -----
 
-To use the module, include something like the following in your terraform 
+To use the module, include something like the following in your Terraform
 configuration:
 
 ```hcl-terraform
@@ -195,12 +195,13 @@ Development
 In order for the build to run correctly, a few tools will need to be installed 
 on your development machine:
 
-* Ruby (2.3.1)
+* Ruby (3.1.1)
 * Bundler
 * git
 * git-crypt
 * gnupg
 * direnv
+* aws-vault
 
 #### Mac OS X Setup
 
