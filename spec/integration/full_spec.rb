@@ -72,7 +72,8 @@ describe 'full example' do
     it { is_expected.to exist }
 
     it 'has an associated launch template' do
-      expect(auto_scaling_group.launch_template.launch_template_name).to(eq(launch_template_name))
+      expect(auto_scaling_group.launch_template.launch_template_name)
+        .to(eq(launch_template_name))
     end
   end
 
