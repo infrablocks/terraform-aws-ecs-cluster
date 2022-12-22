@@ -24,16 +24,13 @@ resource "aws_launch_template" "cluster" {
   name_prefix          = "cluster-${var.component}-${var.deployment_identifier}-${local.cluster_name}-"
   image_id             = local.ami_id
   instance_type        = local.cluster_instance_type
-  key_name             = local.cluster_instance_ssh_public_key_path == "" ? "" : element(concat(aws_key_pair.cluster.*.key_name, [
-    ""
-  ]), 0)
+  key_name             = local.cluster_instance_ssh_public_key_path == "" ? "" : element(concat(aws_key_pair.cluster.*.key_name, [""]), 0)
 
   iam_instance_profile {
     name = aws_iam_instance_profile.cluster.name
   }
 
-  user_data              = base64encode(local.cluster_user_data)
-#  vpc_security_group_ids = concat([aws_security_group.cluster.id], local.security_groups)
+  user_data = base64encode(local.cluster_user_data)
 
   network_interfaces {
     associate_public_ip_address = local.associate_public_ip_addresses == "yes" ? true : false
@@ -52,11 +49,6 @@ resource "aws_launch_template" "cluster" {
   depends_on = [
     null_resource.iam_wait
   ]
-
-
-  lifecycle {
-    create_before_destroy = true
-  }
 }
 
 resource "aws_autoscaling_group" "cluster" {

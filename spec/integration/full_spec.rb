@@ -199,12 +199,24 @@ describe 'full example' do
   end
 
   describe 'Launch Template' do
-    subject(:launch_template) do
-      autoscaling_group(autoscaling_group_name).launch_template
+    let(:created_launch_template) do
+      launch_template(launch_template_name)
+    end
+
+    let(:created_launch_template_version) do
+      created_launch_template.launch_template_version
+    end
+    let(:created_launch_template_data) do
+      created_launch_template_version.launch_template_data
+    end
+
+    let(:security_group_ids) do
+      created_launch_template_data.network_interfaces[0].groups
     end
 
     it 'has id of launch_template_id output' do
-      expect(launch_template.launch_template_id).to(eq(launch_template_id))
+      expect(created_launch_template.launch_template_id)
+        .to(eq(launch_template_id))
     end
 
     describe 'launch template name' do
@@ -220,6 +232,37 @@ describe 'full example' do
       it 'contains the cluster name' do
         expect(launch_template_name).to(match(/#{cluster_name}/))
       end
+    end
+
+    it 'does not add a docker block device' do
+      expect(created_launch_template_data.block_device_mappings.size)
+        .to(eq(1))
+    end
+
+    it 'has correct number of security groups' do
+      expect(security_group_ids.size).to(eq(3))
+    end
+
+    it 'includes the custom security groups' do
+      custom_security_group_ids =
+        output(role: :full, name: 'custom_security_group_ids')
+      expect(security_group_ids)
+        .to(include(*custom_security_group_ids))
+    end
+
+    it 'includes the default security group' do
+      security_group_id = output(role: :full, name: 'security_group_id')
+      expect(security_group_ids).to(include(security_group_id))
+    end
+
+    it 'configures the ECS cluster in the user data script' do
+      expect(created_launch_template_data.user_data)
+        .to(
+          eq(Base64.strict_encode64(<<~DOC))
+            #!/bin/bash
+            echo "ECS_CLUSTER=#{cluster_name}" > /etc/ecs/ecs.config
+          DOC
+        )
     end
   end
 end

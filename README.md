@@ -11,7 +11,7 @@ The ECS cluster requires:
  
 The ECS cluster consists of:
 * A cluster in ECS
-* A launch configuration and auto-scaling group for a cluster of ECS container 
+* A launch template and auto-scaling group for a cluster of ECS container 
   instances
 * An SSH key to connect to the ECS container instances
 * A security group for the container instances optionally allowing:
@@ -38,7 +38,7 @@ configuration:
 ```hcl-terraform
 module "ecs_cluster" {
   source = "infrablocks/ecs-cluster/aws"
-  version = "4.2.0"
+  version = "5.0.0"
 
   region = "eu-west-2"
   vpc_id = "vpc-fb7dc365"
@@ -120,6 +120,7 @@ Notes:
 | cluster_arn            | The ARN of the created ECS cluster                                               |
 | autoscaling_group_name | The name of the autoscaling group for the ECS container instances                |
 | launch_template_name   | The name of the launch template for the ECS container instances                  |
+| launch_template_id     | The ID of the launch template for the ECS container instances                    |
 | security_group_id      | The ID of the default security group associated with the ECS container instances |
 | instance_role_arn      | The ARN of the container instance role                                           |
 | instance_role_id       | The ID of the container instance role                                            |
@@ -134,7 +135,7 @@ Notes:
 ### Compatibility
 
 This module is compatible with Terraform versions greater than or equal to 
-Terraform 0.14.
+Terraform 1.0.
 
 ### Required Permissions
 
@@ -194,7 +195,7 @@ Development
 In order for the build to run correctly, a few tools will need to be installed 
 on your development machine:
 
-* Ruby (3.1.1)
+* Ruby (3.1)
 * Bundler
 * git
 * git-crypt
@@ -292,33 +293,26 @@ When a deployment identifier is provided via an environment variable,
 infrastructure will not be destroyed at the end of test execution. This can
 be useful during development to avoid lengthy provision and destroy cycles.
 
-By default, providers will be downloaded for each terraform execution. To
-cache providers between calls:
-
-```bash
-TF_PLUGIN_CACHE_DIR="$HOME/.terraform.d/plugin-cache" aws-vault exec <profile> -- ./go
-```
-
 ### Common Tasks
 
 #### Generating an SSH key pair
 
 To generate an SSH key pair:
 
-```
+```bash
 ssh-keygen -m PEM -t rsa -b 4096 -C integration-test@example.com -N '' -f config/secrets/keys/bastion/ssh
 ```
 
 #### Generating a self-signed certificate
 
 To generate a self signed certificate:
-```
+```bash
 openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365
 ```
 
 To decrypt the resulting key:
 
-```
+```bash
 openssl rsa -in key.pem -out ssl.key
 ```
 
