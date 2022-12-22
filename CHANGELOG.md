@@ -1,3 +1,22 @@
+## 5.0.0 (December 22nd 2022)
+
+BACKWARDS INCOMPATIBILITIES / NOTES:
+
+* This module is now compatible with Terraform 1.0 and higher.
+* In line with Amazon's deprecation and pending removal of support for launch
+  configurations, this module now creates a launch template for the autoscaling
+  group. As a result, the `launch_configuration_name` output has been replaced
+  by the `launch_template_name` and `launch_template_id` outputs. Upon upgrading
+  this module, the launch configuration will be destroyed and an equivalent 
+  launch template will be created and associated with the autoscaling group.
+* The unused `launch_configuration_create_before_destroy` variable has been 
+  removed.
+
+IMPROVEMENTS
+
+* This module no longer requires the template provider.
+* This module now allows using the Terraform AWS provider v4.
+
 ## 4.2.0 (June 20th 2022)
 
 IMPROVEMENTS:

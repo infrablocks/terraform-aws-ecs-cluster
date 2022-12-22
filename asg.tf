@@ -20,32 +20,35 @@ data "aws_ami" "amazon_linux_2" {
   }
 }
 
-resource "aws_launch_configuration" "cluster" {
-  name_prefix   = "cluster-${var.component}-${var.deployment_identifier}-${local.cluster_name}-"
-  image_id      = local.ami_id
-  instance_type = local.cluster_instance_type
-  key_name      = local.cluster_instance_ssh_public_key_path == "" ? "" : element(concat(aws_key_pair.cluster.*.key_name, [""]), 0)
+resource "aws_launch_template" "cluster" {
+  name_prefix          = "cluster-${var.component}-${var.deployment_identifier}-${local.cluster_name}-"
+  image_id             = local.ami_id
+  instance_type        = local.cluster_instance_type
+  key_name             = local.cluster_instance_ssh_public_key_path == "" ? "" : element(concat(aws_key_pair.cluster.*.key_name, [""]), 0)
 
-  iam_instance_profile = aws_iam_instance_profile.cluster.name
+  iam_instance_profile {
+    name = aws_iam_instance_profile.cluster.name
+  }
 
-  user_data = local.cluster_user_data
+  user_data = base64encode(local.cluster_user_data)
 
-  security_groups = concat([aws_security_group.cluster.id], local.security_groups)
+  network_interfaces {
+    associate_public_ip_address = local.associate_public_ip_addresses == "yes" ? true : false
+    security_groups = concat([aws_security_group.cluster.id], local.security_groups)
+  }
 
-  associate_public_ip_address = local.associate_public_ip_addresses == "yes" ? true : false
+  block_device_mappings {
+    device_name = "/dev/sda1"
+
+    ebs {
+      volume_size = local.cluster_instance_root_block_device_size
+      volume_type = local.cluster_instance_root_block_device_type
+    }
+  }
 
   depends_on = [
     null_resource.iam_wait
   ]
-
-  root_block_device {
-    volume_size = local.cluster_instance_root_block_device_size
-    volume_type = local.cluster_instance_root_block_device_type
-  }
-
-  lifecycle {
-    create_before_destroy = true
-  }
 }
 
 resource "aws_autoscaling_group" "cluster" {
@@ -53,7 +56,10 @@ resource "aws_autoscaling_group" "cluster" {
 
   vpc_zone_identifier = var.subnet_ids
 
-  launch_configuration = aws_launch_configuration.cluster.name
+  launch_template {
+    id      = aws_launch_template.cluster.id
+    version = "$Latest"
+  }
 
   min_size         = local.cluster_minimum_size
   max_size         = local.cluster_maximum_size
@@ -74,7 +80,9 @@ resource "aws_autoscaling_group" "cluster" {
   }
 
   dynamic "tag" {
-    for_each = local.include_asg_capacity_provider == "yes" ? merge({AmazonECSManaged: ""}, local.tags) : local.tags
+    for_each = local.include_asg_capacity_provider == "yes" ? merge({
+      AmazonECSManaged : ""
+    }, local.tags) : local.tags
     content {
       key                 = tag.key
       value               = tag.value
