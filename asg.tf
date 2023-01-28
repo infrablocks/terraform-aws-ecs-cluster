@@ -46,6 +46,10 @@ resource "aws_launch_template" "cluster" {
     }
   }
 
+  monitoring {
+    enabled = var.enable_detailed_monitoring
+  }
+
   depends_on = [
     null_resource.iam_wait
   ]
