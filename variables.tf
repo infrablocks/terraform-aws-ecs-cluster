@@ -203,5 +203,5 @@ variable "cluster_log_group_retention" {
 variable "enable_detailed_monitoring" {
   description = "Enable detailed monitoring of EC2 instance(s)"
   type        = bool
-  default     = false
+  default     = true
 }
