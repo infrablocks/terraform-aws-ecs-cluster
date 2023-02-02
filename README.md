@@ -6,12 +6,14 @@ Terraform AWS ECS Cluster
 A Terraform module for building an ECS Cluster in AWS.
 
 The ECS cluster requires:
+
 * An existing VPC
 * Some existing subnets
- 
+
 The ECS cluster consists of:
+
 * A cluster in ECS
-* A launch template and auto-scaling group for a cluster of ECS container 
+* A launch template and auto-scaling group for a cluster of ECS container
   instances
 * An SSH key to connect to the ECS container instances
 * A security group for the container instances optionally allowing:
@@ -49,26 +51,26 @@ module "ecs_cluster" {
 
   component = "important-component"
   deployment_identifier = "production"
-  
+
   cluster_name = "services"
   cluster_instance_ssh_public_key_path = "~/.ssh/id_rsa.pub"
   cluster_instance_type = "t3.small"
-  
+
   cluster_minimum_size = 2
   cluster_maximum_size = 10
   cluster_desired_capacity = 4
 }
 ```
 
-As mentioned above, the ECS cluster deploys into an existing base network. 
-Whilst the base network can be created using any mechanism you like, the 
+As mentioned above, the ECS cluster deploys into an existing base network.
+Whilst the base network can be created using any mechanism you like, the
 [AWS Base Networking](https://github.com/infrablocks/terraform-aws-base-networking)
-module will create everything you need. See the 
+module will create everything you need. See the
 [docs](https://github.com/infrablocks/terraform-aws-base-networking/blob/main/README.md)
 for usage instructions.
 
-See the 
-[Terraform registry entry](https://registry.terraform.io/modules/infrablocks/ecs-cluster/aws/latest) 
+See the
+[Terraform registry entry](https://registry.terraform.io/modules/infrablocks/ecs-cluster/aws/latest)
 for more details.
 
 ### Inputs
@@ -96,19 +98,22 @@ for more details.
 | associate_public_ip_addresses              | Whether or not to associate public IP addresses with ECS container instances ("yes" or "no")                     | "no"               | yes                                      |
 | include_default_ingress_rule               | Whether or not to include the default ingress rule on the ECS container instances security group ("yes" or "no") | "yes"              | yes                                      |
 | include_default_egress_rule                | Whether or not to include the default egress rule on the ECS container instances security group ("yes" or "no")  | "yes"              | yes                                      |
-| allowed_cidrs                              | The CIDRs allowed access to containers                                                                           | ["10.0.0.0/8"]     | if include_default_ingress_rule is "yes" | 
-| egress_cidrs                               | The CIDRs accessible from containers                                                                             | ["0.0.0.0/0"]      | if include_default_egress_rule is "yes"  | 
+| allowed_cidrs                              | The CIDRs allowed access to containers                                                                           | ["10.0.0.0/8"]     | if include_default_ingress_rule is "yes" |
+| egress_cidrs                               | The CIDRs accessible from containers                                                                             | ["0.0.0.0/0"]      | if include_default_egress_rule is "yes"  |
 | security_groups                            | The list of security group IDs to associate with the cluster in addition to the default security group           | []                 | no                                       |
+| cluster_log_group_retention                | The number of days logs will be retained in the CloudWatch log group of the cluster (0 = unlimited)  |  0             |  no                     |
+| enable_detailed_monitoring                 |  Enable detailed monitoring of EC2 instance(s)           | true    | no
 
 Notes:
+
 * By default, the latest available Amazon Linux 2 AMI is used.
 * For Amazon Linux 1 AMIs use version <= 0.6.0 of this module for terraform 0.11
   or version = 1.0.0 for terraform 0.12.
-* When a specific AMI is provided via `cluster_instance_amis` (a map of region 
-  to AMI ID), only the root block device can be customised, using the 
-  `cluster_instance_root_block_device_size` and 
+* When a specific AMI is provided via `cluster_instance_amis` (a map of region
+  to AMI ID), only the root block device can be customised, using the
+  `cluster_instance_root_block_device_size` and
   `cluster_instance_root_block_device_type` variables.
-* The user data template will get the cluster name as `cluster_name`. If 
+* The user data template will get the cluster name as `cluster_name`. If
   none is supplied, a default will be used.
 
 ### Outputs
@@ -134,7 +139,7 @@ Notes:
 
 ### Compatibility
 
-This module is compatible with Terraform versions greater than or equal to 
+This module is compatible with Terraform versions greater than or equal to
 Terraform 1.0.
 
 ### Required Permissions
@@ -192,7 +197,7 @@ Development
 
 ### Machine Requirements
 
-In order for the build to run correctly, a few tools will need to be installed 
+In order for the build to run correctly, a few tools will need to be installed
 on your development machine:
 
 * Ruby (3.1)
@@ -209,13 +214,13 @@ Installing the required tools is best managed by [homebrew](http://brew.sh).
 
 To install homebrew:
 
-```
+```shell
 ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 ```
 
 Then, to install the required tools:
 
-```
+```shell
 # ruby
 brew install rbenv
 brew install ruby-build
@@ -246,13 +251,13 @@ direnv allow <repository-directory>
 
 ### Running the build
 
-Running the build requires an AWS account and AWS credentials. You are free to 
+Running the build requires an AWS account and AWS credentials. You are free to
 configure credentials however you like as long as an access key ID and secret
-access key are available. These instructions utilise 
+access key are available. These instructions utilise
 [aws-vault](https://github.com/99designs/aws-vault) which makes credential
 management easy and secure.
 
-To provision module infrastructure, run tests and then destroy that 
+To provision module infrastructure, run tests and then destroy that
 infrastructure, execute:
 
 ```bash
@@ -289,7 +294,7 @@ Configuration parameters can be overridden via environment variables:
 DEPLOYMENT_IDENTIFIER=testing aws-vault exec <profile> -- ./go
 ```
 
-When a deployment identifier is provided via an environment variable, 
+When a deployment identifier is provided via an environment variable,
 infrastructure will not be destroyed at the end of test execution. This can
 be useful during development to avoid lengthy provision and destroy cycles.
 
@@ -306,6 +311,7 @@ ssh-keygen -m PEM -t rsa -b 4096 -C integration-test@example.com -N '' -f config
 #### Generating a self-signed certificate
 
 To generate a self signed certificate:
+
 ```bash
 openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365
 ```
@@ -342,14 +348,14 @@ openssl aes-256-cbc \
 Contributing
 ------------
 
-Bug reports and pull requests are welcome on GitHub at 
-https://github.com/infrablocks/terraform-aws-assumable-roles-policy. 
-This project is intended to be a safe, welcoming space for collaboration, and 
-contributors are expected to adhere to 
+Bug reports and pull requests are welcome on GitHub at
+https://github.com/infrablocks/terraform-aws-assumable-roles-policy.
+This project is intended to be a safe, welcoming space for collaboration, and
+contributors are expected to adhere to
 the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
 License
 -------
 
-The library is available as open source under the terms of the 
+The library is available as open source under the terms of the
 [MIT License](http://opensource.org/licenses/MIT).
