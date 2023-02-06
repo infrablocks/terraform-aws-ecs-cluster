@@ -205,3 +205,9 @@ variable "enable_detailed_monitoring" {
   type        = bool
   default     = true
 }
+
+variable "cluster_instance_root_block_device_path" {
+  description = "Path of the instance root block storage volume"
+  type        = string
+  default     = "/dev/sda1"
+}

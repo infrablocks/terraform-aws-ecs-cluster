@@ -4,6 +4,7 @@ IMPROVEMENTS:
 
 * added option to specify log retention period for cluster
 * added option to disable enhanced instance monitoring (enabled by default)
+* added option to specify the path of the root block storage device as AWS default has changed from `/dev/sda1` to `/dev/xvda`
 
 ## 5.0.0 (December 22nd 2022)
 
