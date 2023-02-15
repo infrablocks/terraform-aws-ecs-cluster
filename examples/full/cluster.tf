@@ -17,6 +17,11 @@ module "ecs_cluster" {
 
   cluster_instance_root_block_device_size = 30
   cluster_instance_root_block_device_type = "standard"
+  cluster_instance_root_block_device_path = "/dev/sda1"
+
+  cluster_log_group_retention = 0
+
+  enable_detailed_monitoring = true
 
   security_groups = aws_security_group.custom_security_group[*].id
 

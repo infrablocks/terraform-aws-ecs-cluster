@@ -5,6 +5,7 @@ locals {
   cluster_instance_ssh_public_key_path = var.cluster_instance_ssh_public_key_path == null ? "" : var.cluster_instance_ssh_public_key_path
   cluster_instance_root_block_device_size = var.cluster_instance_root_block_device_size == null ? 30 : var.cluster_instance_root_block_device_size
   cluster_instance_root_block_device_type = var.cluster_instance_root_block_device_type == null ? "standard" : var.cluster_instance_root_block_device_type
+  cluster_instance_root_block_device_path = var.cluster_instance_root_block_device_path == null ? "/dev/sda1" : var.cluster_instance_root_block_device_path
   cluster_instance_user_data_template = var.cluster_instance_user_data_template == null ? "" : var.cluster_instance_user_data_template
 
   cluster_instance_amis = var.cluster_instance_amis == null ? {
@@ -38,6 +39,11 @@ locals {
   cluster_minimum_size = var.cluster_minimum_size == null ? 1 : var.cluster_minimum_size
   cluster_maximum_size = var.cluster_maximum_size == null ? 10 : var.cluster_maximum_size
   cluster_desired_capacity = var.cluster_desired_capacity == null ? 3 : var.cluster_desired_capacity
+
+  cluster_log_group_retention = var.cluster_log_group_retention == null ? 0 : var.cluster_log_group_retention
+
+  enable_detailed_monitoring = var.enable_detailed_monitoring == null ? true : var.enable_detailed_monitoring
+
   associate_public_ip_addresses = var.associate_public_ip_addresses == null ? "no" : var.associate_public_ip_addresses
   security_groups = var.security_groups == null ? [] : var.security_groups
   include_default_ingress_rule = var.include_default_ingress_rule == null ? "yes" : var.include_default_ingress_rule

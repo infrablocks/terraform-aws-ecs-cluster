@@ -38,12 +38,16 @@ resource "aws_launch_template" "cluster" {
   }
 
   block_device_mappings {
-    device_name = "/dev/sda1"
+    device_name = local.cluster_instance_root_block_device_path
 
     ebs {
       volume_size = local.cluster_instance_root_block_device_size
       volume_type = local.cluster_instance_root_block_device_type
     }
+  }
+
+  monitoring {
+    enabled = local.enable_detailed_monitoring
   }
 
   depends_on = [

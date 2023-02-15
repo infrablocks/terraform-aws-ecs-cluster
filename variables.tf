@@ -193,3 +193,21 @@ variable "asg_capacity_provider_target_capacity" {
   type        = number
   default     = 100
 }
+
+variable "cluster_log_group_retention" {
+  description = "The number of days logs will be retained in the CloudWatch log group of the cluster"
+  type        = number
+  default     = 0
+}
+
+variable "enable_detailed_monitoring" {
+  description = "Enable detailed monitoring of EC2 instance(s)"
+  type        = bool
+  default     = true
+}
+
+variable "cluster_instance_root_block_device_path" {
+  description = "Path of the instance root block storage volume"
+  type        = string
+  default     = "/dev/sda1"
+}

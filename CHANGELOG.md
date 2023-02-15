@@ -1,3 +1,11 @@
+## 5.0.1 (February 2nd 2023)
+
+IMPROVEMENTS:
+
+* added option to specify log retention period for cluster
+* added option to disable enhanced instance monitoring (enabled by default)
+* added option to specify the path of the root block storage device as AWS default has changed from `/dev/sda1` to `/dev/xvda`
+
 ## 5.0.0 (December 22nd 2022)
 
 BACKWARDS INCOMPATIBILITIES / NOTES:
@@ -7,9 +15,9 @@ BACKWARDS INCOMPATIBILITIES / NOTES:
   configurations, this module now creates a launch template for the autoscaling
   group. As a result, the `launch_configuration_name` output has been replaced
   by the `launch_template_name` and `launch_template_id` outputs. Upon upgrading
-  this module, the launch configuration will be destroyed and an equivalent 
+  this module, the launch configuration will be destroyed and an equivalent
   launch template will be created and associated with the autoscaling group.
-* The unused `launch_configuration_create_before_destroy` variable has been 
+* The unused `launch_configuration_create_before_destroy` variable has been
   removed.
 
 IMPROVEMENTS
@@ -43,7 +51,7 @@ BACKWARDS INCOMPATIBILITIES / NOTES:
 
 IMPROVEMENTS:
 
-* The `associate_public_ip_addresses` variable allows public IPs to be 
+* The `associate_public_ip_addresses` variable allows public IPs to be
   associated to ECS container instances. By default its value is `no`.
 
 ## 0.2.5 (December 31st, 2017)
@@ -62,18 +70,18 @@ BACKWARDS INCOMPATIBILITIES / NOTES:
   is nothing requiring the subnets to be private
 * The `private_network_cidr` variable has been renamed to `allowed_cidrs` and
   its type has changed to list.
-  
+
 IMPROVEMENTS:
 
 * The cluster now uses the latest ECS optimised amazon linux image by default.
 * The default security group ingress and egress rules are now optional and
   configurable. A list of CIDRs for both ingress and egress can be specified
   using `allowed_cidrs` and `egress_cidrs` respectively. The default rules
-  can be disabled using `include_default_ingress_rule` and 
+  can be disabled using `include_default_ingress_rule` and
   `include_default_egress_rule`.
-* The security group ID is now available via an output named 
-  `security_group_id` so that additional rules can be added outside of the 
-  module.  
+* The security group ID is now available via an output named
+  `security_group_id` so that additional rules can be added outside of the
+  module.
 
 ## 0.2.3 (December 29th, 2017)
 
@@ -81,16 +89,16 @@ BACKWARDS INCOMPATIBILITIES / NOTES:
 
 * The configuration directory has changed from `<repo>/src` to `<repo>` to
   satisfy the terraform standard module structure.
-  
+
 IMPROVEMENTS:
 
 * All variables and outputs now have descriptions to satisfy the terraform
-  standard module structure. 
+  standard module structure.
 
-## 0.2.0 (November 3th, 2017) 
+## 0.2.0 (November 3th, 2017)
 
 BACKWARDS INCOMPATIBILITIES / NOTES:
 
-* The IAM roles and policies for instance and service now use randomly 
-  generated names. The value that was previously used for name can now be found 
+* The IAM roles and policies for instance and service now use randomly
+  generated names. The value that was previously used for name can now be found
   in the description.
