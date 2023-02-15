@@ -90,6 +90,8 @@ jobs:
           command: ./scripts/ci/steps/test.sh
       - store_artifacts:
           path: build/logs
+      - store_artifacts:
+          path: state
       - notify
 
   prerelease:
