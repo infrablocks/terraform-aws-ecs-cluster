@@ -38,6 +38,10 @@ variable "cluster_desired_capacity" {
   default = null
 }
 
+variable "enable_detailed_monitoring" {
+  default = null
+}
+
 variable "include_default_ingress_rule" {
   default = null
 }

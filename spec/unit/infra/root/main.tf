@@ -30,6 +30,8 @@ module "ecs_cluster" {
   cluster_maximum_size     = var.cluster_maximum_size
   cluster_desired_capacity = var.cluster_desired_capacity
 
+  enable_detailed_monitoring = var.enable_detailed_monitoring
+
   security_groups = var.security_groups
 
   include_default_ingress_rule = var.include_default_ingress_rule

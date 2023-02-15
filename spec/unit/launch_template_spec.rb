@@ -101,6 +101,17 @@ describe 'Launch Template' do
     end
   end
 
+  describe 'monitoring' do
+    it 'is enabled by default' do
+      expect(@plan)
+        .to(include_resource_creation(type: 'aws_launch_template')
+              .with_attribute_value(
+                [:monitoring, 0, :enabled],
+                true
+              ))
+    end
+  end
+
   describe 'root block device' do
     it 'uses the default specified size' do
       expect(@plan)
@@ -145,6 +156,25 @@ describe 'Launch Template' do
               .with_attribute_value(
                 [:block_device_mappings, 0, :device_name],
                 device_path
+              ))
+    end
+  end
+
+  context 'when enable detailed monitoring is specified' do
+    enable_detailed_monitoring = false
+
+    before(:context) do
+      @plan = plan(role: :root) do |vars|
+        vars.enable_detailed_monitoring = enable_detailed_monitoring
+      end
+    end
+
+    it 'uses provided enable monitoring' do
+      expect(@plan)
+        .to(include_resource_creation(type: 'aws_launch_template')
+              .with_attribute_value(
+                [:monitoring, 0, :enabled],
+                enable_detailed_monitoring
               ))
     end
   end

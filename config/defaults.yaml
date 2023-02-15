@@ -31,6 +31,8 @@ cluster_minimum_size: 1
 cluster_maximum_size: 3
 cluster_desired_capacity: 2
 
+enable_detailed_monitoring: true
+
 security_groups: []
 
 include_default_ingress_rule: "yes"

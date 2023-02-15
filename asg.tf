@@ -47,7 +47,7 @@ resource "aws_launch_template" "cluster" {
   }
 
   monitoring {
-    enabled = var.enable_detailed_monitoring
+    enabled = local.enable_detailed_monitoring
   }
 
   depends_on = [

@@ -39,6 +39,9 @@ locals {
   cluster_minimum_size = var.cluster_minimum_size == null ? 1 : var.cluster_minimum_size
   cluster_maximum_size = var.cluster_maximum_size == null ? 10 : var.cluster_maximum_size
   cluster_desired_capacity = var.cluster_desired_capacity == null ? 3 : var.cluster_desired_capacity
+
+  enable_detailed_monitoring = var.enable_detailed_monitoring == null ? true : var.enable_detailed_monitoring
+
   associate_public_ip_addresses = var.associate_public_ip_addresses == null ? "no" : var.associate_public_ip_addresses
   security_groups = var.security_groups == null ? [] : var.security_groups
   include_default_ingress_rule = var.include_default_ingress_rule == null ? "yes" : var.include_default_ingress_rule
