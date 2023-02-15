@@ -119,5 +119,33 @@ describe 'Launch Template' do
                 'standard'
               ))
     end
+
+    it 'uses the default specified device name' do
+      expect(@plan)
+        .to(include_resource_creation(type: 'aws_launch_template')
+              .with_attribute_value(
+                [:block_device_mappings, 0, :device_name],
+                '/dev/sda1'
+              ))
+    end
+  end
+
+  context 'when root block device path is specified' do
+    device_path = '/custom/path'
+
+    before(:context) do
+      @plan = plan(role: :root) do |vars|
+        vars.cluster_instance_root_block_device_path = device_path
+      end
+    end
+
+    it 'uses provided device path' do
+      expect(@plan)
+        .to(include_resource_creation(type: 'aws_launch_template')
+              .with_attribute_value(
+                [:block_device_mappings, 0, :device_name],
+                device_path
+              ))
+    end
   end
 end

@@ -24,6 +24,9 @@ variable "cluster_instance_amis" {
 variable "cluster_instance_root_block_device_size" {
   default = null
 }
+variable "cluster_instance_root_block_device_path" {
+  default = null
+}
 
 variable "cluster_minimum_size" {
   default = null

@@ -24,6 +24,7 @@ module "ecs_cluster" {
   cluster_instance_type                   = var.cluster_instance_type
   cluster_instance_amis                   = var.cluster_instance_amis
   cluster_instance_root_block_device_size = var.cluster_instance_root_block_device_size
+  cluster_instance_root_block_device_path = var.cluster_instance_root_block_device_path
 
   cluster_minimum_size     = var.cluster_minimum_size
   cluster_maximum_size     = var.cluster_maximum_size

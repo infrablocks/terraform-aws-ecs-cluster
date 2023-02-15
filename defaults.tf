@@ -5,6 +5,7 @@ locals {
   cluster_instance_ssh_public_key_path = var.cluster_instance_ssh_public_key_path == null ? "" : var.cluster_instance_ssh_public_key_path
   cluster_instance_root_block_device_size = var.cluster_instance_root_block_device_size == null ? 30 : var.cluster_instance_root_block_device_size
   cluster_instance_root_block_device_type = var.cluster_instance_root_block_device_type == null ? "standard" : var.cluster_instance_root_block_device_type
+  cluster_instance_root_block_device_path = var.cluster_instance_root_block_device_path == null ? "/dev/sda1" : var.cluster_instance_root_block_device_path
   cluster_instance_user_data_template = var.cluster_instance_user_data_template == null ? "" : var.cluster_instance_user_data_template
 
   cluster_instance_amis = var.cluster_instance_amis == null ? {
