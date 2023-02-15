@@ -37,6 +37,9 @@ variable "cluster_maximum_size" {
 variable "cluster_desired_capacity" {
   default = null
 }
+variable "cluster_log_group_retention" {
+  default = null
+}
 
 variable "enable_detailed_monitoring" {
   default = null

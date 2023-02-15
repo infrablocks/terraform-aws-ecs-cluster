@@ -40,6 +40,8 @@ locals {
   cluster_maximum_size = var.cluster_maximum_size == null ? 10 : var.cluster_maximum_size
   cluster_desired_capacity = var.cluster_desired_capacity == null ? 3 : var.cluster_desired_capacity
 
+  cluster_log_group_retention = var.cluster_log_group_retention == null ? 0 : var.cluster_log_group_retention
+
   enable_detailed_monitoring = var.enable_detailed_monitoring == null ? true : var.enable_detailed_monitoring
 
   associate_public_ip_addresses = var.associate_public_ip_addresses == null ? "no" : var.associate_public_ip_addresses

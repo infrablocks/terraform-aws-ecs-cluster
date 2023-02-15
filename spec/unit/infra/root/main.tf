@@ -30,6 +30,8 @@ module "ecs_cluster" {
   cluster_maximum_size     = var.cluster_maximum_size
   cluster_desired_capacity = var.cluster_desired_capacity
 
+  cluster_log_group_retention = var.cluster_log_group_retention
+
   enable_detailed_monitoring = var.enable_detailed_monitoring
 
   security_groups = var.security_groups

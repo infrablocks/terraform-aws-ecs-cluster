@@ -31,6 +31,8 @@ cluster_minimum_size: 1
 cluster_maximum_size: 3
 cluster_desired_capacity: 2
 
+cluster_log_group_retention: 0
+
 enable_detailed_monitoring: true
 
 security_groups: []

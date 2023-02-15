@@ -29,5 +29,30 @@ describe 'CloudWatch' do
         .to(include_resource_creation(type: 'aws_cloudwatch_log_group')
               .with_attribute_value(:name, log_group_name))
     end
+
+    it 'uses log retention default of 0' do
+      expect(@plan)
+        .to(include_resource_creation(type: 'aws_cloudwatch_log_group')
+              .with_attribute_value(:retention_in_days, 0))
+    end
+
+    context 'when cluster log group retention is set' do
+      cluster_log_group_retention = 3
+
+      before(:context) do
+        @plan = plan(role: :root) do |vars|
+          vars.cluster_log_group_retention = cluster_log_group_retention
+        end
+      end
+
+      it 'uses provided log group retention' do
+        expect(@plan)
+          .to(include_resource_creation(type: 'aws_cloudwatch_log_group')
+                .with_attribute_value(
+                  :retention_in_days,
+                  cluster_log_group_retention
+                ))
+      end
+    end
   end
 end
