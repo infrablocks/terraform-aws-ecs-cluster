@@ -26,6 +26,8 @@ module "ecs_cluster" {
   cluster_instance_root_block_device_size = var.cluster_instance_root_block_device_size
   cluster_instance_root_block_device_path = var.cluster_instance_root_block_device_path
 
+  cluster_instance_enable_ebs_volume_encryption = var.cluster_instance_enable_ebs_volume_encryption
+
   cluster_minimum_size     = var.cluster_minimum_size
   cluster_maximum_size     = var.cluster_maximum_size
   cluster_desired_capacity = var.cluster_desired_capacity

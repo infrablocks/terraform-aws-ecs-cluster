@@ -40,6 +40,9 @@ variable "cluster_desired_capacity" {
 variable "cluster_log_group_retention" {
   default = null
 }
+variable "cluster_instance_enable_ebs_volume_encryption" {
+  default = null
+}
 
 variable "enable_detailed_monitoring" {
   default = null

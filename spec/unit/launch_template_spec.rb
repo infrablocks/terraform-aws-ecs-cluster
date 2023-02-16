@@ -139,6 +139,15 @@ describe 'Launch Template' do
                 '/dev/sda1'
               ))
     end
+
+    it 'enables encryption by default' do
+      expect(@plan)
+        .to(include_resource_creation(type: 'aws_launch_template')
+              .with_attribute_value(
+                [:block_device_mappings, 0, :ebs, 0, :encrypted],
+                "true"
+              ))
+    end
   end
 
   context 'when root block device path is specified' do
@@ -175,6 +184,25 @@ describe 'Launch Template' do
               .with_attribute_value(
                 [:monitoring, 0, :enabled],
                 enable_detailed_monitoring
+              ))
+    end
+  end
+
+  context 'when ebs volume encryption is disabled' do
+    encryption_enabled = false
+
+    before(:context) do
+      @plan = plan(role: :root) do |vars|
+        vars.cluster_instance_enable_ebs_volume_encryption = encryption_enabled
+      end
+    end
+
+    it 'disables encryption' do
+      expect(@plan)
+        .to(include_resource_creation(type: 'aws_launch_template')
+              .with_attribute_value(
+                [:block_device_mappings, 0, :ebs, 0, :encrypted],
+                "#{encryption_enabled}"
               ))
     end
   end

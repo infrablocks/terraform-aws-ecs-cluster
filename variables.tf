@@ -211,3 +211,9 @@ variable "cluster_instance_root_block_device_path" {
   type        = string
   default     = "/dev/sda1"
 }
+
+variable "cluster_instance_enable_ebs_volume_encryption" {
+  description = "Determines whether encryption is enabled on the EBS volume"
+  type        = bool
+  default     = true
+}

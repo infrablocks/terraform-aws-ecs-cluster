@@ -41,6 +41,7 @@ locals {
   cluster_desired_capacity = var.cluster_desired_capacity == null ? 3 : var.cluster_desired_capacity
 
   cluster_log_group_retention = var.cluster_log_group_retention == null ? 0 : var.cluster_log_group_retention
+  cluster_instance_enable_ebs_volume_encryption = var.cluster_instance_enable_ebs_volume_encryption == null ? true : var.cluster_instance_enable_ebs_volume_encryption
 
   enable_detailed_monitoring = var.enable_detailed_monitoring == null ? true : var.enable_detailed_monitoring
 
