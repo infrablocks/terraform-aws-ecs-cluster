@@ -1,9 +1,9 @@
 locals {
   ami_id = coalesce(
-    lookup(local.cluster_instance_amis, var.region),
+    lookup(var.cluster_instance_amis, var.region),
     data.aws_ami.amazon_linux_2.image_id)
   cluster_user_data_template = coalesce(
-    local.cluster_instance_user_data_template,
+    var.cluster_instance_user_data_template,
     file("${path.module}/user-data/cluster.tpl"))
   cluster_user_data = replace(
     local.cluster_user_data_template,
@@ -21,10 +21,10 @@ data "aws_ami" "amazon_linux_2" {
 }
 
 resource "aws_launch_template" "cluster" {
-  name_prefix          = "cluster-${var.component}-${var.deployment_identifier}-${local.cluster_name}-"
+  name_prefix          = "cluster-${var.component}-${var.deployment_identifier}-${var.cluster_name}-"
   image_id             = local.ami_id
-  instance_type        = local.cluster_instance_type
-  key_name             = local.cluster_instance_ssh_public_key_path == "" ? "" : element(concat(aws_key_pair.cluster.*.key_name, [""]), 0)
+  instance_type        = var.cluster_instance_type
+  key_name             = var.cluster_instance_ssh_public_key_path == "" ? "" : element(concat(aws_key_pair.cluster.*.key_name, [""]), 0)
 
   iam_instance_profile {
     name = aws_iam_instance_profile.cluster.name
@@ -33,24 +33,24 @@ resource "aws_launch_template" "cluster" {
   user_data = base64encode(local.cluster_user_data)
 
   network_interfaces {
-    associate_public_ip_address = local.associate_public_ip_addresses == "yes" ? true : false
-    security_groups = concat([aws_security_group.cluster.id], local.security_groups)
+    associate_public_ip_address = var.associate_public_ip_addresses == "yes" ? true : false
+    security_groups = concat([aws_security_group.cluster.id], var.security_groups)
   }
 
   block_device_mappings {
-    device_name = local.cluster_instance_root_block_device_path
+    device_name = var.cluster_instance_root_block_device_path
 
     ebs {
-      encrypted   = local.cluster_instance_enable_ebs_volume_encryption
+      encrypted   = var.cluster_instance_enable_ebs_volume_encryption
       kms_key_id   = local.cluster_instance_ebs_volume_kms_key_id
 
-      volume_size = local.cluster_instance_root_block_device_size
-      volume_type = local.cluster_instance_root_block_device_type
+      volume_size = var.cluster_instance_root_block_device_size
+      volume_type = var.cluster_instance_root_block_device_type
     }
   }
 
   monitoring {
-    enabled = local.enable_detailed_monitoring
+    enabled = var.enable_detailed_monitoring
   }
 
   depends_on = [
@@ -59,7 +59,7 @@ resource "aws_launch_template" "cluster" {
 }
 
 resource "aws_autoscaling_group" "cluster" {
-  name_prefix = "asg-${var.component}-${var.deployment_identifier}-${local.cluster_name}-"
+  name_prefix = "asg-${var.component}-${var.deployment_identifier}-${var.cluster_name}-"
 
   vpc_zone_identifier = var.subnet_ids
 
@@ -68,26 +68,26 @@ resource "aws_autoscaling_group" "cluster" {
     version = "$Latest"
   }
 
-  min_size         = local.cluster_minimum_size
-  max_size         = local.cluster_maximum_size
-  desired_capacity = local.cluster_desired_capacity
+  min_size         = var.cluster_minimum_size
+  max_size         = var.cluster_maximum_size
+  desired_capacity = var.cluster_desired_capacity
 
-  protect_from_scale_in = ((local.include_asg_capacity_provider == "yes" && local.asg_capacity_provider_manage_termination_protection == "yes") || local.protect_cluster_instances_from_scale_in == "yes")
+  protect_from_scale_in = ((var.include_asg_capacity_provider == "yes" && var.asg_capacity_provider_manage_termination_protection == "yes") || var.protect_cluster_instances_from_scale_in == "yes")
 
   tag {
     key                 = "Name"
-    value               = "cluster-worker-${var.component}-${var.deployment_identifier}-${local.cluster_name}"
+    value               = "cluster-worker-${var.component}-${var.deployment_identifier}-${var.cluster_name}"
     propagate_at_launch = true
   }
 
   tag {
     key                 = "ClusterName"
-    value               = local.cluster_name
+    value               = var.cluster_name
     propagate_at_launch = true
   }
 
   dynamic "tag" {
-    for_each = local.include_asg_capacity_provider == "yes" ? merge({
+    for_each = var.include_asg_capacity_provider == "yes" ? merge({
       AmazonECSManaged : ""
     }, local.tags) : local.tags
     content {
