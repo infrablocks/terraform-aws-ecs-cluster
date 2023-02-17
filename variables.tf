@@ -56,7 +56,7 @@ variable "cluster_instance_root_block_device_type" {
 variable "cluster_instance_root_block_device_path" {
   description = "Path of the instance root block storage volume"
   type        = string
-  default     = "/dev/sda1"
+  default     = "/dev/xvda"
   nullable    = false
 }
 

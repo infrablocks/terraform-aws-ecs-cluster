@@ -87,7 +87,7 @@ for more details.
 | cluster_instance_ssh_public_key_path       | The path to the public key to use for the container instances                                                    |         -          |                   yes                    |
 | cluster_instance_type                      | The instance type of the container instances                                                                     |     t2.medium      |                   yes                    |
 | cluster_instance_root_block_device_size    | The size in GB of the root block device on cluster instances                                                     |         30         |                   yes                    |
-| cluster_instance_root_block_device_path    | Path of the instance root block storage volume   |     /dev/sda1      |                   yes                    
+| cluster_instance_root_block_device_path    | Path of the instance root block storage volume                                                                   |     /dev/xvda      |                   yes                    |
 | cluster_instance_root_block_device_type    | The type of the root block device on cluster instances ('standard', 'gp2', or 'io1')                             |      standard      |                   yes                    |
 | cluster_instance_user_data_template        | The contents of a template for container instance user data                                                      |   see user-data    |                    no                    |
 | cluster_instance_amis                      | A map of regions to AMIs for the container instances                                                             | ECS optimised AMIs |                   yes                    |
@@ -102,8 +102,8 @@ for more details.
 | allowed_cidrs                              | The CIDRs allowed access to containers                                                                           |   ["10.0.0.0/8"]   | if include_default_ingress_rule is "yes" |
 | egress_cidrs                               | The CIDRs accessible from containers                                                                             |   ["0.0.0.0/0"]    | if include_default_egress_rule is "yes"  |
 | security_groups                            | The list of security group IDs to associate with the cluster in addition to the default security group           |         []         |                    no                    |
-| cluster_log_group_retention                | The number of days logs will be retained in the CloudWatch log group of the cluster (0 = unlimited)  |         0          |                    no                    |
-| enable_detailed_monitoring                 |  Enable detailed monitoring of EC2 instance(s)           |        true        |                    no                    
+| cluster_log_group_retention                | The number of days logs will be retained in the CloudWatch log group of the cluster (0 = unlimited)              |         0          |                    no                    |
+| enable_detailed_monitoring                 | Enable detailed monitoring of EC2 instance(s)                                                                    |        true        |                    no                    
 
 Notes:
 

@@ -139,7 +139,7 @@ describe 'Launch Template' do
         .to(include_resource_creation(type: 'aws_launch_template')
               .with_attribute_value(
                 [:block_device_mappings, 0, :device_name],
-                '/dev/sda1'
+                '/dev/xvda'
               ))
     end
 
