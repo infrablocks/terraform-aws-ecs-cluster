@@ -33,7 +33,7 @@ resource "aws_launch_template" "cluster" {
   user_data = base64encode(local.cluster_user_data)
 
   network_interfaces {
-    associate_public_ip_address = var.associate_public_ip_addresses == "yes" ? true : false
+    associate_public_ip_address = var.associate_public_ip_addresses
     security_groups = concat([aws_security_group.cluster.id], var.security_groups)
   }
 

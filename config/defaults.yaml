@@ -37,8 +37,8 @@ enable_detailed_monitoring: true
 
 security_groups: []
 
-include_default_ingress_rule: "yes"
-include_default_egress_rule: "yes"
+include_default_ingress_rule: true
+include_default_egress_rule: true
 
 allowed_cidrs:
   - '10.1.0.0/16'

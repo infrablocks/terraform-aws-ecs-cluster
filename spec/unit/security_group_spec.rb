@@ -85,8 +85,8 @@ describe 'Security Group' do
   context 'when default ingress and egress are not included' do
     before(:context) do
       @plan = plan(role: :root) do |vars|
-        vars.include_default_ingress_rule = 'no'
-        vars.include_default_egress_rule = 'no'
+        vars.include_default_ingress_rule = false
+        vars.include_default_egress_rule = false
       end
     end
 

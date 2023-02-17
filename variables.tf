@@ -134,7 +134,7 @@ variable "cluster_desired_capacity" {
 variable "associate_public_ip_addresses" {
   description = "Whether or not to associate public IP addresses with ECS container instances (\"yes\" or \"no\")."
   type        = string
-  default     = "no"
+  default     = false
   nullable    = false
 }
 
@@ -148,13 +148,13 @@ variable "security_groups" {
 variable "include_default_ingress_rule" {
   description = "Whether or not to include the default ingress rule on the ECS container instances security group (\"yes\" or \"no\")."
   type        = string
-  default     = "yes"
+  default     = true
   nullable    = false
 }
 variable "include_default_egress_rule" {
   description = "Whether or not to include the default egress rule on the ECS container instances security group (\"yes\" or \"no\")."
   type        = string
-  default     = "yes"
+  default     = true
   nullable    = false
 }
 variable "allowed_cidrs" {
