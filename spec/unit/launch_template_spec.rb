@@ -148,7 +148,7 @@ describe 'Launch Template' do
         .to(include_resource_creation(type: 'aws_launch_template')
               .with_attribute_value(
                 [:block_device_mappings, 0, :ebs, 0, :encrypted],
-                "true"
+                'true'
               ))
     end
 
@@ -157,7 +157,7 @@ describe 'Launch Template' do
         .to(include_resource_creation(type: 'aws_launch_template')
               .with_attribute_value(
                 [:block_device_mappings, 0, :ebs, 0, :kms_key_id],
-              "arn:aws:kms:#{region}:#{account_id}:alias/aws/ebs"
+                "arn:aws:kms:#{region}:#{account_id}:alias/aws/ebs"
               ))
     end
   end
@@ -214,13 +214,13 @@ describe 'Launch Template' do
         .to(include_resource_creation(type: 'aws_launch_template')
               .with_attribute_value(
                 [:block_device_mappings, 0, :ebs, 0, :encrypted],
-                "#{encryption_enabled}"
+                encryption_enabled.to_s
               ))
     end
   end
 
   context 'when encryption kms key is set' do
-    kms_key_id = "arn:aws:kms:eu-west-2:111111111111:some/other/key"
+    kms_key_id = 'arn:aws:kms:eu-west-2:111111111111:some/other/key'
 
     before(:context) do
       @plan = plan(role: :root) do |vars|
