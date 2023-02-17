@@ -42,6 +42,7 @@ resource "aws_launch_template" "cluster" {
 
     ebs {
       encrypted   = local.cluster_instance_enable_ebs_volume_encryption
+      kms_key_id   = local.cluster_instance_ebs_volume_kms_key_id
 
       volume_size = local.cluster_instance_root_block_device_size
       volume_type = local.cluster_instance_root_block_device_type

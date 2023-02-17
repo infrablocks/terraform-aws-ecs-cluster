@@ -1,3 +1,5 @@
+data "aws_caller_identity" "current" {}
+
 locals {
   # default for cases when `null` value provided, meaning "use default"
   cluster_name = var.cluster_name == null ? "default" : var.cluster_name
@@ -42,6 +44,7 @@ locals {
 
   cluster_log_group_retention = var.cluster_log_group_retention == null ? 0 : var.cluster_log_group_retention
   cluster_instance_enable_ebs_volume_encryption = var.cluster_instance_enable_ebs_volume_encryption == null ? true : var.cluster_instance_enable_ebs_volume_encryption
+  cluster_instance_ebs_volume_kms_key_id = var.cluster_instance_ebs_volume_kms_key_id == null ? "arn:aws:kms:${var.region}:${data.aws_caller_identity.current.account_id}:alias/aws/ebs" : var.cluster_instance_ebs_volume_kms_key_id
 
   enable_detailed_monitoring = var.enable_detailed_monitoring == null ? true : var.enable_detailed_monitoring
 

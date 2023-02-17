@@ -217,3 +217,8 @@ variable "cluster_instance_enable_ebs_volume_encryption" {
   type        = bool
   default     = true
 }
+
+variable "cluster_instance_ebs_volume_kms_key_id" {
+  description = "KMS key to use for encryption of the EBS volume when enabled"
+  type        = string
+}

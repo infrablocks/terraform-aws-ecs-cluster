@@ -12,6 +12,9 @@ describe 'Launch Template' do
   let(:region) do
     var(role: :root, name: 'region')
   end
+  let(:account_id) do
+    output(role: :prerequisites, name: 'account_id')
+  end
 
   before(:context) do
     @plan = plan(role: :root)
@@ -148,6 +151,15 @@ describe 'Launch Template' do
                 "true"
               ))
     end
+
+    it 'uses default kms key for encryption' do
+      expect(@plan)
+        .to(include_resource_creation(type: 'aws_launch_template')
+              .with_attribute_value(
+                [:block_device_mappings, 0, :ebs, 0, :kms_key_id],
+              "arn:aws:kms:#{region}:#{account_id}:alias/aws/ebs"
+              ))
+    end
   end
 
   context 'when root block device path is specified' do
@@ -203,6 +215,25 @@ describe 'Launch Template' do
               .with_attribute_value(
                 [:block_device_mappings, 0, :ebs, 0, :encrypted],
                 "#{encryption_enabled}"
+              ))
+    end
+  end
+
+  context 'when encryption kms key is set' do
+    kms_key_id = "arn:aws:kms:eu-west-2:111111111111:some/other/key"
+
+    before(:context) do
+      @plan = plan(role: :root) do |vars|
+        vars.cluster_instance_ebs_volume_kms_key_id = kms_key_id
+      end
+    end
+
+    it 'uses provided kms key' do
+      expect(@plan)
+        .to(include_resource_creation(type: 'aws_launch_template')
+              .with_attribute_value(
+                [:block_device_mappings, 0, :ebs, 0, :kms_key_id],
+                kms_key_id
               ))
     end
   end

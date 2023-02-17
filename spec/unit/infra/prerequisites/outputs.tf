@@ -13,3 +13,7 @@ output "private_subnet_ids" {
 output "security_group_ids" {
   value = aws_security_group.custom_security_group.*.id
 }
+
+output "account_id" {
+  value = data.aws_caller_identity.current.account_id
+}
