@@ -1,10 +1,27 @@
+## 6.0.0 (February 17th 2023)
+
+BACKWARDS INCOMPATIBILITIES / NOTES:
+
+* This module is now compatible with Terraform 1.1 and higher.
+* This module now uses ebs volume encryption by default. This can be disabled
+  using `cluster_instance_enable_ebs_volume_encryption = false`.
+* In line with Amazon's update of the default root block storage device, the 
+  default in this module is now `/dev/xvda`.
+* All variables previously using `"yes|no"` have been replaced with
+  `true|false`.
+
+IMPROVEMENTS:
+
+* This module now uses the nullable feature to simplify variable defaults.
+
 ## 5.0.1 (February 2nd 2023)
 
 IMPROVEMENTS:
 
 * added option to specify log retention period for cluster
 * added option to disable enhanced instance monitoring (enabled by default)
-* added option to specify the path of the root block storage device as AWS default has changed from `/dev/sda1` to `/dev/xvda`
+* added option to specify the path of the root block storage device as AWS
+  default has changed from `/dev/sda1` to `/dev/xvda`
 
 ## 5.0.0 (December 22nd 2022)
 
@@ -88,11 +105,11 @@ IMPROVEMENTS:
 BACKWARDS INCOMPATIBILITIES / NOTES:
 
 * The configuration directory has changed from `<repo>/src` to `<repo>` to
-  satisfy the terraform standard module structure.
+  satisfy the Terraform standard module structure.
 
 IMPROVEMENTS:
 
-* All variables and outputs now have descriptions to satisfy the terraform
+* All variables and outputs now have descriptions to satisfy the Terraform
   standard module structure.
 
 ## 0.2.0 (November 3th, 2017)

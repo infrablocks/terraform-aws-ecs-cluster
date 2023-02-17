@@ -23,3 +23,5 @@ module "dns-zones" {
   private_zone_vpc_id = aws_default_vpc.default.id
   private_zone_vpc_region = var.region
 }
+
+data "aws_caller_identity" "current" {}

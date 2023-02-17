@@ -25,7 +25,7 @@ cluster_instance_type: 't2.medium'
 cluster_instance_amis:
   eu-west-2: "''"
 cluster_instance_root_block_device_size: 40
-cluster_instance_root_block_device_path: '/dev/sda1'
+cluster_instance_root_block_device_path: '/dev/xvda'
 
 cluster_minimum_size: 1
 cluster_maximum_size: 3
@@ -37,8 +37,8 @@ enable_detailed_monitoring: true
 
 security_groups: []
 
-include_default_ingress_rule: "yes"
-include_default_egress_rule: "yes"
+include_default_ingress_rule: true
+include_default_egress_rule: true
 
 allowed_cidrs:
   - '10.1.0.0/16'
