@@ -37,7 +37,6 @@ variable "cluster_instance_ssh_public_key_path" {
   description = "The path to the public key to use for the container instances."
   type        = string
   default     = null
-  nullable    = true
 }
 
 variable "cluster_instance_root_block_device_size" {
@@ -63,29 +62,24 @@ variable "cluster_instance_root_block_device_path" {
 variable "cluster_instance_user_data_template" {
   description = "The contents of a template for container instance user data."
   type        = string
-  default     = ""
-  nullable    = false
+  default     = null
 }
 
 variable "cluster_instance_ami" {
   description = "AMI for the container instances."
   type        = string
-
-  default     = ""
-  nullable    = false
+  default     = null
 }
 
 variable "cluster_instance_iam_policy_contents" {
   description = "The contents of the cluster instance IAM policy."
   type        = string
-  default     = ""
-  nullable    = false
+  default     = null
 }
 variable "cluster_service_iam_policy_contents" {
   description = "The contents of the cluster service IAM policy."
   type        = string
-  default     = ""
-  nullable    = false
+  default     = null
 }
 
 variable "cluster_minimum_size" {

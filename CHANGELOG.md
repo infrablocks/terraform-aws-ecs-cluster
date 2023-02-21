@@ -11,6 +11,13 @@ BACKWARDS INCOMPATIBILITIES / NOTES:
   `true|false`.
 * The `allowed_cidrs` variable has been renamed to `default_ingress_cidrs`.
 * The `egress_cidrs` variable has been renamed to `default_egress_cidrs`.
+* The `cluster_instance_amis` variable has been replaced with the singular
+  `cluster_instance_ami`, with default value of `null`.
+* The following variables have had their default value replaced from `""` to
+  `null`:
+  - `cluster_instance_user_data_template`
+  - `cluster_instance_iam_policy_contents`
+  - `cluster_service_iam_policy_contents`
 
 IMPROVEMENTS:
 
