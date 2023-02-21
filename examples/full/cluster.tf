@@ -25,5 +25,5 @@ module "ecs_cluster" {
 
   security_groups = aws_security_group.custom_security_group[*].id
 
-  include_asg_capacity_provider = "yes"
+  include_asg_capacity_provider = true
 }

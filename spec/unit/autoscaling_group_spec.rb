@@ -142,7 +142,7 @@ describe 'autoscaling group' do
   context 'when scale in protection enabled' do
     before(:context) do
       @plan = plan(role: :root) do |vars|
-        vars.protect_cluster_instances_from_scale_in = 'yes'
+        vars.protect_cluster_instances_from_scale_in = true
       end
     end
 
@@ -156,7 +156,7 @@ describe 'autoscaling group' do
   context 'when scale in protection disabled' do
     before(:context) do
       @plan = plan(role: :root) do |vars|
-        vars.protect_cluster_instances_from_scale_in = 'no'
+        vars.protect_cluster_instances_from_scale_in = false
       end
     end
 

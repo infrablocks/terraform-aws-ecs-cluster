@@ -22,7 +22,7 @@ module "ecs_cluster" {
   cluster_name                            = var.cluster_name
   cluster_instance_ssh_public_key_path    = var.cluster_instance_ssh_public_key_path
   cluster_instance_type                   = var.cluster_instance_type
-  cluster_instance_amis                   = var.cluster_instance_amis
+  cluster_instance_ami                    = var.cluster_instance_ami
   cluster_instance_root_block_device_size = var.cluster_instance_root_block_device_size
   cluster_instance_root_block_device_path = var.cluster_instance_root_block_device_path
 
@@ -42,8 +42,8 @@ module "ecs_cluster" {
   include_default_ingress_rule = var.include_default_ingress_rule
   include_default_egress_rule  = var.include_default_egress_rule
 
-  allowed_cidrs = var.allowed_cidrs
-  egress_cidrs  = var.egress_cidrs
+  default_ingress_cidrs = var.default_ingress_cidrs
+  default_egress_cidrs  = var.default_egress_cidrs
 
   enable_container_insights = var.enable_container_insights
 

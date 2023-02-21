@@ -85,5 +85,5 @@ output "log_group" {
 
 output "asg_capacity_provider_name" {
   description = "The name of the ASG capacity provider associated with the cluster."
-  value       = var.include_asg_capacity_provider == "yes" ? aws_ecs_capacity_provider.autoscaling_group[0].name : ""
+  value       = var.include_asg_capacity_provider ? aws_ecs_capacity_provider.autoscaling_group[0].name : ""
 }

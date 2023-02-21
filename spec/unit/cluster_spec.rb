@@ -16,7 +16,7 @@ describe 'ECS Cluster' do
   context 'when container insights enabled' do
     before(:context) do
       @plan = plan(role: :root) do |vars|
-        vars.enable_container_insights = 'yes'
+        vars.enable_container_insights = true
       end
     end
 
@@ -30,7 +30,7 @@ describe 'ECS Cluster' do
   context 'when container insights disabled' do
     before(:context) do
       @plan = plan(role: :root) do |vars|
-        vars.enable_container_insights = 'no'
+        vars.enable_container_insights = false
       end
     end
 

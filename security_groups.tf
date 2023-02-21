@@ -20,7 +20,7 @@ resource "aws_security_group_rule" "cluster_default_ingress" {
   from_port = 0
   to_port   = 0
 
-  cidr_blocks = var.allowed_cidrs
+  cidr_blocks = var.default_ingress_cidrs
 }
 
 resource "aws_security_group_rule" "cluster_default_egress" {
@@ -34,5 +34,5 @@ resource "aws_security_group_rule" "cluster_default_egress" {
   from_port = 0
   to_port   = 0
 
-  cidr_blocks = var.egress_cidrs
+  cidr_blocks = var.default_egress_cidrs
 }

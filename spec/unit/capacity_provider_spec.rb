@@ -18,7 +18,7 @@ describe 'ASG Capacity Provider' do
     describe 'by default' do
       before(:context) do
         @plan = plan(role: :root) do |vars|
-          vars.include_asg_capacity_provider = 'yes'
+          vars.include_asg_capacity_provider = true
         end
       end
 
@@ -53,8 +53,8 @@ describe 'ASG Capacity Provider' do
     context 'with managed termination protection' do
       before(:context) do
         @plan = plan(role: :root) do |vars|
-          vars.include_asg_capacity_provider = 'yes'
-          vars.asg_capacity_provider_manage_termination_protection = 'yes'
+          vars.include_asg_capacity_provider = true
+          vars.asg_capacity_provider_manage_termination_protection = true
         end
       end
 
@@ -75,8 +75,8 @@ describe 'ASG Capacity Provider' do
     context 'without managed termination protection' do
       before(:context) do
         @plan = plan(role: :root) do |vars|
-          vars.include_asg_capacity_provider = 'yes'
-          vars.asg_capacity_provider_manage_termination_protection = 'no'
+          vars.include_asg_capacity_provider = true
+          vars.asg_capacity_provider_manage_termination_protection = false
         end
       end
 
@@ -97,8 +97,8 @@ describe 'ASG Capacity Provider' do
     context 'with managed scaling' do
       before(:context) do
         @plan = plan(role: :root) do |vars|
-          vars.include_asg_capacity_provider = 'yes'
-          vars.asg_capacity_provider_manage_scaling = 'yes'
+          vars.include_asg_capacity_provider = true
+          vars.asg_capacity_provider_manage_scaling = true
           vars.asg_capacity_provider_minimum_scaling_step_size = 3
           vars.asg_capacity_provider_maximum_scaling_step_size = 300
           vars.asg_capacity_provider_target_capacity = 90
@@ -169,8 +169,8 @@ describe 'ASG Capacity Provider' do
     context 'without managed scaling' do
       before(:context) do
         @plan = plan(role: :root) do |vars|
-          vars.include_asg_capacity_provider = 'yes'
-          vars.asg_capacity_provider_manage_scaling = 'no'
+          vars.include_asg_capacity_provider = true
+          vars.asg_capacity_provider_manage_scaling = false
         end
       end
 
@@ -194,7 +194,7 @@ describe 'ASG Capacity Provider' do
   context 'when capacity provider not included' do
     before(:context) do
       @plan = plan(role: :root) do |vars|
-        vars.include_asg_capacity_provider = 'no'
+        vars.include_asg_capacity_provider = false
       end
     end
 

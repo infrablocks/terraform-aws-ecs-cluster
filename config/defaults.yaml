@@ -22,8 +22,7 @@ custom_ami_id: "ami-3fb6bc5b"
 cluster_name: 'test-cluster'
 cluster_instance_ssh_public_key_path: "%{hiera('project_directory')}/config/secrets/cluster/ssh.public"
 cluster_instance_type: 't2.medium'
-cluster_instance_amis:
-  eu-west-2: "''"
+cluster_instance_ami: "''"
 cluster_instance_root_block_device_size: 40
 cluster_instance_root_block_device_path: '/dev/xvda'
 
@@ -40,18 +39,18 @@ security_groups: []
 include_default_ingress_rule: true
 include_default_egress_rule: true
 
-allowed_cidrs:
+default_ingress_cidrs:
   - '10.1.0.0/16'
-egress_cidrs:
+default_egress_cidrs:
   - '10.1.0.0/16'
 
-enable_container_insights: "no"
+enable_container_insights: false
 
-protect_cluster_instances_from_scale_in: "no"
+protect_cluster_instances_from_scale_in: false
 
-include_asg_capacity_provider: "no"
-asg_capacity_provider_manage_termination_protection: "no"
-asg_capacity_provider_manage_scaling: "no"
+include_asg_capacity_provider: false
+asg_capacity_provider_manage_termination_protection: false
+asg_capacity_provider_manage_scaling: false
 asg_capacity_provider_minimum_scaling_step_size: 1
 asg_capacity_provider_maximum_scaling_step_size: 1000
 asg_capacity_provider_target_capacity: 100
