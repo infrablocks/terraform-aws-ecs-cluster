@@ -17,8 +17,8 @@ variable "cluster_instance_ssh_public_key_path" {
 variable "cluster_instance_type" {
   default = null
 }
-variable "cluster_instance_amis" {
-  type = map(string)
+variable "cluster_instance_ami" {
+  type = string
   default = null
 }
 variable "cluster_instance_root_block_device_size" {
@@ -58,11 +58,11 @@ variable "include_default_egress_rule" {
   default = null
 }
 
-variable "allowed_cidrs" {
+variable "default_ingress_cidrs" {
   type = list(string)
   default = null
 }
-variable "egress_cidrs" {
+variable "default_egress_cidrs" {
   type = list(string)
   default = null
 }

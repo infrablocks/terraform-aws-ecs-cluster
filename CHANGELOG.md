@@ -3,12 +3,14 @@
 BACKWARDS INCOMPATIBILITIES / NOTES:
 
 * This module is now compatible with Terraform 1.1 and higher.
-* This module now uses ebs volume encryption by default. This can be disabled
+* This module now uses EBS volume encryption by default. This can be disabled
   using `cluster_instance_enable_ebs_volume_encryption = false`.
 * In line with Amazon's update of the default root block storage device, the 
   default in this module is now `/dev/xvda`.
 * All variables previously using `"yes|no"` have been replaced with
   `true|false`.
+* The `allowed_cidrs` variable has been renamed to `default_ingress_cidrs`.
+* The `egress_cidrs` variable has been renamed to `default_egress_cidrs`.
 
 IMPROVEMENTS:
 

@@ -1,6 +1,6 @@
 locals {
   ami_id = coalesce(
-    lookup(var.cluster_instance_amis, var.region),
+    var.cluster_instance_ami,
     data.aws_ami.amazon_linux_2.image_id)
   cluster_user_data_template = coalesce(
     var.cluster_instance_user_data_template,
@@ -24,7 +24,7 @@ resource "aws_launch_template" "cluster" {
   name_prefix          = "cluster-${var.component}-${var.deployment_identifier}-${var.cluster_name}-"
   image_id             = local.ami_id
   instance_type        = var.cluster_instance_type
-  key_name             = var.cluster_instance_ssh_public_key_path == "" ? "" : element(concat(aws_key_pair.cluster.*.key_name, [""]), 0)
+  key_name             = var.cluster_instance_ssh_public_key_path == null ? "" : element(concat(aws_key_pair.cluster.*.key_name, [""]), 0)
 
   iam_instance_profile {
     name = aws_iam_instance_profile.cluster.name
@@ -72,7 +72,7 @@ resource "aws_autoscaling_group" "cluster" {
   max_size         = var.cluster_maximum_size
   desired_capacity = var.cluster_desired_capacity
 
-  protect_from_scale_in = ((var.include_asg_capacity_provider == "yes" && var.asg_capacity_provider_manage_termination_protection == "yes") || var.protect_cluster_instances_from_scale_in == "yes")
+  protect_from_scale_in = ((var.include_asg_capacity_provider && var.asg_capacity_provider_manage_termination_protection) || var.protect_cluster_instances_from_scale_in)
 
   tag {
     key                 = "Name"
@@ -87,7 +87,7 @@ resource "aws_autoscaling_group" "cluster" {
   }
 
   dynamic "tag" {
-    for_each = var.include_asg_capacity_provider == "yes" ? merge({
+    for_each = var.include_asg_capacity_provider ? merge({
       AmazonECSManaged : ""
     }, local.tags) : local.tags
     content {

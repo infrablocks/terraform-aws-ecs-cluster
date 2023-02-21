@@ -36,8 +36,8 @@ variable "cluster_instance_type" {
 variable "cluster_instance_ssh_public_key_path" {
   description = "The path to the public key to use for the container instances."
   type        = string
-  default     = ""
-  nullable    = false
+  default     = null
+  nullable    = true
 }
 
 variable "cluster_instance_root_block_device_size" {
@@ -67,35 +67,11 @@ variable "cluster_instance_user_data_template" {
   nullable    = false
 }
 
-variable "cluster_instance_amis" {
-  description = "A map of regions to AMIs for the container instances."
-  type        = map(string)
+variable "cluster_instance_ami" {
+  description = "AMI for the container instances."
+  type        = string
 
-  default = {
-    af-south-1     = ""
-    ap-east-1      = ""
-    ap-northeast-1 = ""
-    ap-northeast-2 = ""
-    ap-northeast-3 = ""
-    ap-south-1     = ""
-    ap-southeast-1 = ""
-    ap-southeast-2 = ""
-    ca-central-1   = ""
-    cn-north-1     = ""
-    cn-northwest-1 = ""
-    eu-central-1   = ""
-    eu-north-1     = ""
-    eu-south-1     = ""
-    eu-west-1      = ""
-    eu-west-2      = ""
-    eu-west-3      = ""
-    me-south-1     = ""
-    sa-east-1      = ""
-    us-east-1      = ""
-    us-east-2      = ""
-    us-west-1      = ""
-    us-west-2      = ""
-  }
+  default     = ""
   nullable    = false
 }
 
@@ -132,7 +108,7 @@ variable "cluster_desired_capacity" {
 }
 
 variable "associate_public_ip_addresses" {
-  description = "Whether or not to associate public IP addresses with ECS container instances (\"yes\" or \"no\")."
+  description = "Whether or not to associate public IP addresses with ECS container instances."
   type        = string
   default     = false
   nullable    = false
@@ -146,24 +122,24 @@ variable "security_groups" {
 }
 
 variable "include_default_ingress_rule" {
-  description = "Whether or not to include the default ingress rule on the ECS container instances security group (\"yes\" or \"no\")."
+  description = "Whether or not to include the default ingress rule on the ECS container instances security group."
   type        = string
   default     = true
   nullable    = false
 }
 variable "include_default_egress_rule" {
-  description = "Whether or not to include the default egress rule on the ECS container instances security group (\"yes\" or \"no\")."
+  description = "Whether or not to include the default egress rule on the ECS container instances security group."
   type        = string
   default     = true
   nullable    = false
 }
-variable "allowed_cidrs" {
+variable "default_ingress_cidrs" {
   description = "The CIDRs allowed access to containers."
   type        = list(string)
   default     = ["10.0.0.0/8"]
   nullable    = false
 }
-variable "egress_cidrs" {
+variable "default_egress_cidrs" {
   description = "The CIDRs accessible from containers."
   type        = list(string)
   default     = ["0.0.0.0/0"]
@@ -178,35 +154,35 @@ variable "tags" {
 }
 
 variable "enable_container_insights" {
-  description = "Whether or not to enable container insights on the ECS cluster (\"yes\" or \"no\")."
+  description = "Whether or not to enable container insights on the ECS cluster."
   type        = string
-  default     = "no"
+  default     = false
   nullable    = false
 }
 
 variable "protect_cluster_instances_from_scale_in" {
-  description = "Whether or not to protect cluster instances in the autoscaling group from scale in (\"yes\" or \"no\")."
+  description = "Whether or not to protect cluster instances in the autoscaling group from scale in."
   type        = string
-  default     = "no"
+  default     = false
   nullable    = false
 }
 
 variable "include_asg_capacity_provider" {
-  description = "Whether or not to add the created ASG as a capacity provider for the ECS cluster (\"yes\" or \"no\")."
+  description = "Whether or not to add the created ASG as a capacity provider for the ECS cluster."
   type        = string
-  default     = "no"
+  default     = false
   nullable    = false
 }
 variable "asg_capacity_provider_manage_termination_protection" {
-  description = "Whether or not to allow ECS to manage termination protection for the ASG capacity provider (\"yes\" or \"no\")."
+  description = "Whether or not to allow ECS to manage termination protection for the ASG capacity provider."
   type        = string
-  default     = "yes"
+  default     = true
   nullable    = false
 }
 variable "asg_capacity_provider_manage_scaling" {
-  description = "Whether or not to allow ECS to manage scaling for the ASG capacity provider (\"yes\" or \"no\")."
+  description = "Whether or not to allow ECS to manage scaling for the ASG capacity provider."
   type        = string
-  default     = "yes"
+  default     = true
   nullable    = false
 }
 variable "asg_capacity_provider_minimum_scaling_step_size" {

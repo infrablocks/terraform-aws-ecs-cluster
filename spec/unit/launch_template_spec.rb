@@ -68,9 +68,8 @@ describe 'Launch Template' do
     ami_id = 'custom_ami_id'
 
     before(:context) do
-      region = var(role: :root, name: 'region')
       @plan = plan(role: :root) do |vars|
-        vars.cluster_instance_amis = "{#{region}=\"#{ami_id}\"}"
+        vars.cluster_instance_ami = ami_id
       end
     end
 
