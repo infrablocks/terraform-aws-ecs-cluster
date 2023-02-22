@@ -1,4 +1,4 @@
-## 6.0.0 (February 17th 2023)
+## 6.0.0 (February 22th 2023)
 
 BACKWARDS INCOMPATIBILITIES / NOTES:
 
