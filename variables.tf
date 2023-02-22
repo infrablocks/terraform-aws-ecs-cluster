@@ -53,7 +53,7 @@ variable "cluster_instance_root_block_device_type" {
 }
 
 variable "cluster_instance_root_block_device_path" {
-  description = "Path of the instance root block storage volume"
+  description = "Path of the instance root block storage volume."
   type        = string
   default     = "/dev/xvda"
   nullable    = false
@@ -141,7 +141,7 @@ variable "default_egress_cidrs" {
 }
 
 variable "tags" {
-  description = "Map of tags to be applied to all resources in cluster"
+  description = "Map of tags to be applied to all resources in cluster."
   type        = map(string)
   default     = {}
   nullable    = false
@@ -199,28 +199,28 @@ variable "asg_capacity_provider_target_capacity" {
 }
 
 variable "cluster_log_group_retention" {
-  description = "The number of days logs will be retained in the CloudWatch log group of the cluster"
+  description = "The number of days logs will be retained in the CloudWatch log group of the cluster."
   type        = number
   default     = 0
   nullable    = false
 }
 
 variable "enable_detailed_monitoring" {
-  description = "Enable detailed monitoring of EC2 instance(s)"
+  description = "Enable detailed monitoring of EC2 instance(s)."
   type        = bool
   default     = true
   nullable    = false
 }
 
 variable "cluster_instance_enable_ebs_volume_encryption" {
-  description = "Determines whether encryption is enabled on the EBS volume"
+  description = "Determines whether encryption is enabled on the EBS volume."
   type        = bool
   default     = true
   nullable    = false
 }
 
 variable "cluster_instance_ebs_volume_kms_key_id" {
-  description = "KMS key to use for encryption of the EBS volume when enabled"
+  description = "KMS key to use for encryption of the EBS volume when enabled."
   type        = string
   default     = null
 }
