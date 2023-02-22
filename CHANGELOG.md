@@ -46,17 +46,13 @@ BACKWARDS INCOMPATIBILITIES / NOTES:
 * The unused `launch_configuration_create_before_destroy` variable has been
   removed.
 
-IMPROVEMENTS
-
-* This module no longer requires the template provider.
-* This module now allows using the Terraform AWS provider v4.
-
 ## 4.2.0 (June 20th 2022)
 
 IMPROVEMENTS:
 
 * The `aws` and `null` provider constraints have been loosened to allow this
-  module to be used with the latest versions of each.
+  module to be used with the latest versions of each. This enables use of
+  Terraform AWS provider v4.
 * The no longer supported `template` provider has been replaced with native
   terraform configuration language equivalents.
 
