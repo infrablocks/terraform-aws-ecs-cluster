@@ -53,6 +53,17 @@ resource "aws_launch_template" "cluster" {
     enabled = var.enable_detailed_monitoring
   }
 
+  tag_specifications {
+    resource_type = "volume"
+    tags = merge(
+      local.tags,
+      {
+        Name        = "cluster-worker-${var.component}-${var.deployment_identifier}-${var.cluster_name}"
+        ClusterName = var.cluster_name
+      }
+    )
+  }
+
   depends_on = [
     null_resource.iam_wait
   ]
