@@ -1,4 +1,4 @@
-Terraform AWS ECS Cluster
+clTerraform AWS ECS Cluster
 =========================
 
 [![CircleCI](https://circleci.com/gh/infrablocks/terraform-aws-ecs-cluster.svg?style=svg)](https://circleci.com/gh/infrablocks/terraform-aws-ecs-cluster)
@@ -93,6 +93,7 @@ for more details.
 | cluster_instance_ami                                | AMI for the container instances                                                                        | ECS optimised AMI |               yes               |
 | cluster_instance_iam_policy_contents                | The contents of the cluster instance IAM policy                                                        |   see policies    |               no                |
 | cluster_service_iam_policy_contents                 | The contents of the cluster service IAM policy                                                         |   see policies    |               no                |
+| cluster_instance_metadata_options                   | Map of metadata_options for cluster instances. | { http_tokens = "required" } | no |
 | cluster_minimum_size                                | The minimum size of the ECS cluster                                                                    |         1         |               yes               |
 | cluster_maximum_size                                | The maximum size of the ECS cluster                                                                    |        10         |               yes               |
 | cluster_desired_capacity                            | The desired capacity of the ECS cluster                                                                |         3         |               yes               |
@@ -118,6 +119,7 @@ for more details.
 Notes:
 
 * By default, the latest available Amazon Linux 2 AMI is used.
+* By default, [IMDSv2](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/configuring-instance-metadata-service.html) is now required for [security reasons](https://aws.amazon.com/blogs/security/defense-in-depth-open-firewalls-reverse-proxies-ssrf-vulnerabilities-ec2-instance-metadata-service/)
 * For Amazon Linux 1 AMIs use version <= 0.6.0 of this module for terraform 0.11
   or version = 1.0.0 for terraform 0.12.
 * When a specific AMI is provided via `cluster_instance_ami`, only the root

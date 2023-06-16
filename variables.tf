@@ -76,6 +76,14 @@ variable "cluster_instance_iam_policy_contents" {
   type        = string
   default     = null
 }
+
+variable "cluster_instance_metadata_options" {
+  description = "The metadata_options for cluster instances."
+  type        = map
+  default     = {
+    http_tokens = "required"      # AWS Recommended default: IMDSv2 required
+  }
+}
 variable "cluster_service_iam_policy_contents" {
   description = "The contents of the cluster service IAM policy."
   type        = string
