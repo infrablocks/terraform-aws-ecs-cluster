@@ -1,5 +1,7 @@
 ## Unreleased
 
+* Name and tag cluster worker EBS volumes (Resolves #94)
+
 BACKWARDS INCOMPATIBILITIES / NOTES:
 
 * The `cluster_desired_capacity` is now ignored after the first `apply` of the
