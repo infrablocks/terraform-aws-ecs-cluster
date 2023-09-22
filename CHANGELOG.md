@@ -1,3 +1,11 @@
+## Unreleased
+
+BACKWARDS INCOMPATIBILITIES / NOTES:
+
+* The `cluster_desired_capacity` is now ignored after the first `apply` of the
+  module since, in the case of autoscaling or manual scaling, the value may have
+  changed between `apply`s.
+
 ## 6.0.0 (February 22th 2023)
 
 BACKWARDS INCOMPATIBILITIES / NOTES:
