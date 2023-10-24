@@ -29,6 +29,8 @@ module "ecs_cluster" {
   cluster_instance_enable_ebs_volume_encryption = var.cluster_instance_enable_ebs_volume_encryption
   cluster_instance_ebs_volume_kms_key_id = var.cluster_instance_ebs_volume_kms_key_id
 
+  cluster_instance_metadata_options = var.cluster_instance_metadata_options
+
   cluster_minimum_size     = var.cluster_minimum_size
   cluster_maximum_size     = var.cluster_maximum_size
   cluster_desired_capacity = var.cluster_desired_capacity

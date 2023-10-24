@@ -83,6 +83,7 @@ variable "cluster_instance_metadata_options" {
   default     = {
     http_tokens = "required"      # AWS Recommended default: IMDSv2 required
   }
+  nullable    = false
 }
 variable "cluster_service_iam_policy_contents" {
   description = "The contents of the cluster service IAM policy."

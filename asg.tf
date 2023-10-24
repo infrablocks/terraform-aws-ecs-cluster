@@ -35,6 +35,7 @@ resource "aws_launch_template" "cluster" {
     http_tokens                 = lookup(var.cluster_instance_metadata_options, "http_tokens", null)
     http_put_response_hop_limit = lookup(var.cluster_instance_metadata_options, "http_put_response_hop_limit", null)
     instance_metadata_tags      = lookup(var.cluster_instance_metadata_options, "instance_metadata_tags", null)
+    http_protocol_ipv6          = lookup(var.cluster_instance_metadata_options, "http_protocol_ipv6", null)
   }
 
   user_data = base64encode(local.cluster_user_data)
