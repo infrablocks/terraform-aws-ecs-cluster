@@ -1,3 +1,11 @@
+## Unreleased
+
+BACKWARDS INCOMPATIBILITIES / NOTES:
+
+* IMDSv2 support is now on by default, this can be changed via the new
+  `cluster_instance_metadata_options` variable which mirrors 
+  aws_launch_template's [metadata_options](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/launch_template#metadata-options)
+
 ## 6.0.0 (February 22th 2023)
 
 BACKWARDS INCOMPATIBILITIES / NOTES:
