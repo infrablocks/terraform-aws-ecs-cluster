@@ -2,9 +2,13 @@
 
 BACKWARDS INCOMPATIBILITIES / NOTES:
 
+
 * IMDSv2 support is now on by default, this can be changed via the new
   `cluster_instance_metadata_options` variable which mirrors 
   aws_launch_template's [metadata_options](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/launch_template#metadata-options)
+* The `cluster_desired_capacity` is now ignored after the first `apply` of the
+  module since, in the case of autoscaling or manual scaling, the value may have
+  changed between `apply`s.
 
 ## 6.0.0 (February 22th 2023)
 
