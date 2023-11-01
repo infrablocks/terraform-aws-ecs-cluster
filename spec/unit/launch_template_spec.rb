@@ -238,20 +238,7 @@ describe 'Launch Template' do
   end
 
   describe 'metadata options' do
-    it 'requires http_tokens (IMDSv2) by default' do
-      expect(@plan)
-        .to(include_resource_creation(type: 'aws_launch_template')
-              .with_attribute_value(
-                :metadata_options,
-                including(
-                  including({
-                              http_tokens: 'required'
-                            })
-                )
-              ))
-    end
-
-    it 'http_protocol_ipv6 and instance_metadata_tags disabled by default' do
+    it 'disables http_protocol_ipv6 and instance_metadata_tags by default' do
       expect(@plan)
         .to(include_resource_creation(type: 'aws_launch_template')
               .with_attribute_value(
@@ -270,7 +257,7 @@ describe 'Launch Template' do
         @plan = plan(role: :root) do |vars|
           vars.cluster_instance_metadata_options = {
             http_endpoint: 'enabled',
-            http_tokens: 'optional',
+            http_tokens: 'required',
             http_protocol_ipv6: 'enabled',
             instance_metadata_tags: 'enabled',
             http_put_response_hop_limit: 15
@@ -285,7 +272,7 @@ describe 'Launch Template' do
                   :metadata_options,
                   including(including({
                                         http_endpoint: 'enabled',
-                                        http_tokens: 'optional',
+                                        http_tokens: 'required',
                                         http_protocol_ipv6: 'enabled',
                                         instance_metadata_tags: 'enabled',
                                         http_put_response_hop_limit: 15
