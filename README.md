@@ -17,16 +17,16 @@ The ECS cluster consists of:
   instances
 * An SSH key to connect to the ECS container instances
 * A security group for the container instances optionally allowing:
-  * Outbound internet access for all containers
-  * Inbound TCP access on any port from the VPC network
+    * Outbound internet access for all containers
+    * Inbound TCP access on any port from the VPC network
 * An IAM role and policy for the container instances allowing:
-  * ECS interactions
-  * ECR image pulls
-  * S3 object fetches
-  * Logging to cloudwatch
+    * ECS interactions
+    * ECR image pulls
+    * S3 object fetches
+    * Logging to cloudwatch
 * An IAM role and policy for ECS services allowing:
-  * Elastic load balancer registration / deregistration
-  * EC2 describe actions and security group ingress rule creation
+    * Elastic load balancer registration / deregistration
+    * EC2 describe actions and security group ingress rule creation
 * A CloudWatch log group
 
 ![Diagram of infrastructure managed by this module](https://raw.githubusercontent.com/infrablocks/terraform-aws-ecs-cluster/main/docs/architecture.png)
@@ -39,25 +39,25 @@ configuration:
 
 ```hcl-terraform
 module "ecs_cluster" {
-  source = "infrablocks/ecs-cluster/aws"
+  source  = "infrablocks/ecs-cluster/aws"
   version = "5.0.0"
 
-  region = "eu-west-2"
-  vpc_id = "vpc-fb7dc365"
+  region     = "eu-west-2"
+  vpc_id     = "vpc-fb7dc365"
   subnet_ids = [
-   "subnet-eb32c271",
-   "subnet-64872d1f"
+    "subnet-eb32c271",
+    "subnet-64872d1f"
   ]
 
-  component = "important-component"
+  component             = "important-component"
   deployment_identifier = "production"
 
-  cluster_name = "services"
+  cluster_name                         = "services"
   cluster_instance_ssh_public_key_path = "~/.ssh/id_rsa.pub"
-  cluster_instance_type = "t3.small"
+  cluster_instance_type                = "t3.small"
 
-  cluster_minimum_size = 2
-  cluster_maximum_size = 10
+  cluster_minimum_size     = 2
+  cluster_maximum_size     = 10
   cluster_desired_capacity = 4
 }
 ```
@@ -91,6 +91,7 @@ for more details.
 | cluster_instance_root_block_device_type             | The type of the root block device on cluster instances ('standard', 'gp2', or 'io1')                   |     standard      |               yes               |
 | cluster_instance_user_data_template                 | The contents of a template for container instance user data                                            |   see user-data   |               no                |
 | cluster_instance_ami                                | AMI for the container instances                                                                        | ECS optimised AMI |               yes               |
+| cluster_instance_metadata_options                   | A map of metadata options for cluster instances.                                                       |         -         |               no                |
 | cluster_instance_iam_policy_contents                | The contents of the cluster instance IAM policy                                                        |   see policies    |               no                |
 | cluster_service_iam_policy_contents                 | The contents of the cluster service IAM policy                                                         |   see policies    |               no                |
 | cluster_minimum_size                                | The minimum size of the ECS cluster                                                                    |         1         |               yes               |
@@ -201,7 +202,6 @@ Terraform 1.0.
 * logs:DescribeLogGroups
 * logs:ListTagsLogGroup
 * logs:DeleteLogGroup
-
 
 Development
 -----------

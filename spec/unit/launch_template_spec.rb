@@ -236,4 +236,49 @@ describe 'Launch Template' do
               ))
     end
   end
+
+  describe 'metadata options' do
+    it 'disables http_protocol_ipv6 and instance_metadata_tags by default' do
+      expect(@plan)
+        .to(include_resource_creation(type: 'aws_launch_template')
+              .with_attribute_value(
+                :metadata_options,
+                including(
+                  including({
+                              http_protocol_ipv6: 'disabled',
+                              instance_metadata_tags: 'disabled'
+                            })
+                )
+              ))
+    end
+
+    context 'when cluster_instance_metadata_options is provided' do
+      before(:context) do
+        @plan = plan(role: :root) do |vars|
+          vars.cluster_instance_metadata_options = {
+            http_endpoint: 'enabled',
+            http_tokens: 'required',
+            http_protocol_ipv6: 'enabled',
+            instance_metadata_tags: 'enabled',
+            http_put_response_hop_limit: 15
+          }
+        end
+      end
+
+      it 'uses provided metadata options' do
+        expect(@plan)
+          .to(include_resource_creation(type: 'aws_launch_template')
+                .with_attribute_value(
+                  :metadata_options,
+                  including(including({
+                                        http_endpoint: 'enabled',
+                                        http_tokens: 'required',
+                                        http_protocol_ipv6: 'enabled',
+                                        instance_metadata_tags: 'enabled',
+                                        http_put_response_hop_limit: 15
+                                      }))
+                ))
+      end
+    end
+  end
 end

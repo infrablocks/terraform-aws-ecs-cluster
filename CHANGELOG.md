@@ -8,6 +8,16 @@ BACKWARDS INCOMPATIBILITIES / NOTES:
   module since, in the case of autoscaling or manual scaling, the value may have
   changed between `apply`s.
 
+IMPROVEMENTS:
+
+* A `cluster_instance_metadata_options` variable has been added which mirrors
+  the [metadata_options](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/launch_template#metadata-options)
+  exposed on the `aws_launch_template` resource. Among other things, this allows
+  users of this module to require that IMDSv2 be used by containers in the 
+  cluster. By default, IMDSv2 is not required in this version of the module but
+  a future major release of the module may enforce IMDSv2 usage.
+
+
 ## 6.0.0 (February 22th 2023)
 
 BACKWARDS INCOMPATIBILITIES / NOTES:

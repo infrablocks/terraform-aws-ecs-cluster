@@ -8,6 +8,7 @@ locals {
   cluster_user_data = replace(
     local.cluster_user_data_template,
     "$${cluster_name}", local.cluster_full_name)
+  cluster_instance_metadata_options = var.cluster_instance_metadata_options == null ? {} : var.cluster_instance_metadata_options
 }
 
 data "aws_ami" "amazon_linux_2" {
@@ -28,6 +29,14 @@ resource "aws_launch_template" "cluster" {
 
   iam_instance_profile {
     name = aws_iam_instance_profile.cluster.name
+  }
+
+  metadata_options {
+    http_endpoint               = lookup(local.cluster_instance_metadata_options, "http_endpoint", null)
+    http_tokens                 = lookup(local.cluster_instance_metadata_options, "http_tokens", null)
+    http_put_response_hop_limit = lookup(local.cluster_instance_metadata_options, "http_put_response_hop_limit", null)
+    instance_metadata_tags      = lookup(local.cluster_instance_metadata_options, "instance_metadata_tags", null)
+    http_protocol_ipv6          = lookup(local.cluster_instance_metadata_options, "http_protocol_ipv6", null)
   }
 
   user_data = base64encode(local.cluster_user_data)
