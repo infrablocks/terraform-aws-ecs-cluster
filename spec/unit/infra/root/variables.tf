@@ -28,6 +28,11 @@ variable "cluster_instance_root_block_device_path" {
   default = null
 }
 
+variable "cluster_instance_metadata_options" {
+  type = map
+  default = null
+}
+
 variable "cluster_minimum_size" {
   default = null
 }
