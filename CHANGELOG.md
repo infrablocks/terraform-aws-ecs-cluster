@@ -14,7 +14,10 @@ IMPROVEMENTS:
   users of this module to require that IMDSv2 be used by containers in the 
   cluster. By default, IMDSv2 is not required in this version of the module but
   a future major release of the module may enforce IMDSv2 usage.
-
+* The EBS volumes attached to container instances are now tagged with
+  `Component`, `DeploymentIdentifier`, `Name` and `ClusterName` tags by default,
+  as well as with any tags passed in the `tags` var when provided (resolves 
+  #94).
 
 ## 6.0.0 (February 22th 2023)
 
