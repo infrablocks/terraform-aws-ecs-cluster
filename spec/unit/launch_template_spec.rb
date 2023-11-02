@@ -9,6 +9,12 @@ describe 'Launch Template' do
   let(:dep_id) do
     var(role: :root, name: 'deployment_identifier')
   end
+  let(:cluster_name) do
+    'default'
+  end
+  let(:tags) do
+    var(role: :root, name: 'tags')
+  end
   let(:region) do
     var(role: :root, name: 'region')
   end
@@ -157,6 +163,26 @@ describe 'Launch Template' do
               .with_attribute_value(
                 [:block_device_mappings, 0, :ebs, 0, :kms_key_id],
                 "arn:aws:kms:#{region}:#{account_id}:alias/aws/ebs"
+              ))
+    end
+  end
+
+  describe 'tag specifications' do
+    it 'sets default and provided tags on volumes' do
+      expect(@plan)
+        .to(include_resource_creation(type: 'aws_launch_template')
+              .with_attribute_value(
+                [:tag_specifications, 0],
+                {
+                  resource_type: 'volume',
+                  tags: {
+                    'Component' => component,
+                    'DeploymentIdentifier' => dep_id,
+                    'Name' =>
+                      "cluster-worker-#{component}-#{dep_id}-#{cluster_name}",
+                    'ClusterName' => cluster_name
+                  }.merge(tags)
+                }
               ))
     end
   end
