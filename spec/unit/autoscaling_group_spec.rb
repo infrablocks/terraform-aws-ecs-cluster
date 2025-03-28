@@ -180,7 +180,6 @@ describe 'autoscaling group' do
     end
   end
 
-
   context 'when include_cluster_instances is true' do
     before(:context) do
       @plan = plan(role: :root) do |vars|

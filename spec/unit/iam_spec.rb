@@ -127,18 +127,18 @@ describe 'IAM policies, profiles and roles' do
       it 'exists' do
         expect(@plan)
           .to(include_resource_creation(
-                type: 'aws_iam_role',
-                name: 'cluster_service_role'
-              )
+            type: 'aws_iam_role',
+            name: 'cluster_service_role'
+          )
                 .once)
       end
 
       it 'has correct description' do
         expect(@plan)
           .to(include_resource_creation(
-                type: 'aws_iam_role',
-                name: 'cluster_service_role'
-              )
+            type: 'aws_iam_role',
+            name: 'cluster_service_role'
+          )
                 .with_attribute_value(
                   :description,
                   "cluster-service-role-#{component}-#{dep_id}-default"
@@ -148,9 +148,9 @@ describe 'IAM policies, profiles and roles' do
       it 'allows assuming a role of ecs' do
         expect(@plan)
           .to(include_resource_creation(
-                type: 'aws_iam_role',
-                name: 'cluster_service_role'
-              )
+            type: 'aws_iam_role',
+            name: 'cluster_service_role'
+          )
                 .with_attribute_value(
                   :assume_role_policy,
                   a_policy_with_statement(
@@ -166,18 +166,18 @@ describe 'IAM policies, profiles and roles' do
       it 'exists' do
         expect(@plan)
           .to(include_resource_creation(
-                type: 'aws_iam_policy',
-                name: 'cluster_service_policy'
-              )
+            type: 'aws_iam_policy',
+            name: 'cluster_service_policy'
+          )
                 .once)
       end
 
       it 'has correct description' do
         expect(@plan)
           .to(include_resource_creation(
-                type: 'aws_iam_policy',
-                name: 'cluster_service_policy'
-              )
+            type: 'aws_iam_policy',
+            name: 'cluster_service_policy'
+          )
                 .with_attribute_value(
                   :description,
                   "cluster-service-policy-#{component}-#{dep_id}-default"
@@ -187,23 +187,23 @@ describe 'IAM policies, profiles and roles' do
       it 'allows ELB, EC2 ingress and describe actions' do
         expect(@plan)
           .to(include_resource_creation(
-                type: 'aws_iam_policy',
-                name: 'cluster_service_policy'
-              )
+            type: 'aws_iam_policy',
+            name: 'cluster_service_policy'
+          )
                 .with_attribute_value(
                   :policy,
                   a_policy_with_statement(
                     Resource: '*',
                     Effect: 'Allow',
                     Action: %w[
-                    elasticloadbalancing:RegisterInstancesWithLoadBalancer
-                    elasticloadbalancing:DeregisterInstancesFromLoadBalancer
-                    elasticloadbalancing:Describe*
-                    elasticloadbalancing:RegisterTargets
-                    elasticloadbalancing:DeregisterTargets
-                    ec2:Describe*
-                    ec2:AuthorizeSecurityGroupIngress
-                  ]
+                      elasticloadbalancing:RegisterInstancesWithLoadBalancer
+                      elasticloadbalancing:DeregisterInstancesFromLoadBalancer
+                      elasticloadbalancing:Describe*
+                      elasticloadbalancing:RegisterTargets
+                      elasticloadbalancing:DeregisterTargets
+                      ec2:Describe*
+                      ec2:AuthorizeSecurityGroupIngress
+                    ]
                   )
                 ))
       end
@@ -228,9 +228,9 @@ describe 'IAM policies, profiles and roles' do
       it 'does not exist' do
         expect(@plan)
           .not_to(include_resource_creation(
-                type: 'aws_iam_role',
-                name: 'cluster_instance_role'
-              ))
+                    type: 'aws_iam_role',
+                    name: 'cluster_instance_role'
+                  ))
       end
     end
 
@@ -238,9 +238,9 @@ describe 'IAM policies, profiles and roles' do
       it 'does not exist' do
         expect(@plan)
           .not_to(include_resource_creation(
-                type: 'aws_iam_policy',
-                name: 'cluster_instance_policy'
-              ))
+                    type: 'aws_iam_policy',
+                    name: 'cluster_instance_policy'
+                  ))
       end
     end
   end
@@ -264,9 +264,9 @@ describe 'IAM policies, profiles and roles' do
       it 'exists' do
         expect(@plan)
           .to(include_resource_creation(
-                    type: 'aws_iam_role',
-                    name: 'cluster_instance_role'
-                  ).once)
+            type: 'aws_iam_role',
+            name: 'cluster_instance_role'
+          ).once)
       end
     end
 
@@ -274,9 +274,9 @@ describe 'IAM policies, profiles and roles' do
       it 'exists' do
         expect(@plan)
           .to(include_resource_creation(
-                    type: 'aws_iam_policy',
-                    name: 'cluster_instance_policy'
-                  ).once)
+            type: 'aws_iam_policy',
+            name: 'cluster_instance_policy'
+          ).once)
       end
     end
   end

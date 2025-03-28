@@ -80,7 +80,7 @@ describe 'Launch Template' do
       end
     end
 
-    context 'launch template name prefix' do
+    describe 'launch template name prefix' do
       it 'contains component, deployment identifier and cluster name' do
         expect(@plan)
           .to(include_resource_creation(type: 'aws_launch_template')
@@ -91,7 +91,7 @@ describe 'Launch Template' do
       end
     end
 
-    context 'monitoring' do
+    describe 'monitoring' do
       it 'is enabled by default' do
         expect(@plan)
           .to(include_resource_creation(type: 'aws_launch_template')
@@ -102,7 +102,7 @@ describe 'Launch Template' do
       end
     end
 
-    context 'root block device' do
+    describe 'root block device' do
       it 'uses the default specified size' do
         expect(@plan)
           .to(include_resource_creation(type: 'aws_launch_template')
@@ -149,7 +149,7 @@ describe 'Launch Template' do
       end
     end
 
-    context 'tag specifications' do
+    describe 'tag specifications' do
       it 'sets default and provided tags on volumes' do
         expect(@plan)
           .to(include_resource_creation(type: 'aws_launch_template')
@@ -169,7 +169,7 @@ describe 'Launch Template' do
       end
     end
 
-    context 'metadata options' do
+    describe 'metadata options' do
       it 'disables http_protocol_ipv6 and instance_metadata_tags by default' do
         expect(@plan)
           .to(include_resource_creation(type: 'aws_launch_template')

@@ -7,6 +7,8 @@ AllCops:
 
 Layout/LineLength:
   Max: 80
+  AllowedPatterns:
+    - ^\s+(?:context|it)\s["'][\w\s]+["']\s+do$
 
 Metrics/BlockLength:
   AllowedMethods:

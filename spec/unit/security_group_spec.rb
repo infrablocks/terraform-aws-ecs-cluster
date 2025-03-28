@@ -28,7 +28,10 @@ describe 'Security Group' do
       it 'has Component' do
         expect(@plan)
           .to(include_resource_creation(type: 'aws_security_group')
-                .with_attribute_value(:tags, including({ Component: component })))
+                .with_attribute_value(
+                  :tags,
+                  including({ Component: component })
+                ))
       end
 
       it 'has DeploymentIdentifier' do

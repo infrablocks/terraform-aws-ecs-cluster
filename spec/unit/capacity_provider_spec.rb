@@ -14,7 +14,8 @@ describe 'ASG Capacity Provider' do
     @plan = plan(role: :root)
   end
 
-  context 'when include_asg_capacity_provider is true and include_cluster_instances is true' do
+  context 'when include_asg_capacity_provider is true and\
+   include_cluster_instances is true' do
     describe 'by default' do
       before(:context) do
         @plan = plan(role: :root) do |vars|
@@ -196,7 +197,8 @@ describe 'ASG Capacity Provider' do
     end
   end
 
-  context 'when include_asg_capacity_provider is false and include_cluster_instances is true' do
+  context 'when include_asg_capacity_provider is false \
+  and include_cluster_instances is true' do
     before(:context) do
       @plan = plan(role: :root) do |vars|
         vars.include_cluster_instances = true
@@ -283,19 +285,23 @@ describe 'ASG Capacity Provider' do
         vars.cluster_name = 'special-cluster'
         vars.include_cluster_instances = false
         vars.include_asg_capacity_provider = false
-        vars.additional_capacity_providers = ["FARGATE"]
+        vars.additional_capacity_providers = ['FARGATE']
       end
     end
 
     it 'creates a cluster capacity providers resource' do
       expect(@plan)
-        .to(include_resource_creation(type: 'aws_ecs_cluster_capacity_providers')
+        .to(include_resource_creation(
+          type: 'aws_ecs_cluster_capacity_providers'
+        )
               .once)
     end
 
     it 'uses the correct cluster name on the cluster capacity providers resource' do
       expect(@plan)
-        .to(include_resource_creation(type: 'aws_ecs_cluster_capacity_providers')
+        .to(include_resource_creation(
+          type: 'aws_ecs_cluster_capacity_providers'
+        )
               .with_attribute_value(
                 :cluster_name,
                 "#{component}-#{dep_id}-special-cluster"
@@ -304,9 +310,11 @@ describe 'ASG Capacity Provider' do
 
     it 'adds the additional capacity providers to the cluster capacity providers' do
       expect(@plan)
-        .to(include_resource_creation(type: 'aws_ecs_cluster_capacity_providers')
+        .to(include_resource_creation(
+          type: 'aws_ecs_cluster_capacity_providers'
+        )
               .with_attribute_value(
-                :capacity_providers, ["FARGATE"]
+                :capacity_providers, ['FARGATE']
               ))
     end
   end
