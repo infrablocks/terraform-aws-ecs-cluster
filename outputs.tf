@@ -15,47 +15,47 @@ output "cluster_arn" {
 
 output "autoscaling_group_name" {
   description = "The name of the autoscaling group for the ECS container instances."
-  value       = aws_autoscaling_group.cluster.name
+  value       = try(aws_autoscaling_group.cluster[0].arn, "")
 }
 
 output "autoscaling_group_arn" {
   description = "The ARN of the autoscaling group for the ECS container instances."
-  value       = aws_autoscaling_group.cluster.arn
+  value       = try(aws_autoscaling_group.cluster[0].arn, "")
 }
 
 output "launch_template_name" {
   description = "The name of the launch template for the ECS container instances."
-  value       = aws_launch_template.cluster.name
+  value       = try(aws_launch_template.cluster[0].name, "")
 }
 
 output "launch_template_id" {
   description = "The id of the launch template for the ECS container instances."
-  value       = aws_launch_template.cluster.id
+  value       = try(aws_launch_template.cluster[0].id, "")
 }
 
 output "security_group_id" {
   description = "The ID of the default security group associated with the ECS container instances."
-  value       = aws_security_group.cluster.id
+  value       = try(aws_security_group.cluster[0].id, "")
 }
 
 output "instance_role_arn" {
   description = "The ARN of the container instance role."
-  value       = aws_iam_role.cluster_instance_role.arn
+  value       = try(aws_iam_role.cluster_instance_role[0].arn, "")
 }
 
 output "instance_role_id" {
   description = "The ID of the container instance role."
-  value       = aws_iam_role.cluster_instance_role.unique_id
+  value       = try(aws_iam_role.cluster_instance_role[0].unique_id, "")
 }
 
 output "instance_policy_arn" {
   description = "The ARN of the container instance policy."
-  value       = aws_iam_policy.cluster_instance_policy.arn
+  value       = try(aws_iam_policy.cluster_instance_policy[0].arn, "")
 }
 
 output "instance_policy_id" {
   description = "The ID of the container instance policy."
-  value       = aws_iam_policy.cluster_instance_policy.id
+  value       = try(aws_iam_policy.cluster_instance_policy[0].id, "")
 }
 
 output "service_role_arn" {
@@ -85,5 +85,5 @@ output "log_group" {
 
 output "asg_capacity_provider_name" {
   description = "The name of the ASG capacity provider associated with the cluster."
-  value       = var.include_asg_capacity_provider ? aws_ecs_capacity_provider.autoscaling_group[0].name : ""
+  value       = try(aws_ecs_capacity_provider.autoscaling_group[0].name, "")
 }

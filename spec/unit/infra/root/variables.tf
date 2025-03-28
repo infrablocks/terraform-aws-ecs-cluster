@@ -11,6 +11,9 @@ variable "tags" {
 variable "cluster_name" {
   default = null
 }
+variable "include_cluster_instances" {
+  default = null
+}
 variable "cluster_instance_ssh_public_key_path" {
   default = null
 }
@@ -102,4 +105,8 @@ variable "asg_capacity_provider_maximum_scaling_step_size" {
 }
 variable "asg_capacity_provider_target_capacity" {
   default = null
+}
+variable "additional_capacity_providers" {
+  type    = list(string)
+  default = []
 }

@@ -19,7 +19,10 @@ module "ecs_cluster" {
 
   tags = var.tags
 
-  cluster_name                            = var.cluster_name
+  cluster_name = var.cluster_name
+
+  include_cluster_instances               = var.include_cluster_instances
+
   cluster_instance_ssh_public_key_path    = var.cluster_instance_ssh_public_key_path
   cluster_instance_type                   = var.cluster_instance_type
   cluster_instance_ami                    = var.cluster_instance_ami
@@ -27,7 +30,7 @@ module "ecs_cluster" {
   cluster_instance_root_block_device_path = var.cluster_instance_root_block_device_path
 
   cluster_instance_enable_ebs_volume_encryption = var.cluster_instance_enable_ebs_volume_encryption
-  cluster_instance_ebs_volume_kms_key_id = var.cluster_instance_ebs_volume_kms_key_id
+  cluster_instance_ebs_volume_kms_key_id        = var.cluster_instance_ebs_volume_kms_key_id
 
   cluster_instance_metadata_options = var.cluster_instance_metadata_options
 
@@ -57,4 +60,5 @@ module "ecs_cluster" {
   asg_capacity_provider_minimum_scaling_step_size     = var.asg_capacity_provider_minimum_scaling_step_size
   asg_capacity_provider_maximum_scaling_step_size     = var.asg_capacity_provider_maximum_scaling_step_size
   asg_capacity_provider_target_capacity               = var.asg_capacity_provider_target_capacity
+  additional_capacity_providers                       = var.additional_capacity_providers
 }

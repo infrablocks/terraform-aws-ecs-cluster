@@ -14,11 +14,12 @@ describe 'ASG Capacity Provider' do
     @plan = plan(role: :root)
   end
 
-  context 'when capacity provider included' do
+  context 'when include_asg_capacity_provider is true and include_cluster_instances is true' do
     describe 'by default' do
       before(:context) do
         @plan = plan(role: :root) do |vars|
           vars.include_asg_capacity_provider = true
+          vars.include_cluster_instances = true
         end
       end
 
@@ -53,6 +54,7 @@ describe 'ASG Capacity Provider' do
     context 'with managed termination protection' do
       before(:context) do
         @plan = plan(role: :root) do |vars|
+          vars.include_cluster_instances = true
           vars.include_asg_capacity_provider = true
           vars.asg_capacity_provider_manage_termination_protection = true
         end
@@ -75,6 +77,7 @@ describe 'ASG Capacity Provider' do
     context 'without managed termination protection' do
       before(:context) do
         @plan = plan(role: :root) do |vars|
+          vars.include_cluster_instances = true
           vars.include_asg_capacity_provider = true
           vars.asg_capacity_provider_manage_termination_protection = false
         end
@@ -97,6 +100,7 @@ describe 'ASG Capacity Provider' do
     context 'with managed scaling' do
       before(:context) do
         @plan = plan(role: :root) do |vars|
+          vars.include_cluster_instances = true
           vars.include_asg_capacity_provider = true
           vars.asg_capacity_provider_manage_scaling = true
           vars.asg_capacity_provider_minimum_scaling_step_size = 3
@@ -169,6 +173,7 @@ describe 'ASG Capacity Provider' do
     context 'without managed scaling' do
       before(:context) do
         @plan = plan(role: :root) do |vars|
+          vars.include_cluster_instances = true
           vars.include_asg_capacity_provider = true
           vars.asg_capacity_provider_manage_scaling = false
         end
@@ -191,9 +196,10 @@ describe 'ASG Capacity Provider' do
     end
   end
 
-  context 'when capacity provider not included' do
+  context 'when include_asg_capacity_provider is false and include_cluster_instances is true' do
     before(:context) do
       @plan = plan(role: :root) do |vars|
+        vars.include_cluster_instances = true
         vars.include_asg_capacity_provider = false
       end
     end
@@ -213,6 +219,94 @@ describe 'ASG Capacity Provider' do
                             propagate_at_launch: true,
                             value: ''
                           })
+              ))
+    end
+  end
+
+  context 'when include_asg_capacity_provider is true and include_cluster_instances is false' do
+    before(:context) do
+      @plan = plan(role: :root) do |vars|
+        vars.include_cluster_instances = false
+        vars.include_asg_capacity_provider = true
+      end
+    end
+
+    it 'does not create a capacity provider for the ECS cluster' do
+      expect(@plan)
+        .not_to(include_resource_creation(type: 'aws_ecs_capacity_provider'))
+    end
+
+    it 'does not include the AmazonECSManaged tag on the ASG' do
+      expect(@plan)
+        .not_to(include_resource_creation(type: 'aws_autoscaling_group')
+                  .with_attribute_value(
+                    :tag,
+                    including({
+                                key: 'AmazonECSManaged',
+                                propagate_at_launch: true,
+                                value: ''
+                              })
+                  ))
+    end
+  end
+
+  context 'when include_asg_capacity_provider is false and include_cluster_instances is false' do
+    before(:context) do
+      @plan = plan(role: :root) do |vars|
+        vars.include_cluster_instances = false
+        vars.include_asg_capacity_provider = false
+      end
+    end
+
+    it 'does not create a capacity provider for the ECS cluster' do
+      expect(@plan)
+        .not_to(include_resource_creation(type: 'aws_ecs_capacity_provider'))
+    end
+
+    it 'does not include the AmazonECSManaged tag on the ASG' do
+      expect(@plan)
+        .not_to(include_resource_creation(type: 'aws_autoscaling_group')
+                  .with_attribute_value(
+                    :tag,
+                    including({
+                                key: 'AmazonECSManaged',
+                                propagate_at_launch: true,
+                                value: ''
+                              })
+                  ))
+    end
+  end
+
+  context 'when additional_capacity_providers are provided' do
+    before(:context) do
+      @plan = plan(role: :root) do |vars|
+        vars.cluster_name = 'special-cluster'
+        vars.include_cluster_instances = false
+        vars.include_asg_capacity_provider = false
+        vars.additional_capacity_providers = ["FARGATE"]
+      end
+    end
+
+    it 'creates a cluster capacity providers resource' do
+      expect(@plan)
+        .to(include_resource_creation(type: 'aws_ecs_cluster_capacity_providers')
+              .once)
+    end
+
+    it 'uses the correct cluster name on the cluster capacity providers resource' do
+      expect(@plan)
+        .to(include_resource_creation(type: 'aws_ecs_cluster_capacity_providers')
+              .with_attribute_value(
+                :cluster_name,
+                "#{component}-#{dep_id}-special-cluster"
+              ))
+    end
+
+    it 'adds the additional capacity providers to the cluster capacity providers' do
+      expect(@plan)
+        .to(include_resource_creation(type: 'aws_ecs_cluster_capacity_providers')
+              .with_attribute_value(
+                :capacity_providers, ["FARGATE"]
               ))
     end
   end

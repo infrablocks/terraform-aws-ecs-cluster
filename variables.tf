@@ -8,7 +8,7 @@ variable "vpc_id" {
 }
 variable "subnet_ids" {
   description = "The IDs of the subnets for container instances."
-  type        = list(string)
+  type = list(string)
 }
 
 variable "component" {
@@ -27,6 +27,12 @@ variable "cluster_name" {
   nullable    = false
 }
 
+variable "include_cluster_instances" {
+  description = "Whether or not to provision an ASG to create ECS cluster container instances."
+  type        = bool
+  default     = true
+  nullable    = false
+}
 variable "cluster_instance_type" {
   description = "The instance type of the container instances."
   type        = string
@@ -116,8 +122,8 @@ variable "associate_public_ip_addresses" {
 
 variable "security_groups" {
   description = "The list of security group IDs to associate with the cluster."
-  type        = list(string)
-  default     = []
+  type = list(string)
+  default = []
   nullable    = false
 }
 
@@ -135,21 +141,21 @@ variable "include_default_egress_rule" {
 }
 variable "default_ingress_cidrs" {
   description = "The CIDRs allowed access to containers."
-  type        = list(string)
-  default     = ["10.0.0.0/8"]
+  type = list(string)
+  default = ["10.0.0.0/8"]
   nullable    = false
 }
 variable "default_egress_cidrs" {
   description = "The CIDRs accessible from containers."
-  type        = list(string)
-  default     = ["0.0.0.0/0"]
+  type = list(string)
+  default = ["0.0.0.0/0"]
   nullable    = false
 }
 
 variable "tags" {
   description = "Map of tags to be applied to all resources in cluster."
-  type        = map(string)
-  default     = {}
+  type = map(string)
+  default = {}
   nullable    = false
 }
 
@@ -201,6 +207,12 @@ variable "asg_capacity_provider_target_capacity" {
   description = "The target capacity, as a percentage from 1 to 100, for the ASG capacity provider."
   type        = number
   default     = 100
+  nullable    = false
+}
+variable "additional_capacity_providers" {
+  description = "Additional capacity providers to associate with the ECS cluster. Supports \"FARGATE\" and \"FARGATE_SPOT\"."
+  type        = list(string)
+  default     = []
   nullable    = false
 }
 

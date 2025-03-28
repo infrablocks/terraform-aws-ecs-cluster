@@ -21,7 +21,7 @@ describe 'autoscaling group' do
       @plan = plan(role: :root)
     end
 
-    it 'creates a autoscaling group' do
+    it 'creates an autoscaling group' do
       expect(@plan)
         .to(include_resource_creation(type: 'aws_autoscaling_group')
               .once)
@@ -164,6 +164,34 @@ describe 'autoscaling group' do
       expect(@plan)
         .to(include_resource_creation(type: 'aws_autoscaling_group')
               .with_attribute_value(:protect_from_scale_in, false))
+    end
+  end
+
+  context 'when include_cluster_instances is false' do
+    before(:context) do
+      @plan = plan(role: :root) do |vars|
+        vars.include_cluster_instances = false
+      end
+    end
+
+    it 'does not create an autoscaling group' do
+      expect(@plan)
+        .not_to(include_resource_creation(type: 'aws_autoscaling_group'))
+    end
+  end
+
+
+  context 'when include_cluster_instances is true' do
+    before(:context) do
+      @plan = plan(role: :root) do |vars|
+        vars.include_cluster_instances = true
+      end
+    end
+
+    it 'creates an autoscaling group' do
+      expect(@plan)
+        .to(include_resource_creation(type: 'aws_autoscaling_group')
+              .once)
     end
   end
 end

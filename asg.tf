@@ -22,13 +22,15 @@ data "aws_ami" "amazon_linux_2" {
 }
 
 resource "aws_launch_template" "cluster" {
+  count = var.include_cluster_instances ? 1 : 0
+
   name_prefix          = "cluster-${var.component}-${var.deployment_identifier}-${var.cluster_name}-"
   image_id             = local.ami_id
   instance_type        = var.cluster_instance_type
   key_name             = var.cluster_instance_ssh_public_key_path == null ? "" : element(concat(aws_key_pair.cluster.*.key_name, [""]), 0)
 
   iam_instance_profile {
-    name = aws_iam_instance_profile.cluster.name
+    name = aws_iam_instance_profile.cluster[0].name
   }
 
   metadata_options {
@@ -43,7 +45,7 @@ resource "aws_launch_template" "cluster" {
 
   network_interfaces {
     associate_public_ip_address = var.associate_public_ip_addresses
-    security_groups = concat([aws_security_group.cluster.id], var.security_groups)
+    security_groups = concat([aws_security_group.cluster[0].id], var.security_groups)
   }
 
   block_device_mappings {
@@ -79,12 +81,14 @@ resource "aws_launch_template" "cluster" {
 }
 
 resource "aws_autoscaling_group" "cluster" {
+  count = var.include_cluster_instances ? 1 : 0
+
   name_prefix = "asg-${var.component}-${var.deployment_identifier}-${var.cluster_name}-"
 
   vpc_zone_identifier = var.subnet_ids
 
   launch_template {
-    id      = aws_launch_template.cluster.id
+    id      = aws_launch_template.cluster[0].id
     version = "$Latest"
   }
 

@@ -5,6 +5,8 @@ locals {
 }
 
 resource "aws_iam_role" "cluster_instance_role" {
+  count = var.include_cluster_instances ? 1 : 0
+
   description        = "cluster-instance-role-${var.component}-${var.deployment_identifier}-${var.cluster_name}"
   assume_role_policy = file("${path.module}/policies/cluster-instance-role.json")
 
@@ -12,20 +14,26 @@ resource "aws_iam_role" "cluster_instance_role" {
 }
 
 resource "aws_iam_policy" "cluster_instance_policy" {
+  count = var.include_cluster_instances ? 1 : 0
+
   description = "cluster-instance-policy-${var.component}-${var.deployment_identifier}-${var.cluster_name}"
   policy      = local.cluster_instance_policy_contents
 }
 
 resource "aws_iam_policy_attachment" "cluster_instance_policy_attachment" {
+  count = var.include_cluster_instances ? 1 : 0
+
   name       = "cluster-instance-policy-attachment-${var.component}-${var.deployment_identifier}-${var.cluster_name}"
-  roles      = [aws_iam_role.cluster_instance_role.id]
-  policy_arn = aws_iam_policy.cluster_instance_policy.arn
+  roles      = [aws_iam_role.cluster_instance_role[0].id]
+  policy_arn = aws_iam_policy.cluster_instance_policy[0].arn
 }
 
 resource "aws_iam_instance_profile" "cluster" {
+  count = var.include_cluster_instances ? 1 : 0
+
   name = "cluster-instance-profile-${var.component}-${var.deployment_identifier}-${var.cluster_name}"
   path = "/"
-  role = aws_iam_role.cluster_instance_role.name
+  role = aws_iam_role.cluster_instance_role[0].name
 }
 
 resource "aws_iam_role" "cluster_service_role" {
