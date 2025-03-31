@@ -15,7 +15,7 @@ output "cluster_arn" {
 
 output "autoscaling_group_name" {
   description = "The name of the autoscaling group for the ECS container instances."
-  value       = try(aws_autoscaling_group.cluster[0].arn, "")
+  value       = try(aws_autoscaling_group.cluster[0].name, "")
 }
 
 output "autoscaling_group_arn" {
