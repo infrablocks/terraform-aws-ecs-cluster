@@ -5,6 +5,12 @@ BACKWARDS INCOMPATIBILITIES / NOTES:
 * The `cluster_desired_capacity` is now ignored after the first `apply` of the
   module since, in the case of autoscaling or manual scaling, the value may have
   changed between `apply`s.
+* Outputs that reference cluster-instance resources
+  (`autoscaling_group_name`, `autoscaling_group_arn`, `launch_template_name`,
+  `launch_template_id`, `security_group_id`, `instance_role_arn`,
+  `instance_role_id`, `instance_policy_arn`, `instance_policy_id` and
+  `asg_capacity_provider_name`) now return `""` when
+  `include_cluster_instances = false`.
 
 IMPROVEMENTS:
 
@@ -13,11 +19,18 @@ IMPROVEMENTS:
   exposed on the `aws_launch_template` resource. Among other things, this allows
   users of this module to require that IMDSv2 be used by containers in the 
   cluster. By default, IMDSv2 is not required in this version of the module but
-  a future major release of the module may enforce IMDSv2 usage.
+  a future major release of the module may enforce IMDSv2 usage. The
+  `http_protocol_ipv6` option is also supported within this variable.
 * The EBS volumes attached to container instances are now tagged with
   `Component`, `DeploymentIdentifier`, `Name` and `ClusterName` tags by default,
   as well as with any tags passed in the `tags` var when provided (resolves 
   #94).
+* This module now supports Fargate. An `additional_capacity_providers` variable
+  has been added accepting `FARGATE` and/or `FARGATE_SPOT`.
+* An `include_cluster_instances` variable has been added (default `true`). When
+  set to `false`, the autoscaling group, launch template, default security
+  group, container instance IAM role/policy and ASG capacity provider are not
+  created, allowing the cluster to be used in Fargate-only mode.
 
 ## 6.0.0 (February 22th 2023)
 
