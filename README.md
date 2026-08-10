@@ -62,6 +62,22 @@ module "ecs_cluster" {
 }
 ```
 
+To enable Container Insights with enhanced observability, set the explicit
+mode:
+
+```hcl-terraform
+module "ecs_cluster" {
+  # ...
+  container_insights_mode = "enhanced"
+}
+```
+
+`container_insights_mode` accepts `enhanced`, `enabled`, or `disabled` and
+takes precedence over the legacy `enable_container_insights` boolean when set.
+Using `enhanced` requires an AWS provider version whose `aws_ecs_cluster`
+setting supports that value; the unit fixture verifies AWS provider `5.100.0`.
+Existing callers can continue using `enable_container_insights` unchanged.
+
 As mentioned above, the ECS cluster deploys into an existing base network.
 Whilst the base network can be created using any mechanism you like, the
 [AWS Base Networking](https://github.com/infrablocks/terraform-aws-base-networking)
@@ -106,6 +122,7 @@ for more details.
 | cluster_log_group_retention                         | The number of days logs will be retained in the CloudWatch log group of the cluster (0 = unlimited)    |         0         |               no                |
 | enable_detailed_monitoring                          | Enable detailed monitoring of EC2 instance(s)                                                          |       true        |               no                |
 | enable_container_insights                           | Whether or not to enable container insights on the ECS cluster                                         |       false       |               no                |
+| container_insights_mode                             | Explicit Container Insights mode (`enhanced`, `enabled`, or `disabled`); overrides `enable_container_insights` |         -         |               no                |
 | protect_cluster_instances_from_scale_in             | Whether or not to protect cluster instances in the autoscaling group from scale in                     |       false       |               no                |
 | include_asg_capacity_provider                       | Whether or not to add the created ASG as a capacity provider for the ECS cluster                       |       false       |               no                |
 | asg_capacity_provider_manage_termination_protection | Whether or not to allow ECS to manage termination protection for the ASG capacity provider             |       true        |               no                |

@@ -83,6 +83,9 @@ variable "security_groups" {
 variable "enable_container_insights" {
   default = null
 }
+variable "container_insights_mode" {
+  default = null
+}
 
 variable "protect_cluster_instances_from_scale_in" {
   default = null
