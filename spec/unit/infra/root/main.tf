@@ -51,6 +51,7 @@ module "ecs_cluster" {
   default_egress_cidrs  = var.default_egress_cidrs
 
   enable_container_insights = var.enable_container_insights
+  container_insights_mode   = var.container_insights_mode
 
   protect_cluster_instances_from_scale_in = var.protect_cluster_instances_from_scale_in
 

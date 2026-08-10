@@ -14,6 +14,10 @@ BACKWARDS INCOMPATIBILITIES / NOTES:
 
 IMPROVEMENTS:
 
+* A `container_insights_mode` variable has been added to support the
+  `enhanced`, `enabled` and `disabled` ECS Container Insights modes. When set,
+  it takes precedence over the existing `enable_container_insights` variable;
+  existing boolean configurations remain unchanged.
 * A `cluster_instance_metadata_options` variable has been added which mirrors
   the [metadata_options](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/launch_template#metadata-options)
   exposed on the `aws_launch_template` resource. Among other things, this allows

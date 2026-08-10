@@ -165,6 +165,19 @@ variable "enable_container_insights" {
   default     = false
   nullable    = false
 }
+variable "container_insights_mode" {
+  description = "Container Insights mode. Overrides enable_container_insights when set."
+  type        = string
+  default     = null
+
+  validation {
+    condition = (
+      var.container_insights_mode == null ||
+      contains(["enhanced", "enabled", "disabled"], var.container_insights_mode)
+    )
+    error_message = "container_insights_mode must be one of: enhanced, enabled, disabled."
+  }
+}
 
 variable "protect_cluster_instances_from_scale_in" {
   description = "Whether or not to protect cluster instances in the autoscaling group from scale in."
