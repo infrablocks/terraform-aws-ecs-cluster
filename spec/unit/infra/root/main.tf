@@ -21,7 +21,7 @@ module "ecs_cluster" {
 
   cluster_name = var.cluster_name
 
-  include_cluster_instances               = var.include_cluster_instances
+  include_cluster_instances = var.include_cluster_instances
 
   cluster_instance_ssh_public_key_path    = var.cluster_instance_ssh_public_key_path
   cluster_instance_type                   = var.cluster_instance_type
@@ -39,6 +39,10 @@ module "ecs_cluster" {
   cluster_desired_capacity = var.cluster_desired_capacity
 
   cluster_log_group_retention = var.cluster_log_group_retention
+
+  enable_execute_command_logging               = var.enable_execute_command_logging
+  execute_command_log_group_retention          = var.execute_command_log_group_retention
+  enable_execute_command_cloudwatch_encryption = var.enable_execute_command_cloudwatch_encryption
 
   enable_detailed_monitoring = var.enable_detailed_monitoring
 

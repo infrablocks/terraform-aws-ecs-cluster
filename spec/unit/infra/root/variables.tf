@@ -55,6 +55,16 @@ variable "cluster_instance_ebs_volume_kms_key_id" {
   default = null
 }
 
+variable "enable_execute_command_logging" {
+  default = null
+}
+variable "execute_command_log_group_retention" {
+  default = null
+}
+variable "enable_execute_command_cloudwatch_encryption" {
+  default = null
+}
+
 variable "enable_detailed_monitoring" {
   default = null
 }

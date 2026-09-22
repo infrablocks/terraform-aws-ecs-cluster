@@ -34,3 +34,4 @@ state/
 *.tfplan
 *.tfstate
 *.tfstate.backup
+/.terraform.lock.hcl
