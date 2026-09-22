@@ -31,6 +31,16 @@ IMPROVEMENTS:
   set to `false`, the autoscaling group, launch template, default security
   group, container instance IAM role/policy and ASG capacity provider are not
   created, allowing the cluster to be used in Fargate-only mode.
+* This module now supports optional logging of ECS Exec (SSM) session
+  activity. An `enable_execute_command_logging` variable has been added
+  (default `false`); when enabled, a dedicated CloudWatch log group and KMS
+  key are created and wired into the cluster's `execute_command_configuration`.
+  The `execute_command_log_group_retention` and
+  `enable_execute_command_cloudwatch_encryption` variables control the log
+  group's retention and whether it is encrypted with the created KMS key. The
+  log group name/ARN and KMS key ARN are exposed via the
+  `execute_command_log_group`, `execute_command_log_group_arn` and
+  `execute_command_kms_key_arn` outputs.
 
 ## 6.0.0 (February 22th 2023)
 
