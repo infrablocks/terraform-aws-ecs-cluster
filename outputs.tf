@@ -83,6 +83,21 @@ output "log_group" {
   value       = aws_cloudwatch_log_group.cluster.name
 }
 
+output "execute_command_log_group" {
+  description = "The name of the CloudWatch log group used for ECS Exec session logging, if enabled."
+  value       = try(aws_cloudwatch_log_group.execute_command[0].name, "")
+}
+
+output "execute_command_log_group_arn" {
+  description = "The ARN of the CloudWatch log group used for ECS Exec session logging, if enabled."
+  value       = try(aws_cloudwatch_log_group.execute_command[0].arn, "")
+}
+
+output "execute_command_kms_key_arn" {
+  description = "The ARN of the KMS key used to encrypt ECS Exec sessions, if enabled."
+  value       = try(aws_kms_key.execute_command[0].arn, "")
+}
+
 output "asg_capacity_provider_name" {
   description = "The name of the ASG capacity provider associated with the cluster."
   value       = try(aws_ecs_capacity_provider.autoscaling_group[0].name, "")

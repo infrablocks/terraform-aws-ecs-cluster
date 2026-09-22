@@ -106,6 +106,9 @@ for more details.
 | cluster_log_group_retention                         | The number of days logs will be retained in the CloudWatch log group of the cluster (0 = unlimited)    |         0         |               no                |
 | enable_detailed_monitoring                          | Enable detailed monitoring of EC2 instance(s)                                                          |       true        |               no                |
 | enable_container_insights                           | Whether or not to enable container insights on the ECS cluster                                         |       false       |               no                |
+| enable_execute_command_logging                      | Whether or not to log ECS Exec (SSM) session activity to a CloudWatch log group                        |       false       |               no                |
+| execute_command_log_group_retention                 | The number of days logs will be retained in the ECS Exec session CloudWatch log group (0 = unlimited)  |         0         |               no                |
+| enable_execute_command_cloudwatch_encryption        | Whether or not to encrypt the ECS Exec session CloudWatch logs                                         |       true        |               no                |
 | protect_cluster_instances_from_scale_in             | Whether or not to protect cluster instances in the autoscaling group from scale in                     |       false       |               no                |
 | include_asg_capacity_provider                       | Whether or not to add the created ASG as a capacity provider for the ECS cluster                       |       false       |               no                |
 | asg_capacity_provider_manage_termination_protection | Whether or not to allow ECS to manage termination protection for the ASG capacity provider             |       true        |               no                |
@@ -148,6 +151,9 @@ Notes:
 | service_policy_arn     | The ARN of the ECS service policy                                                |
 | service_policy_id      | The ID of the ECS service policy                                                 |
 | log_group              | The name of the default log group for the cluster                                |
+| execute_command_log_group | The name of the CloudWatch log group used for ECS Exec session logging, if enabled |
+| execute_command_log_group_arn | The ARN of the CloudWatch log group used for ECS Exec session logging, if enabled |
+| execute_command_kms_key_arn | The ARN of the KMS key used to encrypt ECS Exec sessions, if enabled            |
 
 ### Compatibility
 

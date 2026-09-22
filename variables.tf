@@ -166,6 +166,27 @@ variable "enable_container_insights" {
   nullable    = false
 }
 
+variable "enable_execute_command_logging" {
+  description = "Whether or not to log ECS Exec (SSM) session activity to a CloudWatch log group."
+  type        = bool
+  default     = false
+  nullable    = false
+}
+
+variable "execute_command_log_group_retention" {
+  description = "The number of days logs will be retained in the ECS Exec session CloudWatch log group (0 = unlimited)."
+  type        = number
+  default     = 0
+  nullable    = false
+}
+
+variable "enable_execute_command_cloudwatch_encryption" {
+  description = "Whether or not to encrypt the ECS Exec session CloudWatch logs."
+  type        = bool
+  default     = true
+  nullable    = false
+}
+
 variable "protect_cluster_instances_from_scale_in" {
   description = "Whether or not to protect cluster instances in the autoscaling group from scale in."
   type        = string
