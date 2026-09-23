@@ -244,9 +244,9 @@ brew install ruby-build
 echo 'eval "$(rbenv init - bash)"' >> ~/.bash_profile
 echo 'eval "$(rbenv init - zsh)"' >> ~/.zshrc
 eval "$(rbenv init -)"
-rbenv install 3.1.1
+rbenv install 3.4.10
 rbenv rehash
-rbenv local 3.1.1
+rbenv local 3.4.10
 gem install bundler
 
 # git, git-crypt, gnupg
